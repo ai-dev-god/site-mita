@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ro"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LA MIȚA BICICLISTA — Stabiliment Creativ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Fira+Code:wght@300;400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "brand-navy": "#2E3192",
+              "brand-yellow": "#FFEE58",
+              "on-secondary": "#ffffff",
+              "secondary-fixed": "#fed6fc",
+              "primary-fixed": "#f6e550",
+              "on-tertiary": "#ffffff",
+              "surface-container-low": "#f5f4ed",
+              "inverse-primary": "#d9c935",
+              "on-primary-fixed-variant": "#4f4800",
+              "outline": "#7b7762",
+              "on-error": "#ffffff",
+              "on-surface": "#1b1c18",
+              "tertiary": "#614cba",
+              "on-tertiary-fixed-variant": "#4932a0",
+              "on-primary-fixed": "#1f1c00",
+              "tertiary-container": "#efe8ff",
+              "background": "#faf9f3",
+              "on-tertiary-fixed": "#1c0062",
+              "secondary": "#735473",
+              "secondary-fixed-dim": "#e1bbdf",
+              "outline-variant": "#ccc7ae",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#cabeff",
+              "surface-container": "#efeee7",
+              "surface-container-highest": "#e3e3dc",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#d9c935",
+              "surface-dim": "#dbdad4",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "on-background": "#1b1c18",
+              "on-secondary-fixed": "#2b122d",
+              "on-secondary-fixed-variant": "#5a3d5b",
+              "on-secondary-container": "#795a7a",
+              "inverse-on-surface": "#f2f1ea",
+              "primary": "#686000",
+              "surface-container-high": "#e9e8e2",
+              "surface": "#faf9f3",
+              "on-primary-container": "#756b00",
+              "on-tertiary-container": "#6d58c6",
+              "error": "#ba1a1a",
+              "secondary-container": "#fed6fc",
+              "primary-container": "#ffee58",
+              "tertiary-fixed": "#e6deff",
+              "surface-bright": "#faf9f3",
+              "on-surface-variant": "#4a4734",
+              "surface-variant": "#e3e3dc",
+              "inverse-surface": "#30312c",
+              "surface-tint": "#686000",
+              "brand-dark": "#111111",
+              "brand-blue": "#2D308C"
+            },
+            fontFamily: {
+              "manrope": ["Manrope", "sans-serif"],
+              "fira-code": ["Fira Code", "monospace"]
+            },
+            borderRadius: {
+              "none": "0px",
+              "DEFAULT": "0px",
+              "lg": "0px",
+              "xl": "0px",
+              "full": "0px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .text-huge {
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.85;
+        }
+        .text-display {
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #2E3192; }
+        ::-webkit-scrollbar-thumb { background: #FFEE58; }
+        
+        /* Logo stack style from reference */
+        .logo-stack {
+            display: flex;
+            flex-direction: column;
+            line-height: 0.9;
+            font-weight: 800;
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-brand-navy text-white">
+<!-- Minimal Navigation -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 md:px-12 py-8 bg-transparent">
+<a class="block" href="/" style="">
+<img alt="LA MIȚA BICICLISTA" class="h-12 w-auto brightness-0 invert object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uiB4SV9IpsKDME0vHR3AXgik6ioChFmW5lIm0tI4jFnnMvA7hNQzO2oxpeOMkAsb5JwcWX0Mk1X9K78QOueMTtrfOYoWwfRxSDjP4qGMci8S362rH1oHE-C6bhNgW7_6QlDVXRUdhK4oCaAQJb9Q2mnkxppGOJdFXhYThQzzyLWaNhRGNIcPrxPLo_R29_V4k_4K17g3hjDucXfqdnXGX-fkb1LglZU5l6OFkLE_iAWs-nXiShbwT9098a8zv7WtU8xN05HBYjq" style=""/>
+</a>
+<div class="flex items-center gap-6">
+<div class="hidden md:block">
+<button class="border border-white/40 hover:bg-brand-yellow hover:text-brand-navy transition-all px-6 py-2 text-[10px] font-fira-code tracking-widest uppercase" style="">
+                RESERVATIONS
+            </button>
+</div>
+<span class="font-fira-code text-[10px] tracking-widest font-bold border-b border-brand-yellow pb-1" style="">RO / EN</span>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="min-h-screen flex flex-col justify-center px-8 md:px-24 pt-24">
+<div class="max-w-6xl">
+<span class="font-fira-code text-xs uppercase tracking-[0.4em] text-brand-yellow mb-6 block" style="">LA MITA BICICLISTA</span>
+<h1 class="font-manrope font-extrabold text-huge tracking-tighter uppercase mb-8" style="">
+            STABILIMENT<br/>
+<span class="text-brand-yellow" style="">CREATIV</span>
+</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-end">
+<p class="font-manrope font-light text-2xl md:text-3xl text-white/90 leading-tight max-w-xl" style="">
+                Brasserie, salon istoric și spațiu expozițional în inima Bucureștiului. <span class="font-bold border-b-2 border-brand-yellow" style="">BISERICA AMZEI 9</span>
+</p>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col border-l border-brand-yellow/30 pl-6 py-2">
+<span class="font-fira-code text-[10px] uppercase tracking-widest opacity-60 mb-2" style="">CURRENTLY SERVING</span>
+<span class="font-manrope font-extrabold text-xl uppercase" style="">BRUNCH &amp; COCKTAILS</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Content Story Flow -->
+<section class="px-8 md:px-24 py-32 space-y-48">
+<!-- Brasserie -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+<div class="md:col-span-2">
+<span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" style="">01 / PARTER</span>
+</div>
+<div class="md:col-span-6">
+<h2 class="font-manrope font-extrabold text-6xl tracking-tighter uppercase mb-8" style="">BRASSERIE</h2>
+<p class="font-manrope font-light text-xl text-white/70 leading-relaxed mb-10" style="">
+                Un spațiu vibrant unde tradiția întâlnește modernitatea. Zilnic între 08:00 și 00:00, transformăm momentele obișnuite în experiențe memorabile.
+            </p>
+<div class="flex flex-wrap gap-4">
+<a class="bg-white text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow transition-colors" href="#" style="">
+                    MENIU BRASSERIE
+                </a>
+</div>
+</div>
+<div class="md:col-span-4 flex justify-end">
+<div class="w-full aspect-square border border-white/10 flex items-center justify-center p-12">
+<div class="text-center">
+<span class="font-fira-code text-[10px] block opacity-40 mb-4 tracking-[0.3em]" style="">RESERVATION LINE</span>
+<span class="font-manrope font-bold text-2xl tracking-tighter" style="">031 229 4763</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Salon -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+<div class="md:col-span-2">
+<span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" style="">02 / ETAJ 1</span>
+</div>
+<div class="md:col-span-6">
+<h2 class="font-manrope font-extrabold text-6xl tracking-tighter uppercase mb-8" style="">SALON ISTORIC</h2>
+<p class="font-manrope font-light text-xl text-white/70 leading-relaxed mb-10" style="">
+                Eleganța de odinioară a casei, oferind un refugiu liniștit pentru conversații lungi și momente de introspecție, acompaniate de o selecție premium.
+            </p>
+<div class="space-y-4 mb-10">
+<div class="flex justify-between border-b border-white/10 pb-2">
+<span class="font-fira-code text-[10px] uppercase opacity-60" style="">LUNI – JOI</span>
+<span class="font-manrope font-bold" style="">12:00 – 22:00</span>
+</div>
+<div class="flex justify-between border-b border-white/10 pb-2">
+<span class="font-fira-code text-[10px] uppercase opacity-60" style="">VINERI – DUMINICĂ</span>
+<span class="font-manrope font-bold" style="">10:00 – 00:00</span>
+</div>
+</div>
+<button class="bg-brand-yellow text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-white transition-colors" style="">
+                REZERVĂRI SALON
+            </button>
+</div>
+<div class="md:col-span-4 relative">
+<div class="absolute -top-12 -right-12 opacity-10 pointer-events-none">
+<span class="font-manrope font-extrabold text-[15rem] leading-none" style="">02</span>
+</div>
+</div>
+</div>
+<!-- Expo -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+<div class="md:col-span-2">
+<span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" style="">03 / EXPO</span>
+</div>
+<div class="md:col-span-10">
+<span class="font-fira-code text-[10px] uppercase tracking-widest text-brand-yellow mb-4 block" style="">EXPOZIȚIA ANUALĂ</span>
+<h2 class="font-manrope font-extrabold text-display md:text-7xl tracking-tighter uppercase mb-12 max-w-4xl" style="">
+                ÎNTÂLNIRI. SAU CUM SE NAȘTE O LUME NOUĂ
+            </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<p class="font-manrope font-light italic text-xl text-white/60 leading-relaxed" style="">
+                    O explorare a legăturilor umane prin lentila artei contemporane. Expoziția curentă reunește artiști locali care redefinesc peisajul cultural bucureștean.
+                </p>
+<div class="flex flex-col gap-6">
+<div class="font-fira-code text-lg font-bold tracking-tight text-brand-yellow" style="">
+                        VIN – DUM · 12:00 – 21:00
+                    </div>
+<button class="border-2 border-brand-yellow text-brand-yellow w-fit px-12 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all" style="">
+                        CUMPĂRĂ BILETE
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Shop / Quick Links from Image 5 -->
+<section class="bg-white text-brand-navy py-32 px-8 md:px-24">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
+<div>
+<h2 class="font-manrope font-extrabold text-5xl tracking-tighter uppercase mb-8" style="">VIENNOISERIE &amp; COFETĂRIE</h2>
+<p class="font-manrope font-light text-xl mb-12 opacity-80" style="">Aduceți savoarea 'La Mița Biciclista' acasă. Comandați produsele noastre artizanale direct la ușa dumneavoastră.</p>
+<button class="bg-brand-navy text-white px-12 py-6 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all" style="">
+                SHOP ONLINE
+            </button>
+</div>
+<div class="space-y-4">
+<span class="font-fira-code text-[10px] uppercase tracking-[0.3em] opacity-40 block mb-6" style="">DOWNLOAD MENUS</span>
+<a class="group flex justify-between items-center py-6 border-b border-brand-navy/10 hover:px-4 transition-all" href="#" style="">
+<span class="font-manrope font-extrabold text-xl uppercase" style="">MENIU MIC DEJUN</span>
+<span class="material-symbols-outlined group-hover:translate-x-2 transition-transform" style="">arrow_forward</span>
+</a>
+<a class="group flex justify-between items-center py-6 border-b border-brand-navy/10 hover:px-4 transition-all" href="#" style="">
+<span class="font-manrope font-extrabold text-xl uppercase" style="">MENIU PRINCIPAL</span>
+<span class="material-symbols-outlined group-hover:translate-x-2 transition-transform" style="">arrow_forward</span>
+</a>
+<a class="group flex justify-between items-center py-6 border-b border-brand-navy/10 hover:px-4 transition-all" href="#" style="">
+<span class="font-manrope font-extrabold text-xl uppercase" style="">MENIU BĂUTURI</span>
+<span class="material-symbols-outlined group-hover:translate-x-2 transition-transform" style="">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-brand-navy text-white py-24 px-8 md:px-24">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
+<div class="md:col-span-4">
+<div class="mb-8">
+<img alt="LA MIȚA BICICLISTA" class="h-20 w-auto brightness-0 invert object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uiB4SV9IpsKDME0vHR3AXgik6ioChFmW5lIm0tI4jFnnMvA7hNQzO2oxpeOMkAsb5JwcWX0Mk1X9K78QOueMTtrfOYoWwfRxSDjP4qGMci8S362rH1oHE-C6bhNgW7_6QlDVXRUdhK4oCaAQJb9Q2mnkxppGOJdFXhYThQzzyLWaNhRGNIcPrxPLo_R29_V4k_4K17g3hjDucXfqdnXGX-fkb1LglZU5l6OFkLE_iAWs-nXiShbwT9098a8zv7WtU8xN05HBYjq" style=""/>
+</div>
+<p class="font-fira-code text-xs opacity-60 leading-relaxed max-w-xs" style="">
+                STR. BISERICA AMZEI 9<br/>
+                BUCUREȘTI, SECTOR 1<br/>
+                CONTACT@LAMITABICICLISTA.RO
+            </p>
+</div>
+<div class="md:col-span-4 space-y-8">
+<span class="font-fira-code text-[10px] uppercase tracking-widest text-brand-yellow/60 block" style="">JOIN OUR COMMUNITY</span>
+<div class="flex border-b border-white/20 pb-2">
+<input class="bg-transparent border-none w-full font-fira-code text-sm py-4 focus:ring-0 placeholder:text-white/20" placeholder="EMAIL ADDRESS" type="email"/>
+<button class="text-brand-yellow font-manrope font-bold uppercase text-xs tracking-widest px-4" style="">SUBSCRIBE</button>
+</div>
+</div>
+<div class="md:col-span-4 flex flex-col items-end gap-12">
+<div class="flex gap-8">
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#" style="">Instagram</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#" style="">Facebook</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#" style="">TikTok</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#">TripAdvisor</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#">Google Reviews</a></div>
+<div class="flex gap-4">
+<div class="px-3 py-1 border border-white/10 text-[8px] font-fira-code uppercase tracking-widest" style="">KAYAK GUIDES</div>
+<div class="px-3 py-1 border border-white/10 text-[8px] font-fira-code uppercase tracking-widest" style="">TRIPADVISOR</div>
+<div class="px-3 py-1 border border-white/10 text-[8px] font-fira-code uppercase tracking-widest">GOOGLE REVIEWS</div></div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/10 gap-8">
+<span class="font-fira-code text-[8px] tracking-[0.3em] opacity-40 uppercase text-center md:text-left" style="">
+            LA MIȚA BICICLISTA STABILIMENT CREATIV © COPYRIGHT 2025
+        </span>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-brand-yellow animate-pulse"></span>
+<span class="font-fira-code text-[8px] tracking-widest uppercase opacity-80" style="">Always Open for Culture</span>
+</div>
+</div>
+</footer>
+</body></html>
