@@ -31,33 +31,33 @@ jobs:
             set -euo pipefail
 
             echo "==> Pulling latest code"
-            if [ -d /home/mita/lmbsc/.git ]; then
-              cd /home/mita/lmbsc
+            if [ -d /home/aurel/mita/.git ]; then
+              cd /home/aurel/mita
               git pull --ff-only
             else
               # Directory exists but isn't a git repo (or doesn't exist) — fresh clone
-              rm -rf /home/mita/lmbsc
-              git clone "https://x-access-token:${GH_TOKEN}@github.com/ai-dev-god/site-mita.git" /home/mita/lmbsc
-              cd /home/mita/lmbsc
+              rm -rf /home/aurel/mita
+              git clone "https://x-access-token:${GH_TOKEN}@github.com/ai-dev-god/site-mita.git" /home/aurel/mita
+              cd /home/aurel/mita
             fi
 
             echo "==> Installing Python dependencies"
-            /home/mita/.venv/bin/pip install --quiet --upgrade pip
-            /home/mita/.venv/bin/pip install --quiet -e apps/api
+            /home/aurel/.venv/bin/pip install --quiet --upgrade pip
+            /home/aurel/.venv/bin/pip install --quiet -e apps/api
 
             echo "==> Running Alembic migrations"
-            cd /home/mita/lmbsc/apps/api
-            /home/mita/.venv/bin/alembic upgrade head
-            cd /home/mita/lmbsc
+            cd /home/aurel/mita/apps/api
+            /home/aurel/.venv/bin/alembic upgrade head
+            cd /home/aurel/mita
 
             echo "==> Building Next.js frontend"
-            cd /home/mita/lmbsc/apps/web
+            cd /home/aurel/mita/apps/web
             npm ci --omit=dev
             npm run build
             # Copy static assets into the standalone output
             cp -r public .next/standalone/public
             cp -r .next/static .next/standalone/.next/static
-            cd /home/mita/lmbsc
+            cd /home/aurel/mita
 
             echo "==> Syncing static marketing site to public_html"
             rsync -a --delete \
@@ -66,16 +66,16 @@ jobs:
               --exclude='deploy/' \
               --exclude='.github/' \
               --exclude='.stitch/' \
-              /home/mita/lmbsc/ /home/mita/public_html/
+              /home/aurel/mita/ /home/aurel/public_html/
 
             echo "==> Installing systemd services"
-            sudo cp /home/mita/lmbsc/deploy/lmbsc-api.service /etc/systemd/system/lmbsc-api.service
-            sudo cp /home/mita/lmbsc/deploy/lmbsc-web.service /etc/systemd/system/lmbsc-web.service
+            sudo cp /home/aurel/mita/deploy/lmbsc-api.service /etc/systemd/system/lmbsc-api.service
+            sudo cp /home/aurel/mita/deploy/lmbsc-web.service /etc/systemd/system/lmbsc-web.service
             sudo systemctl daemon-reload
             sudo systemctl enable lmbsc-api lmbsc-web
 
             echo "==> Updating Apache config"
-            sudo cp /home/mita/lmbsc/deploy/apache/lamitabiciclista.conf \
+            sudo cp /home/aurel/mita/deploy/apache/lamitabiciclista.conf \
               /etc/apache2/sites-available/lamitabiciclista.conf
             sudo a2enmod proxy proxy_http headers rewrite ssl 2>/dev/null || true
             sudo a2ensite lamitabiciclista 2>/dev/null || true

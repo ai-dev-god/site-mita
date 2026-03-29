@@ -6,9 +6,9 @@
 # ============================================================
 set -euo pipefail
 
-REPO_DIR="/home/mita/lmbsc"
-VENV_DIR="/home/mita/.venv"
-PUBLIC_HTML="/home/mita/public_html"
+REPO_DIR="/home/aurel/mita"
+VENV_DIR="/home/aurel/.venv"
+PUBLIC_HTML="/home/aurel/public_html"
 ENV_FILE="$REPO_DIR/.env.production"
 SERVICE_NAME="lmbsc-api"
 
