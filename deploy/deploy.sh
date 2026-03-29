@@ -18,15 +18,67 @@ die()  { echo "[deploy] ERROR: $*" >&2; exit 1; }
 # ── Parse flags ─────────────────────────────────────────────
 SKIP_DB=false
 SKIP_MIGRATE=false
+SKIP_INSTALL=false
 for arg in "$@"; do
   case "$arg" in
     --skip-db)      SKIP_DB=true ;;
     --skip-migrate) SKIP_MIGRATE=true ;;
+    --skip-install) SKIP_INSTALL=true ;;
   esac
 done
 
 # ── Pre-flight checks ────────────────────────────────────────
 [[ -f "$ENV_FILE" ]] || die "Missing $ENV_FILE — copy from deploy/.env.production.example and fill in secrets"
+command -v python3.12 &>/dev/null || die "python3.12 not found — install with: sudo apt install python3.12 python3.12-venv"
+
+# ── 0. Install system dependencies (PostgreSQL 16, TimescaleDB, Redis 7) ────
+if [[ "$SKIP_INSTALL" == false ]]; then
+  log "Installing system packages (PostgreSQL 16 + TimescaleDB + Redis 7)..."
+
+  # PostgreSQL 16 via official PGDG repo
+  if ! dpkg -l postgresql-16 &>/dev/null; then
+    sudo apt-get install -y curl gnupg lsb-release
+    curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+      | sudo gpg --dearmor -o /usr/share/keyrings/pgdg.gpg
+    echo "deb [signed-by=/usr/share/keyrings/pgdg.gpg] \
+      https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+      | sudo tee /etc/apt/sources.list.d/pgdg.list
+    sudo apt-get update -q
+    sudo apt-get install -y postgresql-16
+  else
+    log "PostgreSQL 16 already installed — skipping"
+  fi
+
+  # TimescaleDB for PostgreSQL 16
+  if ! dpkg -l timescaledb-2-postgresql-16 &>/dev/null; then
+    curl -fsSL https://packagecloud.io/timescale/timescaledb/gpgkey \
+      | sudo gpg --dearmor -o /usr/share/keyrings/timescaledb.gpg
+    echo "deb [signed-by=/usr/share/keyrings/timescaledb.gpg] \
+      https://packagecloud.io/timescale/timescaledb/debian/ $(lsb_release -cs) main" \
+      | sudo tee /etc/apt/sources.list.d/timescaledb.list
+    sudo apt-get update -q
+    sudo apt-get install -y timescaledb-2-postgresql-16
+    sudo timescaledb-tune --quiet --yes
+  else
+    log "TimescaleDB already installed — skipping"
+  fi
+
+  # Redis 7 via official repo
+  if ! dpkg -l redis-server &>/dev/null || ! redis-server --version | grep -q "^Redis server v=7"; then
+    curl -fsSL https://packages.redis.io/gpg \
+      | sudo gpg --dearmor -o /usr/share/keyrings/redis.gpg
+    echo "deb [signed-by=/usr/share/keyrings/redis.gpg] \
+      https://packages.redis.io/deb $(lsb_release -cs) main" \
+      | sudo tee /etc/apt/sources.list.d/redis.list
+    sudo apt-get update -q
+    sudo apt-get install -y redis
+  else
+    log "Redis 7 already installed — skipping"
+  fi
+
+  # Ensure services are enabled and running
+  sudo systemctl enable --now postgresql redis-server
+fi
 
 # ── 1. Pull latest code ──────────────────────────────────────
 log "Pulling latest code..."
@@ -67,9 +119,8 @@ if [[ "$SKIP_DB" == false ]]; then
     sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
   sudo -u postgres psql -tc "SELECT 1 FROM pg_database WHERE datname='$DB_NAME'" | grep -q 1 || \
     sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_USER;"
-  # Enable TimescaleDB if available
-  sudo -u postgres psql -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;" 2>/dev/null || \
-    log "TimescaleDB not installed — skipping extension (install timescaledb-2-postgresql-16 if needed)"
+  # Enable TimescaleDB extension
+  sudo -u postgres psql -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;"
 fi
 
 # ── 5. Run Alembic migrations ────────────────────────────────
