@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     app_name: str = "LMBSC Hospitality Platform"
     app_version: str = "0.1.0"
     debug: bool = False
+    show_docs: bool = False  # enable Swagger UI + ReDoc independently of debug mode
     environment: str = "development"
 
     # Database
