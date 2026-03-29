@@ -41,12 +41,12 @@ class Table(AuditMixin, Base):
     )
     label: Mapped[str] = mapped_column(String(20), nullable=False, comment="Display name, e.g. T1, B4")
     shape: Mapped[TableShape] = mapped_column(
-        Enum(TableShape, name="table_shape_enum"), nullable=False, default=TableShape.ROUND
+        Enum(TableShape, name="table_shape_enum", values_callable=lambda obj: [e.value for e in obj]), nullable=False, default=TableShape.ROUND
     )
     min_covers: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     max_covers: Mapped[int] = mapped_column(Integer, nullable=False, default=4)
     status: Mapped[TableStatus] = mapped_column(
-        Enum(TableStatus, name="table_status_enum"),
+        Enum(TableStatus, name="table_status_enum", values_callable=lambda obj: [e.value for e in obj]),
         nullable=False,
         default=TableStatus.AVAILABLE,
     )

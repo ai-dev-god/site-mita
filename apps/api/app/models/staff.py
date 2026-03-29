@@ -35,7 +35,7 @@ class StaffMember(AuditMixin, Base):
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     phone: Mapped[str | None] = mapped_column(String(30), nullable=True)
     role: Mapped[StaffRole] = mapped_column(
-        Enum(StaffRole, name="staff_role_enum"), nullable=False, default=StaffRole.SERVER
+        Enum(StaffRole, name="staff_role_enum", values_callable=lambda obj: [e.value for e in obj]), nullable=False, default=StaffRole.SERVER
     )
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 

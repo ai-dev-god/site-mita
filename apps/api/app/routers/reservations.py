@@ -304,6 +304,72 @@ async def cancel_reservation_by_token(cancellation_token: str, db: DbDep) -> Non
     logger.info("reservation.cancelled_by_guest", reservation_id=str(reservation.id))
 
 
+@router.patch(
+    "/reservations/modify/{cancellation_token}",
+    response_model=ReservationRead,
+    summary="Guest self-service modify via tokenized link",
+)
+async def modify_reservation_by_token(
+    cancellation_token: str,
+    body: ReservationUpdate,
+    db: DbDep,
+) -> Reservation:
+    """Tokenized self-service modification (linked from confirmation SMS/email)."""
+    result = await db.execute(
+        select(Reservation).where(
+            and_(
+                Reservation.cancellation_token == cancellation_token,
+                Reservation.deleted_at.is_(None),
+            )
+        )
+    )
+    reservation = result.scalar_one_or_none()
+    if reservation is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Invalid or expired modification token.",
+        )
+
+    if reservation.status in {ReservationStatus.CANCELLED_BY_GUEST, ReservationStatus.CANCELLED_BY_VENUE}:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Cannot modify a cancelled reservation.",
+        )
+
+    new_time = body.reserved_at or reservation.reserved_at
+    new_size = body.party_size or reservation.party_size
+    new_duration = body.duration_minutes or reservation.duration_minutes
+
+    time_changed = body.reserved_at is not None and body.reserved_at != reservation.reserved_at
+    size_changed = body.party_size is not None and body.party_size != reservation.party_size
+
+    if time_changed or size_changed:
+        table = await find_table_for_slot(
+            db,
+            zone_id=reservation.zone_id,
+            reserved_at=new_time,
+            party_size=new_size,
+            duration_minutes=new_duration,
+        )
+        if table is None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail={
+                    "code": "no_availability",
+                    "message": "No tables available for the requested slot and party size.",
+                },
+            )
+        reservation.table_id = table.id
+
+    for field, value in body.model_dump(exclude_none=True).items():
+        setattr(reservation, field, value)
+
+    await db.flush()
+    await db.refresh(reservation)
+    logger.info("reservation.modified_by_guest", reservation_id=str(reservation.id))
+    return reservation
+
+
 @router.get(
     "/reservations",
     response_model=list[ReservationRead],

@@ -29,7 +29,7 @@ class Shift(AuditMixin, Base):
     )
     shift_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     shift_type: Mapped[ShiftType] = mapped_column(
-        Enum(ShiftType, name="shift_type_enum"), nullable=False
+        Enum(ShiftType, name="shift_type_enum", values_callable=lambda obj: [e.value for e in obj]), nullable=False
     )
     starts_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     ends_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

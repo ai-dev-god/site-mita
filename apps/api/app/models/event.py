@@ -41,7 +41,7 @@ class Event(AuditMixin, Base):
     slug: Mapped[str] = mapped_column(String(120), nullable=False, index=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[EventStatus] = mapped_column(
-        Enum(EventStatus, name="event_status_enum"),
+        Enum(EventStatus, name="event_status_enum", values_callable=lambda obj: [e.value for e in obj]),
         nullable=False,
         default=EventStatus.DRAFT,
         index=True,
@@ -96,7 +96,7 @@ class Ticket(AuditMixin, Base):
     )
 
     status: Mapped[TicketStatus] = mapped_column(
-        Enum(TicketStatus, name="ticket_status_enum"),
+        Enum(TicketStatus, name="ticket_status_enum", values_callable=lambda obj: [e.value for e in obj]),
         nullable=False,
         default=TicketStatus.RESERVED,
         index=True,

@@ -56,7 +56,7 @@ class WaitlistEntry(AuditMixin, Base):
     )
 
     status: Mapped[WaitlistStatus] = mapped_column(
-        Enum(WaitlistStatus, name="waitlist_status_enum"),
+        Enum(WaitlistStatus, name="waitlist_status_enum", values_callable=lambda obj: [e.value for e in obj]),
         nullable=False,
         default=WaitlistStatus.WAITING,
         index=True,

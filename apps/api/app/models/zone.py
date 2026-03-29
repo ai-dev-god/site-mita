@@ -37,10 +37,10 @@ class Zone(AuditMixin, Base):
     slug: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     zone_type: Mapped[ZoneType] = mapped_column(
-        Enum(ZoneType, name="zone_type_enum"), nullable=False
+        Enum(ZoneType, name="zone_type_enum", values_callable=lambda obj: [e.value for e in obj]), nullable=False
     )
     reservation_policy: Mapped[ReservationPolicy] = mapped_column(
-        Enum(ReservationPolicy, name="reservation_policy_enum"),
+        Enum(ReservationPolicy, name="reservation_policy_enum", values_callable=lambda obj: [e.value for e in obj]),
         nullable=False,
         default=ReservationPolicy.WALK_IN_ONLY,
     )

@@ -45,13 +45,13 @@ class CampaignLog(AuditMixin, Base):
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     campaign_type: Mapped[CampaignType] = mapped_column(
-        Enum(CampaignType, name="campaign_type_enum"), nullable=False
+        Enum(CampaignType, name="campaign_type_enum", values_callable=lambda obj: [e.value for e in obj]), nullable=False
     )
     channel: Mapped[CampaignChannel] = mapped_column(
-        Enum(CampaignChannel, name="campaign_channel_enum"), nullable=False
+        Enum(CampaignChannel, name="campaign_channel_enum", values_callable=lambda obj: [e.value for e in obj]), nullable=False
     )
     status: Mapped[CampaignStatus] = mapped_column(
-        Enum(CampaignStatus, name="campaign_status_enum"),
+        Enum(CampaignStatus, name="campaign_status_enum", values_callable=lambda obj: [e.value for e in obj]),
         nullable=False,
         default=CampaignStatus.DRAFT,
         index=True,
