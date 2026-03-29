@@ -1,1086 +1,929 @@
 <!DOCTYPE html>
-<html lang="ro">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>La Mița Biciclista</title>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Fira+Code:wght@300..700&display=swap" rel="stylesheet" />
-
-  <style>
-    /* ─── Design Tokens ──────────────────────────────────────────── */
-    :root {
-      --color-bg:     #FBFAF3;
-      --color-white:  #FFFFFF;
-      --color-black:  #111111;
-      --color-gray:   #686868;
-      --color-border: #EEEEEE;
-      --color-yellow: #FFEE58;
-      --color-pink:   #F6CFF4;
-      --color-purple: #503AA8;
-      --color-blue:   #2D308C;
-      --color-dark:   #1A1A1A;
-
-      --font-primary:   'Manrope', sans-serif;
-      --font-mono:      'Fira Code', monospace;
-
-      --text-sm:   0.8125rem;
-      --text-md:   clamp(1rem, 1vw + 0.75rem, 1.125rem);
-      --text-lg:   clamp(1.125rem, 1.2vw + 0.85rem, 1.375rem);
-      --text-xl:   clamp(1.75rem, 2vw + 1rem, 2rem);
-      --text-2xl:  clamp(2.15rem, 3vw + 1rem, 3rem);
-      --text-hero: clamp(3.5rem, 6.5vw + 1rem, 6.5rem);
-
-      --space-1:  4px;
-      --space-2:  8px;
-      --space-3:  12px;
-      --space-4:  16px;
-      --space-5:  24px;
-      --space-6:  32px;
-      --space-7:  48px;
-      --space-8:  64px;
-      --space-9:  96px;
-      --space-10: 128px;
-
-      --max-w: 1440px;
-      --px: clamp(24px, 5.5vw, 80px);
-    }
-
-    /* ─── Reset ──────────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-primary);
-      background: var(--color-bg);
-      color: var(--color-black);
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-    a { color: inherit; text-decoration: none; }
-    img { display: block; max-width: 100%; }
-    button { font-family: inherit; cursor: pointer; border: none; background: none; }
-
-    /* ─── Utilities ──────────────────────────────────────────────── */
-    .container {
-      width: 100%;
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 0 var(--px);
-    }
-    .label {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      font-weight: 500;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--color-gray);
-    }
-    .label--light { color: rgba(255,255,255,0.5); }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-family: var(--font-primary);
-      font-size: var(--text-sm);
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: var(--space-3) var(--space-6);
-      border: 2px solid currentColor;
-      transition: background 0.18s, color 0.18s;
-    }
-    .btn--filled {
-      background: var(--color-black);
-      color: var(--color-white);
-      border-color: var(--color-black);
-    }
-    .btn--filled:hover { background: #333; border-color: #333; }
-    .btn--outline-dark {
-      background: transparent;
-      color: var(--color-black);
-      border-color: var(--color-black);
-    }
-    .btn--outline-dark:hover { background: var(--color-black); color: var(--color-white); }
-    .btn--outline-light {
-      background: transparent;
-      color: var(--color-white);
-      border-color: var(--color-white);
-    }
-    .btn--outline-light:hover { background: var(--color-white); color: var(--color-black); }
-    .btn--purple {
-      background: var(--color-purple);
-      color: var(--color-white);
-      border-color: var(--color-purple);
-    }
-    .btn--purple:hover { background: #3d2d86; border-color: #3d2d86; }
-    .btn--yellow {
-      background: var(--color-yellow);
-      color: var(--color-black);
-      border-color: var(--color-yellow);
-    }
-    .btn--yellow:hover { background: #f0e040; border-color: #f0e040; }
-
-    /* ─── 1. HEADER ──────────────────────────────────────────────── */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--color-white);
-      border-bottom: 1px solid var(--color-border);
-    }
-    .site-header .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 64px;
-    }
-    .logo {
-      font-family: var(--font-primary);
-      font-size: var(--text-md);
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--color-black);
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: var(--space-7);
-    }
-    .lang-toggle {
-      display: flex;
-      align-items: center;
-      gap: var(--space-1);
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      font-weight: 600;
-      letter-spacing: 0.1em;
-    }
-    .lang-toggle a {
-      color: var(--color-gray);
-      transition: color 0.15s;
-    }
-    .lang-toggle a.active { color: var(--color-black); }
-    .lang-toggle a:hover { color: var(--color-black); }
-    .lang-toggle span { color: var(--color-border); }
-    .social-nav {
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-    }
-    .social-nav a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      color: var(--color-gray);
-      transition: color 0.15s;
-    }
-    .social-nav a:hover { color: var(--color-black); }
-    .social-nav svg { width: 18px; height: 18px; fill: currentColor; }
-
-    /* ─── 2. HERO ────────────────────────────────────────────────── */
-    .hero {
-      background: var(--color-bg);
-      padding-top: var(--space-10);
-      padding-bottom: var(--space-10);
-      overflow: hidden;
-    }
-    .hero .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-8);
-      align-items: start;
-    }
-    .hero-left {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-6);
-    }
-    .hero-eyebrow {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      font-weight: 500;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--color-gray);
-    }
-    .hero-headline {
-      font-size: var(--text-hero);
-      font-weight: 800;
-      line-height: 0.92;
-      letter-spacing: -0.03em;
-      text-transform: uppercase;
-    }
-    .hero-headline em {
-      font-style: normal;
-      background: var(--color-yellow);
-      padding: 0 0.08em;
-    }
-    .hero-sub {
-      font-size: var(--text-lg);
-      font-weight: 300;
-      color: var(--color-gray);
-      max-width: 34ch;
-      line-height: 1.6;
-    }
-    .hero-ctas {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-3);
-    }
-    .hero-right {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .menu-item-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      padding: var(--space-4) 0;
-      border-bottom: 1px solid var(--color-border);
-      gap: var(--space-4);
-    }
-    .menu-item-row:first-child { border-top: 1px solid var(--color-border); }
-    .menu-item-name {
-      font-size: var(--text-xl);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: -0.01em;
-    }
-    .menu-item-tag {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      color: var(--color-gray);
-      letter-spacing: 0.1em;
-      white-space: nowrap;
-    }
-    .menu-item-row:hover .menu-item-name { color: var(--color-purple); }
-    .menu-item-row { transition: all 0.15s; cursor: default; }
-
-    /* ─── 3. BRASSERIE ───────────────────────────────────────────── */
-    .section-brasserie {
-      background: var(--color-dark);
-      color: var(--color-white);
-      padding: var(--space-10) 0;
-    }
-    .section-brasserie .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-8);
-      align-items: center;
-    }
-    .section-block-left { display: flex; flex-direction: column; gap: var(--space-5); }
-    .section-title {
-      font-size: var(--text-2xl);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: -0.02em;
-      line-height: 1;
-    }
-    .hours-block { display: flex; flex-direction: column; gap: var(--space-3); }
-    .hours-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      border-bottom: 1px solid rgba(255,255,255,0.12);
-      padding-bottom: var(--space-3);
-    }
-    .hours-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .hours-days {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      letter-spacing: 0.1em;
-      opacity: 0.55;
-    }
-    .hours-time {
-      font-size: var(--text-lg);
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-    .section-block-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: var(--space-5);
-    }
-    .accent-block {
-      width: 120px;
-      height: 120px;
-      background: var(--color-yellow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .accent-block span {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: var(--color-black);
-      text-transform: uppercase;
-      writing-mode: vertical-lr;
-      text-orientation: mixed;
-      transform: rotate(180deg);
-    }
-
-    /* ─── 4. SALON ISTORIC ───────────────────────────────────────── */
-    .section-salon {
-      background: var(--color-bg);
-      padding: var(--space-10) 0;
-      border-bottom: 1px solid var(--color-border);
-    }
-    .section-salon .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-8);
-      align-items: center;
-    }
-    .salon-number {
-      font-size: clamp(6rem, 14vw, 14rem);
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.05em;
-      color: var(--color-border);
-      user-select: none;
-    }
-    .hours-row--dark {
-      border-bottom-color: var(--color-border);
-    }
-
-    /* ─── 5. EXPOZIȚIE ───────────────────────────────────────────── */
-    .section-expo {
-      background: var(--color-pink);
-      padding: var(--space-10) 0;
-    }
-    .section-expo .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-8);
-      align-items: center;
-    }
-    .expo-title {
-      font-size: clamp(1.5rem, 3vw + 0.5rem, 2.75rem);
-      font-weight: 800;
-      text-transform: uppercase;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-    }
-    .expo-meta {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--color-gray);
-      margin-top: var(--space-5);
-    }
-
-    /* ─── 6. MENIU ───────────────────────────────────────────────── */
-    .section-meniu {
-      background: var(--color-white);
-      padding: var(--space-10) 0;
-    }
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: var(--space-8);
-      border-bottom: 1px solid var(--color-border);
-      padding-bottom: var(--space-5);
-    }
-    .menu-cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-4);
-    }
-    .menu-card {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-4);
-      padding: var(--space-6);
-      border: 1px solid var(--color-border);
-      transition: border-color 0.15s, transform 0.15s;
-      cursor: pointer;
-    }
-    .menu-card:hover {
-      border-color: var(--color-black);
-      transform: translateY(-2px);
-    }
-    .menu-card-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--color-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .menu-card-icon svg { width: 20px; height: 20px; }
-    .menu-card-name {
-      font-size: var(--text-md);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      line-height: 1.3;
-    }
-    .menu-card-cta {
-      margin-top: auto;
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      color: var(--color-gray);
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      text-transform: uppercase;
-    }
-    .menu-card-cta svg { width: 14px; height: 14px; }
-
-    /* ─── 7. SHOP ────────────────────────────────────────────────── */
-    .section-shop {
-      background: var(--color-yellow);
-      padding: var(--space-10) 0;
-    }
-    .section-shop .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-8);
-    }
-    .shop-headline {
-      font-size: var(--text-2xl);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      max-width: 16ch;
-    }
-    .shop-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: var(--space-5);
-    }
-    .shop-desc {
-      font-size: var(--text-md);
-      color: #444;
-      max-width: 36ch;
-      line-height: 1.6;
-      text-align: right;
-    }
-
-    /* ─── 8. CONTACT ─────────────────────────────────────────────── */
-    .section-contact {
-      background: var(--color-white);
-      padding: var(--space-10) 0;
-    }
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: var(--space-8);
-      border-top: 1px solid var(--color-border);
-      padding-top: var(--space-8);
-    }
-    .contact-col { display: flex; flex-direction: column; gap: var(--space-4); }
-    .contact-col-title {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--color-gray);
-      margin-bottom: var(--space-2);
-    }
-    .contact-line {
-      font-size: var(--text-lg);
-      font-weight: 500;
-      line-height: 1.4;
-    }
-    .contact-line a:hover { text-decoration: underline; }
-    .contact-social {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-    }
-    .contact-social-link {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      font-size: var(--text-md);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      transition: color 0.15s;
-    }
-    .contact-social-link:hover { color: var(--color-purple); }
-    .contact-social-link svg { width: 20px; height: 20px; fill: currentColor; }
-    .reviews-row {
-      margin-top: var(--space-8);
-      padding-top: var(--space-7);
-      border-top: 1px solid var(--color-border);
-      display: flex;
-      align-items: center;
-      gap: var(--space-5);
-      flex-wrap: wrap;
-    }
-    .review-badge {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      padding: var(--space-3) var(--space-5);
-      border: 1px solid var(--color-border);
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: border-color 0.15s;
-    }
-    .review-badge:hover { border-color: var(--color-black); }
-    .review-badge svg { width: 20px; height: 20px; }
-
-    /* ─── 9. NEWSLETTER ──────────────────────────────────────────── */
-    .section-newsletter {
-      background: var(--color-blue);
-      padding: var(--space-10) 0;
-    }
-    .section-newsletter .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-8);
-      align-items: center;
-    }
-    .newsletter-headline {
-      font-size: var(--text-2xl);
-      font-weight: 800;
-      color: var(--color-white);
-      text-transform: uppercase;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-    .newsletter-sub {
-      margin-top: var(--space-4);
-      font-size: var(--text-md);
-      color: rgba(255,255,255,0.6);
-      line-height: 1.6;
-    }
-    .newsletter-form { display: flex; flex-direction: column; gap: var(--space-3); }
-    .newsletter-input-row { display: flex; gap: 0; }
-    .newsletter-input {
-      flex: 1;
-      padding: var(--space-4) var(--space-5);
-      font-family: var(--font-primary);
-      font-size: var(--text-md);
-      border: 2px solid rgba(255,255,255,0.3);
-      border-right: none;
-      background: rgba(255,255,255,0.08);
-      color: var(--color-white);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .newsletter-input::placeholder { color: rgba(255,255,255,0.35); }
-    .newsletter-input:focus { border-color: var(--color-yellow); }
-    .newsletter-disclaimer {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 0.08em;
-    }
-
-    /* ─── 10. FOOTER ─────────────────────────────────────────────── */
-    .site-footer {
-      background: var(--color-dark);
-      color: var(--color-white);
-      padding: var(--space-7) 0;
-    }
-    .site-footer .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-5);
-    }
-    .footer-copy {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 0.08em;
-    }
-    .footer-logo {
-      font-size: var(--text-md);
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--color-white);
-    }
-    .footer-lang {
-      display: flex;
-      align-items: center;
-      gap: var(--space-1);
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      letter-spacing: 0.1em;
-    }
-    .footer-lang a { color: rgba(255,255,255,0.4); transition: color 0.15s; }
-    .footer-lang a.active { color: var(--color-white); }
-    .footer-lang a:hover { color: var(--color-white); }
-    .footer-lang span { color: rgba(255,255,255,0.2); }
-
-    /* ─── Responsive ─────────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      .hero .container,
-      .section-brasserie .container,
-      .section-salon .container,
-      .section-expo .container,
-      .section-newsletter .container {
-        grid-template-columns: 1fr;
+<html class="light" lang="ro"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LA MIȚA BICICLISTA — Stabiliment Creativ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Fira+Code:wght@300;400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "brand-navy": "#2E3192",
+              "brand-yellow": "#FFEE58",
+              "on-secondary": "#ffffff",
+              "secondary-fixed": "#fed6fc",
+              "primary-fixed": "#f6e550",
+              "on-tertiary": "#ffffff",
+              "surface-container-low": "#f5f4ed",
+              "inverse-primary": "#d9c935",
+              "on-primary-fixed-variant": "#4f4800",
+              "outline": "#7b7762",
+              "on-error": "#ffffff",
+              "on-surface": "#1b1c18",
+              "tertiary": "#614cba",
+              "on-tertiary-fixed-variant": "#4932a0",
+              "on-primary-fixed": "#1f1c00",
+              "tertiary-container": "#efe8ff",
+              "background": "#faf9f3",
+              "on-tertiary-fixed": "#1c0062",
+              "secondary": "#735473",
+              "secondary-fixed-dim": "#e1bbdf",
+              "outline-variant": "#ccc7ae",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#cabeff",
+              "surface-container": "#efeee7",
+              "surface-container-highest": "#e3e3dc",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#d9c935",
+              "surface-dim": "#dbdad4",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "on-background": "#1b1c18",
+              "on-secondary-fixed": "#2b122d",
+              "on-secondary-fixed-variant": "#5a3d5b",
+              "on-secondary-container": "#795a7a",
+              "inverse-on-surface": "#f2f1ea",
+              "primary": "#686000",
+              "surface-container-high": "#e9e8e2",
+              "surface": "#faf9f3",
+              "on-primary-container": "#756b00",
+              "on-tertiary-container": "#6d58c6",
+              "error": "#ba1a1a",
+              "secondary-container": "#fed6fc",
+              "primary-container": "#ffee58",
+              "tertiary-fixed": "#e6deff",
+              "surface-bright": "#faf9f3",
+              "on-surface-variant": "#4a4734",
+              "surface-variant": "#e3e3dc",
+              "inverse-surface": "#30312c",
+              "surface-tint": "#686000",
+              "brand-dark": "#111111",
+              "brand-blue": "#2D308C"
+            },
+            fontFamily: {
+              "manrope": ["Manrope", "sans-serif"],
+              "fira-code": ["Fira Code", "monospace"]
+            },
+            borderRadius: {
+              "none": "0px",
+              "DEFAULT": "0px",
+              "lg": "0px",
+              "xl": "0px",
+              "full": "0px"
+            },
+          },
+        },
       }
-      .section-shop .container { flex-direction: column; align-items: flex-start; }
-      .shop-right { align-items: flex-start; }
-      .shop-desc { text-align: left; }
-      .contact-grid { grid-template-columns: 1fr 1fr; }
-      .menu-cards { grid-template-columns: repeat(2, 1fr); }
-      .salon-number { display: none; }
-    }
-    @media (max-width: 600px) {
-      .contact-grid { grid-template-columns: 1fr; }
-      .menu-cards { grid-template-columns: 1fr; }
-      .header-right { gap: var(--space-4); }
-      .social-nav { display: none; }
-      .site-footer .container { flex-direction: column; align-items: flex-start; }
-    }
-  </style>
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .text-huge {
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.85;
+        }
+        .text-display {
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #2E3192; }
+        ::-webkit-scrollbar-thumb { background: #FFEE58; }
+        
+        /* Logo stack style from reference */
+        .logo-stack {
+            display: flex;
+            flex-direction: column;
+            line-height: 0.9;
+            font-weight: 800;
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-brand-navy text-white">
+<!-- Minimal Navigation -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 md:px-12 py-8 bg-transparent">
+<a class="block" href="/" style="">
+<img alt="LA MIȚA BICICLISTA" class="h-12 w-auto brightness-0 invert object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uiB4SV9IpsKDME0vHR3AXgik6ioChFmW5lIm0tI4jFnnMvA7hNQzO2oxpeOMkAsb5JwcWX0Mk1X9K78QOueMTtrfOYoWwfRxSDjP4qGMci8S362rH1oHE-C6bhNgW7_6QlDVXRUdhK4oCaAQJb9Q2mnkxppGOJdFXhYThQzzyLWaNhRGNIcPrxPLo_R29_V4k_4K17g3hjDucXfqdnXGX-fkb1LglZU5l6OFkLE_iAWs-nXiShbwT9098a8zv7WtU8xN05HBYjq" style=""/>
+</a>
+<div class="flex items-center gap-6">
+<div class="hidden md:block">
+<button class="border border-white/40 hover:bg-brand-yellow hover:text-brand-navy transition-all px-6 py-2 text-[10px] font-fira-code tracking-widest uppercase" style="">
+                RESERVATIONS
+            </button>
+</div>
+<span class="font-fira-code text-[10px] tracking-widest font-bold border-b border-brand-yellow pb-1" style="">RO / EN</span>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="min-h-screen flex flex-col justify-center px-8 md:px-24 pt-24">
+<div class="max-w-6xl">
+<span class="font-fira-code text-xs uppercase tracking-[0.4em] text-brand-yellow mb-6 block" style="">LA MITA BICICLISTA</span>
+<h1 class="font-manrope font-extrabold text-huge tracking-tighter uppercase mb-8" style="">
+            STABILIMENT<br/>
+<span class="text-brand-yellow" style="">CREATIV</span>
+</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-end">
+<p class="font-manrope font-light text-2xl md:text-3xl text-white/90 leading-tight max-w-xl" style="">
+                Brasserie, salon istoric și spațiu expozițional în inima Bucureștiului. <span class="font-bold border-b-2 border-brand-yellow" style="">BISERICA AMZEI 9</span>
+</p>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col border-l border-brand-yellow/30 pl-6 py-2">
+<span class="font-fira-code text-[10px] uppercase tracking-widest opacity-60 mb-2" style="">CURRENTLY SERVING</span>
+<span class="font-manrope font-extrabold text-xl uppercase" style="">BRUNCH &amp; COCKTAILS</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Content Story Flow -->
+<section class="px-8 md:px-24 py-32 space-y-48">
+<!-- Brasserie -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+<div class="md:col-span-2">
+<span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" style="">01 / PARTER</span>
+</div>
+<div class="md:col-span-6">
+<h2 class="font-manrope font-extrabold text-6xl tracking-tighter uppercase mb-8" style="">BRASSERIE</h2>
+<p class="font-manrope font-light text-xl text-white/70 leading-relaxed mb-10" style="">
+                Un spațiu vibrant unde tradiția întâlnește modernitatea. Zilnic între 08:00 și 00:00, transformăm momentele obișnuite în experiențe memorabile.
+            </p>
+<div class="flex flex-wrap gap-4">
+<a class="bg-white text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow transition-colors" href="#meniuri" onclick="switchMenu('brasserie')">
+                    MENIU BRASSERIE
+                </a>
+</div>
+</div>
+<div class="md:col-span-4 flex justify-end">
+<div class="w-full aspect-square border border-white/10 flex items-center justify-center p-12">
+<div class="text-center">
+<span class="font-fira-code text-[10px] block opacity-40 mb-4 tracking-[0.3em]" style="">RESERVATION LINE</span>
+<span class="font-manrope font-bold text-2xl tracking-tighter" style="">031 229 4763</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Salon -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+<div class="md:col-span-2">
+<span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" style="">02 / ETAJ 1</span>
+</div>
+<div class="md:col-span-6">
+<h2 class="font-manrope font-extrabold text-6xl tracking-tighter uppercase mb-8" style="">SALON ISTORIC</h2>
+<p class="font-manrope font-light text-xl text-white/70 leading-relaxed mb-10" style="">
+                Eleganța de odinioară a casei, oferind un refugiu liniștit pentru conversații lungi și momente de introspecție, acompaniate de o selecție premium.
+            </p>
+<div class="space-y-4 mb-10">
+<div class="flex justify-between border-b border-white/10 pb-2">
+<span class="font-fira-code text-[10px] uppercase opacity-60" style="">LUNI – JOI</span>
+<span class="font-manrope font-bold" style="">12:00 – 22:00</span>
+</div>
+<div class="flex justify-between border-b border-white/10 pb-2">
+<span class="font-fira-code text-[10px] uppercase opacity-60" style="">VINERI – DUMINICĂ</span>
+<span class="font-manrope font-bold" style="">10:00 – 00:00</span>
+</div>
+</div>
+<button class="bg-brand-yellow text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-white transition-colors" style="">
+                REZERVĂRI SALON
+            </button>
+</div>
+<div class="md:col-span-4 relative">
+<div class="absolute -top-12 -right-12 opacity-10 pointer-events-none">
+<span class="font-manrope font-extrabold text-[15rem] leading-none" style="">02</span>
+</div>
+</div>
+</div>
+<!-- Expo -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+<div class="md:col-span-2">
+<span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" style="">03 / EXPO</span>
+</div>
+<div class="md:col-span-10">
+<span class="font-fira-code text-[10px] uppercase tracking-widest text-brand-yellow mb-4 block" style="">EXPOZIȚIA ANUALĂ</span>
+<h2 class="font-manrope font-extrabold text-display md:text-7xl tracking-tighter uppercase mb-12 max-w-4xl" style="">
+                ÎNTÂLNIRI. SAU CUM SE NAȘTE O LUME NOUĂ
+            </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<p class="font-manrope font-light italic text-xl text-white/60 leading-relaxed" style="">
+                    O explorare a legăturilor umane prin lentila artei contemporane. Expoziția curentă reunește artiști locali care redefinesc peisajul cultural bucureștean.
+                </p>
+<div class="flex flex-col gap-6">
+<div class="font-fira-code text-lg font-bold tracking-tight text-brand-yellow" style="">
+                        VIN – DUM · 12:00 – 21:00
+                    </div>
+<button class="border-2 border-brand-yellow text-brand-yellow w-fit px-12 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all" style="">
+                        CUMPĂRĂ BILETE
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Shop / Quick Links from Image 5 -->
+<section class="bg-white text-brand-navy py-32 px-8 md:px-24">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
+<div>
+<h2 class="font-manrope font-extrabold text-5xl tracking-tighter uppercase mb-8" style="">VIENNOISERIE &amp; COFETĂRIE</h2>
+<p class="font-manrope font-light text-xl mb-12 opacity-80" style="">Aduceți savoarea 'La Mița Biciclista' acasă. Comandați produsele noastre artizanale direct la ușa dumneavoastră.</p>
+<button class="bg-brand-navy text-white px-12 py-6 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all" style="">
+                SHOP ONLINE
+            </button>
+</div>
+<div class="flex flex-col gap-4 mt-4">
+<a class="border border-brand-navy/20 text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-navy hover:text-white transition-colors text-center" href="#meniuri">
+  EXPLOREAZĂ MENIURILE
+</a>
+</div>
+</div>
+</section>
 
-  <!-- ══════════════════════════════════════════════════════════════
-       1. HEADER
-  ══════════════════════════════════════════════════════════════════ -->
-  <header class="site-header">
-    <div class="container">
-      <a href="/" class="logo">La Mița Biciclista</a>
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MENIURI — Integrated 4-Menu Section                -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="meniuri" class="bg-brand-navy text-white py-24">
 
-      <div class="header-right">
-        <nav class="social-nav" aria-label="Social media">
-          <!-- Instagram -->
-          <a href="#" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-          </a>
-          <!-- Facebook -->
-          <a href="#" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-          </a>
-          <!-- TikTok -->
-          <a href="#" aria-label="TikTok">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-            </svg>
-          </a>
-        </nav>
+  <!-- Section header -->
+  <div class="px-8 md:px-24 mb-12">
+    <span class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow/60 block mb-4">MENIURILE NOASTRE</span>
+    <h2 class="font-manrope font-extrabold text-5xl md:text-6xl tracking-tighter uppercase">MENIURI</h2>
+  </div>
 
-        <div class="lang-toggle">
-          <a href="#" class="active">RO</a>
-          <span>/</span>
-          <a href="#">EN</a>
-        </div>
-      </div>
+  <!-- Tab Bar — horizontal scroll on mobile -->
+  <div class="border-b border-white/10 mb-12 overflow-x-auto">
+    <div class="flex min-w-max px-8 md:px-24 gap-0">
+      <button id="tab-brasserie"
+        onclick="switchMenu('brasserie')"
+        class="menu-tab active-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-brand-yellow text-brand-yellow whitespace-nowrap transition-all">
+        BRASSERIE
+      </button>
+      <button id="tab-mic-dejun"
+        onclick="switchMenu('mic-dejun')"
+        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all">
+        MIC DEJUN
+      </button>
+      <button id="tab-principal"
+        onclick="switchMenu('principal')"
+        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all">
+        PRINCIPAL
+      </button>
+      <button id="tab-bauturi"
+        onclick="switchMenu('bauturi')"
+        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all">
+        BĂUTURI
+      </button>
     </div>
-  </header>
+  </div>
 
-
-  <!-- ══════════════════════════════════════════════════════════════
-       2. HERO
-  ══════════════════════════════════════════════════════════════════ -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-left">
-        <p class="hero-eyebrow">Brasserie · Salon Istoric · Expoziție</p>
-        <h1 class="hero-headline">
-          La<br/>
-          <em>Mița</em><br/>
-          Bici&shy;clista
-        </h1>
-        <p class="hero-sub">
-          Brasserie, salon istoric și spațiu expozițional în inima Bucureștiului.
-          <br/>BISERICA AMZEI 9
-        </p>
-        <div class="hero-ctas">
-          <a href="#salon" class="btn btn--filled">Rezervări Salon</a>
-          <a href="#expo" class="btn btn--outline-dark">Bilete Expoziție</a>
-        </div>
-      </div>
-
-      <div class="hero-right">
-        <div class="menu-item-row">
-          <span class="menu-item-name">Pan Perdu</span>
-          <span class="menu-item-tag">Mic Dejun</span>
-        </div>
-        <div class="menu-item-row">
-          <span class="menu-item-name">EOF Cocot</span>
-          <span class="menu-item-tag">Specialitate</span>
-        </div>
-        <div class="menu-item-row">
-          <span class="menu-item-name">Pom Frit</span>
-          <span class="menu-item-tag">Garnitură</span>
-        </div>
-        <div class="menu-item-row">
-          <span class="menu-item-name">Omlet o Fomaj</span>
-          <span class="menu-item-tag">Brunch</span>
-        </div>
-        <div class="menu-item-row">
-          <span class="menu-item-name">EOF Mimoza</span>
-          <span class="menu-item-tag">Cocktail</span>
-        </div>
-      </div>
+  <!-- ─── BRASSERIE ─── -->
+  <div id="panel-brasserie" class="menu-panel px-8 md:px-24">
+    <div class="mb-6">
+      <span class="font-fira-code text-[10px] uppercase tracking-widest text-white/30">08:00 – 00:00 · ZILNIC</span>
     </div>
-  </section>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-16">
 
-
-  <!-- ══════════════════════════════════════════════════════════════
-       3. BRASSERIE
-  ══════════════════════════════════════════════════════════════════ -->
-  <section class="section-brasserie" id="brasserie">
-    <div class="container">
-      <div class="section-block-left">
-        <p class="label label--light">Parter</p>
-        <h2 class="section-title">Brasserie</h2>
-        <div class="hours-block">
-          <div class="hours-row">
-            <span class="hours-days">Luni – Duminică</span>
-            <span class="hours-time">08:00 – 00:00</span>
-          </div>
-        </div>
-        <p style="font-size:var(--text-md); color:rgba(255,255,255,0.55); line-height:1.6; max-width:38ch;">
-          Deschisă zilnic, braseria noastră vă așteaptă pentru mic dejun, prânz și cină într-un spațiu relaxat și elegant.
-        </p>
-        <a href="tel:+40312294763" class="btn btn--outline-light">031 229 4763</a>
-      </div>
-
-      <div class="section-block-right">
-        <div class="accent-block">
-          <span>Zilnic</span>
-        </div>
-        <p style="font-family:var(--font-mono); font-size:var(--text-sm); color:rgba(255,255,255,0.35); letter-spacing:0.14em; text-transform:uppercase;">
-          Deschis 7 zile / săptămână
-        </p>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════════════════════════════
-       4. SALON ISTORIC
-  ══════════════════════════════════════════════════════════════════ -->
-  <section class="section-salon" id="salon">
-    <div class="container">
-      <div style="display:flex; flex-direction:column; gap:var(--space-5);">
-        <p class="label">Etaj 1</p>
-        <h2 class="section-title">Salon Istoric</h2>
-        <div class="hours-block">
-          <div class="hours-row hours-row--dark">
-            <span class="hours-days" style="color:var(--color-gray);">Lun – Joi</span>
-            <span class="hours-time">18:00 – 00:00</span>
-          </div>
-          <div class="hours-row hours-row--dark">
-            <span class="hours-days" style="color:var(--color-gray);">Vin – Dum</span>
-            <span class="hours-time">08:00 – 00:00</span>
-          </div>
-        </div>
-        <p style="font-size:var(--text-md); color:var(--color-gray); line-height:1.6; max-width:38ch;">
-          Salonul de la etaj găzduiește cine intime și evenimente private. Rezervarea este obligatorie.
-        </p>
-        <div>
-          <a href="mailto:contact@lamitabiciclista.ro" class="btn btn--purple">Rezervări Salon Istoric</a>
-        </div>
-      </div>
-
-      <div style="display:flex; align-items:center; justify-content:flex-end;">
-        <div class="salon-number">01</div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════════════════════════════
-       5. EXPOZIȚIE
-  ══════════════════════════════════════════════════════════════════ -->
-  <section class="section-expo" id="expo">
-    <div class="container">
-      <div style="display:flex; flex-direction:column; gap:var(--space-5);">
-        <p class="label" style="color:#7a5e78;">Etaj 1 · Spațiu expozițional</p>
-        <h2 class="expo-title">Întâlniri.<br/>Sau cum se naște<br/>o lume nouă.</h2>
-        <p class="expo-meta">Vin – Dum &nbsp;·&nbsp; 12:00 – 21:00</p>
-        <div>
-          <a href="#" class="btn btn--filled">Bilete Expoziție</a>
-        </div>
-      </div>
-
-      <div style="display:flex; flex-direction:column; gap:var(--space-5);">
-        <p style="font-size:var(--text-lg); font-weight:300; line-height:1.7; color:#3a2a3a; max-width:36ch;">
-          O expoziție despre întâlnirile care schimbă lumile — ale oamenilor, ale ideilor, ale formelor. Intrare liberă cu rezervare prealabilă.
-        </p>
-        <p style="font-family:var(--font-mono); font-size:var(--text-sm); letter-spacing:0.14em; color:#7a5e78; text-transform:uppercase;">
-          Expoziție curentă
-        </p>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════════════════════════════
-       6. MENIU
-  ══════════════════════════════════════════════════════════════════ -->
-  <section class="section-meniu" id="meniu">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Meniu</h2>
-        <p class="label">Descarcă PDF</p>
-      </div>
-
-      <div class="menu-cards">
-        <!-- Mic Dejun -->
-        <div class="menu-card">
-          <div class="menu-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/>
-            </svg>
-          </div>
-          <p class="menu-card-name">Mic Dejun</p>
-          <p style="font-size:var(--text-sm); color:var(--color-gray); line-height:1.5;">Servit 08:00–12:00 · Pan perdu, viennoiserie, ouă</p>
-          <p class="menu-card-cta">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
-            </svg>
-            Descarcă
-          </p>
-        </div>
-
-        <!-- Feluri Principale -->
-        <div class="menu-card">
-          <div class="menu-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z"/>
-            </svg>
-          </div>
-          <p class="menu-card-name">Feluri Principale</p>
-          <p style="font-size:var(--text-sm); color:var(--color-gray); line-height:1.5;">Bucătărie brasserie · Ingrediente locale și de sezon</p>
-          <p class="menu-card-cta">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
-            </svg>
-            Descarcă
-          </p>
-        </div>
-
-        <!-- Băuturi -->
-        <div class="menu-card">
-          <div class="menu-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15a2.25 2.25 0 0 1 0 3.182M5 14.5a2.25 2.25 0 0 0 0 3.182m14.8-3.182L5 14.5m14.8 3.182-14.8-3.182"/>
-            </svg>
-          </div>
-          <p class="menu-card-name">Băuturi</p>
-          <p style="font-size:var(--text-sm); color:var(--color-gray); line-height:1.5;">Vinuri, cocktailuri, cafea de specialitate</p>
-          <p class="menu-card-cta">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
-            </svg>
-            Descarcă
-          </p>
-        </div>
-
-        <!-- Patiserie -->
-        <div class="menu-card">
-          <div class="menu-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-            </svg>
-          </div>
-          <p class="menu-card-name">Patiserie &amp;<br/>Viennoiserie</p>
-          <p style="font-size:var(--text-sm); color:var(--color-gray); line-height:1.5;">Croissante, tarte, prăjituri artizanale</p>
-          <p class="menu-card-cta">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
-            </svg>
-            Descarcă
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════════════════════════════
-       7. SHOP
-  ══════════════════════════════════════════════════════════════════ -->
-  <section class="section-shop" id="shop">
-    <div class="container">
+      <!-- Mici Gustări -->
       <div>
-        <p class="label" style="color:#666; margin-bottom:var(--space-4);">Comandă online</p>
-        <h2 class="shop-headline">Viennoiserie &amp; Cofetărie</h2>
-      </div>
-
-      <div class="shop-right">
-        <p class="shop-desc">
-          Comandați produsele noastre de patiserie și cofetărie direct acasă la dvs. Livrare în București.
-        </p>
-        <a href="#" class="btn btn--filled">Shop Viennoiserie &amp; Cofetărie</a>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════════════════════════════
-       8. CONTACT
-  ══════════════════════════════════════════════════════════════════ -->
-  <section class="section-contact" id="contact">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Contact</h2>
-        <p class="label">București</p>
-      </div>
-
-      <div class="contact-grid">
-        <div class="contact-col">
-          <p class="contact-col-title">Adresă</p>
-          <p class="contact-line">Biserica Amzei 9<br/>București, România</p>
-          <a href="tel:+40312294763" class="contact-line" style="font-weight:700;">031 229 4763</a>
-          <a href="mailto:contact@lamitabiciclista.ro" class="contact-line" style="font-size:var(--text-md);">contact@lamitabiciclista.ro</a>
-        </div>
-
-        <div class="contact-col">
-          <p class="contact-col-title">Program</p>
-          <div style="display:flex; flex-direction:column; gap:var(--space-2);">
-            <div style="display:flex; justify-content:space-between;">
-              <span style="font-size:var(--text-sm); color:var(--color-gray); font-family:var(--font-mono);">Brasserie</span>
-              <span style="font-size:var(--text-sm); font-weight:600;">08:00–00:00</span>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">MICI GUSTĂRI</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Tartă cu Brânzeturi Maturate</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Brie, Roquefort, Comté, chutney de smochine</p>
             </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span style="font-size:var(--text-sm); color:var(--color-gray); font-family:var(--font-mono);">Salon Lun–Joi</span>
-              <span style="font-size:var(--text-sm); font-weight:600;">18:00–00:00</span>
-            </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span style="font-size:var(--text-sm); color:var(--color-gray); font-family:var(--font-mono);">Salon Vin–Dum</span>
-              <span style="font-size:var(--text-sm); font-weight:600;">08:00–00:00</span>
-            </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span style="font-size:var(--text-sm); color:var(--color-gray); font-family:var(--font-mono);">Expoziție</span>
-              <span style="font-size:var(--text-sm); font-weight:600;">12:00–21:00</span>
-            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">38 RON</span>
           </div>
-        </div>
-
-        <div class="contact-col">
-          <p class="contact-col-title">Social</p>
-          <div class="contact-social">
-            <a href="#" class="contact-social-link">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
-              Instagram
-            </a>
-            <a href="#" class="contact-social-link">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-              Facebook
-            </a>
-            <a href="#" class="contact-social-link">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-              </svg>
-              TikTok
-            </a>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Bruschette cu Roșii Heirloom</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Pâine de casă, roșii, busuioc, ulei de trufe</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">32 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Crudités cu Dipping Trio</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Legume sezoniere, hummus, tapenadă, tzatziki</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">30 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Charcuterie Board</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Mezeluri artizanale, cornișoni, muștar Dijon</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">55 RON</span>
           </div>
         </div>
       </div>
 
-      <div class="reviews-row">
-        <p class="label" style="margin-right:var(--space-3);">Recenzii</p>
-        <a href="#" class="review-badge">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-          Google Reviews
-        </a>
-        <a href="#" class="review-badge">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#00AF87">
-            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 3.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm3 11.5H9v-1l1-1V11l-1-1V9h4v1l-1 1v4l1 1v1z"/>
-          </svg>
-          TripAdvisor
-        </a>
-        <a href="#" class="review-badge">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z"/>
-          </svg>
-          Kayak Guides
-        </a>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════════════════════════════
-       9. NEWSLETTER
-  ══════════════════════════════════════════════════════════════════ -->
-  <section class="section-newsletter" id="newsletter">
-    <div class="container">
+      <!-- Supe -->
       <div>
-        <h2 class="newsletter-headline">Abonare<br/>Newsletter</h2>
-        <p class="newsletter-sub">
-          Fii primul care află despre evenimentele noastre, expoziții și noutăți din bucătărie.
-        </p>
-      </div>
-
-      <div class="newsletter-form">
-        <div class="newsletter-input-row">
-          <input
-            type="email"
-            class="newsletter-input"
-            placeholder="adresa@email.ro"
-            aria-label="Adresă email"
-          />
-          <button class="btn btn--yellow" type="submit" style="border-left:none; white-space:nowrap;">
-            Abonează-te
-          </button>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">SUPE &amp; CIORBE</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Supă Franțuzească de Ceapă</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Gruyère gratinată, crutoane de brioche</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">38 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Supă Cremă de Dovleac</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Semințe de dovleac, ulei de ardei afumat</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">32 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Bisque de Fructe de Mare</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Creveți, crab, smântână, cognac</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">48 RON</span>
+          </div>
         </div>
-        <p class="newsletter-disclaimer">
-          Prin abonare ești de acord cu politica noastră de confidențialitate. Poți dezabona oricând.
-        </p>
       </div>
-    </div>
-  </section>
 
-
-  <!-- ══════════════════════════════════════════════════════════════
-       10. FOOTER
-  ══════════════════════════════════════════════════════════════════ -->
-  <footer class="site-footer">
-    <div class="container">
-      <p class="footer-copy">© 2024 La Mița Biciclista · Toate drepturile rezervate</p>
-
-      <a href="/" class="footer-logo">La Mița Biciclista</a>
-
-      <div class="footer-lang">
-        <a href="#" class="active">RO</a>
-        <span>/</span>
-        <a href="#">EN</a>
+      <!-- Salate -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">SALATE</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Salade Niçoise</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Ton albacore, ouă, olive Kalamata, vinegretă</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">58 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Caesar cu Pui Crocant</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Romaine, Parmezan, crutoane, sos Caesar clasic</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">52 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Caprese Trufată</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Burrata, roșii heirloom, ulei de trufe, bazilicum</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">55 RON</span>
+          </div>
+        </div>
       </div>
-    </div>
-  </footer>
 
-</body>
-</html>
+      <!-- Deserturi -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">DESERTURI</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Crème Brûlée à la Vanille</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Vanilie Bourbon, zahăr caramelizat</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">38 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Tarte Tatin</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Mere caramelizate, foietaj, crème fraîche</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">40 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Mousse au Chocolat Noir</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Valrhona 70%, fleur de sel, tuille crocantă</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">35 RON</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── MIC DEJUN ─── -->
+  <div id="panel-mic-dejun" class="menu-panel hidden px-8 md:px-24">
+    <div class="mb-6">
+      <span class="font-fira-code text-[10px] uppercase tracking-widest text-white/30">08:00 – 12:00 · ZILNIC</span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-16">
+
+      <!-- Cafea & Ceai -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">CAFEA &amp; CEAI</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Espresso</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Single origin, prăjit local</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">15 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Cappuccino</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Lapte de ovăz sau vaci, latte art</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">20 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Flat White</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Ristretto dublu, microfoam de lapte</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">22 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Matcha Latte</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Matcha ceremonial, lapte de cocos</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">24 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Ceai de Colecție</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Selecție de ceaiuri rare, servite în ceainic</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">22 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Viennoiserie -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">VIENNOISERIE</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Croissant cu Unt</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Aluat foietaj, unt 84%, gem de casă</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">18 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Pain au Chocolat</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Valrhona 64%, aluat foietaj viennois</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">20 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Brioche cu Gem</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Brioche clasică, unt de fermă, gem artizanal</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">16 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Kouign-Amann</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Specialitate bretonă, caramel sărat</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">22 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ouă & Savuros -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">OUĂ &amp; SAVUROS</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Ouă Benedict cu Somon</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Somon afumat, sos Hollandaise, English muffin</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">55 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Avocado Toast Trufat</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Pâine de secară, avocado, ou poché, trufe</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">48 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Omletă cu Trufe Negre</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Ouă de fermă, trufe negre, brânză de capră</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">62 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Shakshuka Marocană</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Ouă fierte în sos de roșii picant, feta, za'atar</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">45 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clasice -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">CLASICE</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Pancakes cu Fructe de Pădure</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Sirop de arțar, unt de fermă, fructe proaspete</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">42 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Terci cu Fructe de Pădure</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Ovăz, lapte de cocos, miere, granola crocantă</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">38 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">French Toast cu Caramel</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Brioche prăjită, caramel sărat, înghețată</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">45 RON</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── PRINCIPAL ─── -->
+  <div id="panel-principal" class="menu-panel hidden px-8 md:px-24">
+    <div class="mb-6">
+      <span class="font-fira-code text-[10px] uppercase tracking-widest text-white/30">12:00 – 22:00 · LUNI–DUMINICĂ</span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-16">
+
+      <!-- Entrées -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">ENTRÉES</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Foie Gras cu Brioche</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Terrine de foie gras, chutney de gutui, brioche tostată</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">85 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Tartare de Vită</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Vită Angus, gălbenuș curat, trufe, castraveți murați</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">72 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Burrata con Pomodori</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Burrata proaspătă, roșii heirloom, pesto di basilico</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">62 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Carpaccio de Vită</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Vită Wagyu, Parmigiano Reggiano, rucola, lemon</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">78 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Principale -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">PLATS PRINCIPAUX</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Entrecôte cu Sos Béarnaise</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Angus 300g, béarnaise, cartofi dauphinois</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">135 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Confit de Rață</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Pulpă de rață confit, polentă cremoasă, jus</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">95 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Salmone Poché</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Somon norvegian, sos de lămâie, spanac, capere</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">88 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Risotto ai Tartufi Neri</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Arborio, trufe negre, Parmigiano, unt</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">92 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vegetarian -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">VEGETARIAN</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Gnocchi cu Pesto Trufat</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Gnocchi de cartofi, pesto de busuioc, trufe albe</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">72 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Curry de Legume</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Legume sezoniere, lapte de cocos, orez basmati</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">58 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Tarta cu Legume &amp; Feta</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Legume coapte, feta, oregano, salată verde</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">62 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Garnituri -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">GARNITURI</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <p class="font-manrope font-bold text-base uppercase tracking-tight">Cartofi Dauphinois</p>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">28 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <p class="font-manrope font-bold text-base uppercase tracking-tight">Polentă Cremoasă cu Parmezan</p>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">25 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <p class="font-manrope font-bold text-base uppercase tracking-tight">Legume Rôties</p>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">22 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <p class="font-manrope font-bold text-base uppercase tracking-tight">Salată Verde cu Vinegretă</p>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">20 RON</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── BĂUTURI ─── -->
+  <div id="panel-bauturi" class="menu-panel hidden px-8 md:px-24">
+    <div class="mb-6">
+      <span class="font-fira-code text-[10px] uppercase tracking-widest text-white/30">08:00 – 00:00 · ZILNIC</span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-16">
+
+      <!-- Cocktailuri Semnătură -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">COCKTAILURI SEMNĂTURĂ</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Mița Sour</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Whisky de malț, lămâie, miere, bitter de angustură</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">48 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Biciclista Spritz</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Aperol, Prosecco, apă minerală, portocală</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">45 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Amzei Negroni</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Gin botanic, Campari, Vermouth rosso</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">52 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Salon Royale</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Champagne, crème de cassis, zmeură</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">58 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Creativ Collins</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Gin, soc, lămâie verde, apă tonică artizan</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">48 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vinuri -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">VINURI — PAHAR</h3>
+        <div class="space-y-6">
+          <div>
+            <p class="font-fira-code text-[8px] uppercase tracking-[0.3em] text-white/25 mb-4">ALBE</p>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Fetească Regală</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Cramele Recaș, Banat · sec, mineral</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">42 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Sauvignon Blanc</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Loire Valley, Franța · viu, citric</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">58 RON</span>
+          </div>
+          <div class="mt-4">
+            <p class="font-fira-code text-[8px] uppercase tracking-[0.3em] text-white/25 mb-4">ROȘII</p>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Fetească Neagră</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Davino, Dealu Mare · catifelat, fructe negre</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">48 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Pinot Noir Burgundy</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Bourgogne, Franța · elegant, vișine, pământ</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">72 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bere Artizanală -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">BERE ARTIZANALĂ</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">IPA București</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Hop, citric, local · 330ml</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">30 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Lager Craft</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Blondă ușoară, răcoritoare · 500ml</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">25 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Stout Neagră</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Cafea, ciocolată, corpulenată · 330ml</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">32 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Non-Alcoolice -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">NON-ALCOOLICE</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Limonadă Artizanală</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Lămâie, mentă, ghimbir, zahăr de trestie</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">28 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Kombucha de Casă</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Hibiscus sau ghimbir-lămâie verde</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">30 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Sucuri Naturale Presate</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Portocale, morcov-ghimbir sau mere-țelină</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">32 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Apă Minerală / Plată</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Borsec 330ml · 750ml</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">12 / 18 RON</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Allergen note -->
+  <div class="px-8 md:px-24 mt-20 pt-8 border-t border-white/10">
+    <p class="font-fira-code text-[9px] uppercase tracking-widest text-white/20 max-w-xl">
+      Prețurile sunt exprimate în RON și includ TVA. Informații despre alergeni disponibile la cerere.
+      Meniurile pot varia sezonier. · Toate preparatele pot conține urme de gluten, lactate, ouă.
+    </p>
+  </div>
+
+</section>
+
+<script>
+  function switchMenu(id) {
+    // Update tab styles
+    document.querySelectorAll('.menu-tab').forEach(function(tab) {
+      tab.classList.remove('active-tab', 'border-brand-yellow', 'text-brand-yellow');
+      tab.classList.add('border-transparent', 'text-white/40');
+    });
+    var activeTab = document.getElementById('tab-' + id);
+    if (activeTab) {
+      activeTab.classList.add('active-tab', 'border-brand-yellow', 'text-brand-yellow');
+      activeTab.classList.remove('border-transparent', 'text-white/40');
+    }
+
+    // Update panel visibility
+    document.querySelectorAll('.menu-panel').forEach(function(panel) {
+      panel.classList.add('hidden');
+    });
+    var activePanel = document.getElementById('panel-' + id);
+    if (activePanel) {
+      activePanel.classList.remove('hidden');
+    }
+  }
+</script>
+<!-- Footer -->
+<footer class="bg-brand-navy text-white py-24 px-8 md:px-24">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
+<div class="md:col-span-4">
+<div class="mb-8">
+<img alt="LA MIȚA BICICLISTA" class="h-20 w-auto brightness-0 invert object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uiB4SV9IpsKDME0vHR3AXgik6ioChFmW5lIm0tI4jFnnMvA7hNQzO2oxpeOMkAsb5JwcWX0Mk1X9K78QOueMTtrfOYoWwfRxSDjP4qGMci8S362rH1oHE-C6bhNgW7_6QlDVXRUdhK4oCaAQJb9Q2mnkxppGOJdFXhYThQzzyLWaNhRGNIcPrxPLo_R29_V4k_4K17g3hjDucXfqdnXGX-fkb1LglZU5l6OFkLE_iAWs-nXiShbwT9098a8zv7WtU8xN05HBYjq" style=""/>
+</div>
+<p class="font-fira-code text-xs opacity-60 leading-relaxed max-w-xs" style="">
+                STR. BISERICA AMZEI 9<br/>
+                BUCUREȘTI, SECTOR 1<br/>
+                CONTACT@LAMITABICICLISTA.RO
+            </p>
+</div>
+<div class="md:col-span-4 space-y-8">
+<span class="font-fira-code text-[10px] uppercase tracking-widest text-brand-yellow/60 block" style="">JOIN OUR COMMUNITY</span>
+<div class="flex border-b border-white/20 pb-2">
+<input class="bg-transparent border-none w-full font-fira-code text-sm py-4 focus:ring-0 placeholder:text-white/20" placeholder="EMAIL ADDRESS" type="email"/>
+<button class="text-brand-yellow font-manrope font-bold uppercase text-xs tracking-widest px-4" style="">SUBSCRIBE</button>
+</div>
+</div>
+<div class="md:col-span-4 flex flex-col items-end gap-12">
+<div class="flex gap-8">
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#" style="">Instagram</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#" style="">Facebook</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#" style="">TikTok</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#">TripAdvisor</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#">Google Reviews</a></div>
+<div class="flex gap-4">
+<div class="px-3 py-1 border border-white/10 text-[8px] font-fira-code uppercase tracking-widest" style="">KAYAK GUIDES</div>
+<div class="px-3 py-1 border border-white/10 text-[8px] font-fira-code uppercase tracking-widest" style="">TRIPADVISOR</div>
+<div class="px-3 py-1 border border-white/10 text-[8px] font-fira-code uppercase tracking-widest">GOOGLE REVIEWS</div></div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/10 gap-8">
+<span class="font-fira-code text-[8px] tracking-[0.3em] opacity-40 uppercase text-center md:text-left" style="">
+            LA MIȚA BICICLISTA STABILIMENT CREATIV © COPYRIGHT 2025
+        </span>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-brand-yellow animate-pulse"></span>
+<span class="font-fira-code text-[8px] tracking-widest uppercase opacity-80" style="">Always Open for Culture</span>
+</div>
+</div>
+</footer>
+</body></html>
