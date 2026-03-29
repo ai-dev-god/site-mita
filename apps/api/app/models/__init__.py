@@ -6,7 +6,7 @@ from app.models.event import Event, EventStatus, Ticket, TicketStatus
 from app.models.guest import GuestProfile
 from app.models.metrics import TableTurnMetric
 from app.models.reservation import Reservation, ReservationStatus, SpecialOccasion
-from app.models.shift import Shift, ShiftAssignment, ShiftType
+from app.models.shift import Shift, ShiftType
 from app.models.staff import ShiftAssignment, StaffMember, StaffRole
 from app.models.table import Table, TableShape, TableStatus
 from app.models.venue import Venue

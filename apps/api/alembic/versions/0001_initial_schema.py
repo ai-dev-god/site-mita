@@ -118,8 +118,8 @@ def upgrade() -> None:
         sa.Column("name", sa.String(255), nullable=False),
         sa.Column("slug", sa.String(100), nullable=False),
         sa.Column("description", sa.Text, nullable=True),
-        sa.Column("zone_type", sa.Enum("brasserie", "salon_istoric", "expozitie", name="zone_type_enum"), nullable=False),
-        sa.Column("reservation_policy", sa.Enum("walk_in_only", "reservation_required", "ticketed", name="reservation_policy_enum"), nullable=False, server_default="walk_in_only"),
+        sa.Column("zone_type", postgresql.ENUM(name="zone_type_enum", create_type=False), nullable=False),
+        sa.Column("reservation_policy", postgresql.ENUM(name="reservation_policy_enum", create_type=False), nullable=False, server_default="walk_in_only"),
         sa.Column("total_capacity", sa.Integer, nullable=False, server_default="0"),
         sa.Column("max_party_size", sa.Integer, nullable=False, server_default="10"),
         sa.Column("opens_at", sa.Time, nullable=True),
@@ -139,10 +139,10 @@ def upgrade() -> None:
         sa.Column("venue_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("zone_id", postgresql.UUID(as_uuid=True), sa.ForeignKey("zones.id", ondelete="CASCADE"), nullable=False),
         sa.Column("label", sa.String(20), nullable=False),
-        sa.Column("shape", sa.Enum("round","square","rectangle","booth","bar", name="table_shape_enum"), nullable=False, server_default="round"),
+        sa.Column("shape", postgresql.ENUM(name="table_shape_enum", create_type=False), nullable=False, server_default="round"),
         sa.Column("min_covers", sa.Integer, nullable=False, server_default="1"),
         sa.Column("max_covers", sa.Integer, nullable=False, server_default="4"),
-        sa.Column("status", sa.Enum("available","reserved","seated","ordering","mains_out","last_round","bill_requested","turning","blocked", name="table_status_enum"), nullable=False, server_default="available"),
+        sa.Column("status", postgresql.ENUM(name="table_status_enum", create_type=False), nullable=False, server_default="available"),
         sa.Column("is_combinable", sa.Boolean, nullable=False, server_default="false"),
         sa.Column("is_accessible", sa.Boolean, nullable=False, server_default="false"),
         sa.Column("is_outdoor", sa.Boolean, nullable=False, server_default="false"),
@@ -200,8 +200,8 @@ def upgrade() -> None:
         sa.Column("actual_seated_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("actual_departed_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("party_size", sa.Integer, nullable=False),
-        sa.Column("status", sa.Enum("pending","confirmed","checked_in","completed","cancelled_by_guest","cancelled_by_venue","no_show","waitlisted", name="reservation_status_enum"), nullable=False, server_default="pending"),
-        sa.Column("special_occasion", sa.Enum("birthday","anniversary","business","engagement","other", name="special_occasion_enum"), nullable=True),
+        sa.Column("status", postgresql.ENUM(name="reservation_status_enum", create_type=False), nullable=False, server_default="pending"),
+        sa.Column("special_occasion", postgresql.ENUM(name="special_occasion_enum", create_type=False), nullable=True),
         sa.Column("dietary_tags", postgresql.ARRAY(sa.String), nullable=True),
         sa.Column("internal_notes", sa.Text, nullable=True),
         sa.Column("guest_notes", sa.Text, nullable=True),
@@ -236,7 +236,7 @@ def upgrade() -> None:
         sa.Column("last_name", sa.String(100), nullable=False),
         sa.Column("email", sa.String(255), nullable=False, unique=True),
         sa.Column("phone", sa.String(30), nullable=True),
-        sa.Column("role", sa.Enum("admin","manager","host","server","bartender","exhibition_staff","kitchen", name="staff_role_enum"), nullable=False, server_default="server"),
+        sa.Column("role", postgresql.ENUM(name="staff_role_enum", create_type=False), nullable=False, server_default="server"),
         sa.Column("is_active", sa.Boolean, nullable=False, server_default="true"),
         sa.Column("zone_ids", postgresql.ARRAY(sa.String), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
@@ -254,7 +254,7 @@ def upgrade() -> None:
         sa.Column("venue_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("zone_id", postgresql.UUID(as_uuid=True), sa.ForeignKey("zones.id", ondelete="CASCADE"), nullable=False),
         sa.Column("shift_date", sa.Date, nullable=False),
-        sa.Column("shift_type", sa.Enum("morning","afternoon","evening","full_day", name="shift_type_enum"), nullable=False),
+        sa.Column("shift_type", postgresql.ENUM(name="shift_type_enum", create_type=False), nullable=False),
         sa.Column("starts_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("ends_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("cover_target", sa.Integer, nullable=True),
@@ -304,7 +304,7 @@ def upgrade() -> None:
         sa.Column("notified_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("seated_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("table_id", postgresql.UUID(as_uuid=True), sa.ForeignKey("tables.id"), nullable=True),
-        sa.Column("status", sa.Enum("waiting","notified","seated","expired","cancelled", name="waitlist_status_enum"), nullable=False, server_default="waiting"),
+        sa.Column("status", postgresql.ENUM(name="waitlist_status_enum", create_type=False), nullable=False, server_default="waiting"),
         sa.Column("qr_token", sa.String(64), nullable=True, unique=True),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
@@ -326,7 +326,7 @@ def upgrade() -> None:
         sa.Column("name", sa.String(255), nullable=False),
         sa.Column("slug", sa.String(120), nullable=False),
         sa.Column("description", sa.Text, nullable=True),
-        sa.Column("status", sa.Enum("draft","published","sold_out","cancelled","completed", name="event_status_enum"), nullable=False, server_default="draft"),
+        sa.Column("status", postgresql.ENUM(name="event_status_enum", create_type=False), nullable=False, server_default="draft"),
         sa.Column("starts_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("ends_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("doors_open_at", sa.DateTime(timezone=True), nullable=True),
@@ -354,7 +354,7 @@ def upgrade() -> None:
         sa.Column("guest_id", postgresql.UUID(as_uuid=True), sa.ForeignKey("guest_profiles.id"), nullable=True),
         sa.Column("ticket_number", sa.String(32), nullable=False, unique=True),
         sa.Column("qr_code", sa.String(512), nullable=False, unique=True),
-        sa.Column("status", sa.Enum("reserved","paid","checked_in","cancelled","refunded", name="ticket_status_enum"), nullable=False, server_default="reserved"),
+        sa.Column("status", postgresql.ENUM(name="ticket_status_enum", create_type=False), nullable=False, server_default="reserved"),
         sa.Column("stripe_payment_intent_id", sa.String(128), nullable=True),
         sa.Column("amount_paid_ron", sa.Numeric(10, 2), nullable=True),
         sa.Column("checked_in_at", sa.DateTime(timezone=True), nullable=True),
@@ -374,9 +374,9 @@ def upgrade() -> None:
         sa.Column("id", postgresql.UUID(as_uuid=True), primary_key=True),
         sa.Column("venue_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("name", sa.String(255), nullable=False),
-        sa.Column("campaign_type", sa.Enum("post_visit_thank_you","birthday_offer","win_back","new_menu","event_announcement","loyalty","referral","newsletter","custom", name="campaign_type_enum"), nullable=False),
-        sa.Column("channel", sa.Enum("email","sms","push", name="campaign_channel_enum"), nullable=False),
-        sa.Column("status", sa.Enum("draft","scheduled","running","completed","cancelled", name="campaign_status_enum"), nullable=False, server_default="draft"),
+        sa.Column("campaign_type", postgresql.ENUM(name="campaign_type_enum", create_type=False), nullable=False),
+        sa.Column("channel", postgresql.ENUM(name="campaign_channel_enum", create_type=False), nullable=False),
+        sa.Column("status", postgresql.ENUM(name="campaign_status_enum", create_type=False), nullable=False, server_default="draft"),
         sa.Column("audience_segment", sa.String(100), nullable=True),
         sa.Column("audience_filters", sa.Text, nullable=True),
         sa.Column("audience_tags", postgresql.ARRAY(sa.String), nullable=True),
@@ -401,9 +401,10 @@ def upgrade() -> None:
     op.create_index("ix_campaign_logs_deleted_at", "campaign_logs", ["deleted_at"])
 
     # ── table_turn_metrics (TimescaleDB hypertable) ───────────────────────────
+    # TimescaleDB requires the partition column (time) to be part of the primary key
     op.create_table(
         "table_turn_metrics",
-        sa.Column("id", postgresql.UUID(as_uuid=True), primary_key=True),
+        sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("venue_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("time", sa.DateTime(timezone=True), nullable=False, comment="TimescaleDB partition key"),
         sa.Column("table_id", postgresql.UUID(as_uuid=True), sa.ForeignKey("tables.id"), nullable=False),
@@ -419,6 +420,8 @@ def upgrade() -> None:
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("deleted_at", sa.DateTime(timezone=True), nullable=True),
     )
+    # Composite PK required by TimescaleDB: partition key must be in PK
+    op.execute("ALTER TABLE table_turn_metrics ADD PRIMARY KEY (id, time)")
     op.create_index("ix_table_turn_metrics_time", "table_turn_metrics", ["time"])
     op.create_index("ix_table_turn_metrics_time_zone", "table_turn_metrics", ["time", "zone_id"])
     op.create_index("ix_table_turn_metrics_time_table", "table_turn_metrics", ["time", "table_id"])
