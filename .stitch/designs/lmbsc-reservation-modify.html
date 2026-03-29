@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>LMBSC — Modificare Rezervare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-primary:        #2C4A2E;
+    --color-primary-light:  #4A7A4C;
+    --color-primary-muted:  #EAF0EA;
+    --color-accent:         #B8962E;
+    --color-accent-light:   #F5E9C4;
+    --color-surface:        #FAF6F0;
+    --color-raised:         #FFFFFF;
+    --color-text:           #1A1A1A;
+    --color-text-sec:       #5A5A5A;
+    --color-text-muted:     #9A9A9A;
+    --color-border:         #E4DDD5;
+    --color-border-focus:   #2C4A2E;
+    --color-warning:        #D97706;
+    --color-warning-bg:     #FEF3C7;
+    --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+    --shadow-md:  0 4px 16px rgba(44,74,46,0.12);
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  12px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: #DDD8D0;
+    color: var(--color-text);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px 16px 40px;
+  }
+
+  .phone-frame {
+    width: 390px;
+    background: var(--color-surface);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+
+  /* ── HEADER ──────────────────────────────── */
+  .app-header {
+    background: var(--color-raised);
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .back-btn {
+    width: 36px; height: 36px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 14px; color: var(--color-text-sec); flex-shrink: 0;
+  }
+  .header-center { flex: 1; text-align: center; }
+  .header-logo {
+    font-family: var(--font-display);
+    font-size: 15px; font-weight: 700; color: var(--color-primary); line-height: 1.1;
+  }
+  .header-sub {
+    font-size: 10px; color: var(--color-text-muted);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-top: 1px;
+  }
+  .lang-btn {
+    width: 36px; height: 36px;
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm); font-size: 11px; font-weight: 700;
+    color: var(--color-text-sec); display: flex; align-items: center;
+    justify-content: center; cursor: pointer; flex-shrink: 0; font-family: var(--font-body);
+  }
+
+  /* ── HERO STRIP ────────────────────────── */
+  .hero-strip {
+    background: var(--color-accent);
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .hero-strip__title {
+    font-family: var(--font-display);
+    font-size: 16px; font-weight: 700; color: #fff;
+  }
+  .hero-strip__sub { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+  .hero-strip__id {
+    font-size: 10px; font-weight: 700;
+    color: rgba(255,255,255,0.85); letter-spacing: 0.07em;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 12px; padding: 3px 10px;
+  }
+
+  /* ── CURRENT BOOKING CARD ───────────────── */
+  .current-card {
+    margin: 16px 20px 0;
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .current-card__header {
+    background: var(--color-primary-muted);
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .current-card__label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--color-primary);
+  }
+  .current-card__chips {
+    display: flex; gap: 6px; flex-wrap: wrap; padding: 12px 14px;
+  }
+  .chip {
+    display: flex; align-items: center; gap: 4px;
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: 20px; padding: 4px 10px;
+    font-size: 11px; font-weight: 600; color: var(--color-text-sec);
+  }
+
+  /* ── WARNING BANNER ─────────────────────── */
+  .warn-banner {
+    margin: 12px 20px 0;
+    background: var(--color-warning-bg);
+    border: 1px solid rgba(217,119,6,0.25);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    display: flex; gap: 8px; align-items: flex-start;
+    font-size: 11px; color: var(--color-warning); line-height: 1.5;
+  }
+
+  /* ── SCROLL BODY ─────────────────────── */
+  .scroll-body {
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+
+  /* ── FIELD LABEL ────────────────────────── */
+  .field-label {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--color-text-sec); margin-bottom: 8px;
+  }
+
+  /* ── CHANGE INDICATOR ──────────────────── */
+  .change-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .change-old {
+    font-size: 12px; color: var(--color-text-muted);
+    text-decoration: line-through;
+  }
+  .change-arrow { font-size: 12px; color: var(--color-accent); }
+  .change-new { font-size: 12px; font-weight: 700; color: var(--color-primary); }
+
+  /* ── DATE PICKER ───────────────────── */
+  .date-nav {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  }
+  .date-nav__arrow {
+    width: 32px; height: 32px;
+    border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+    background: var(--color-raised); display: flex; align-items: center;
+    justify-content: center; cursor: pointer; font-size: 13px;
+    color: var(--color-text-sec); flex-shrink: 0;
+  }
+  .date-nav__month {
+    flex: 1; text-align: center; font-size: 13px;
+    font-weight: 600; color: var(--color-text);
+  }
+  .date-row {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+  }
+  .date-day-header {
+    text-align: center; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--color-text-muted); padding-bottom: 4px;
+  }
+  .date-cell {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
+    color: var(--color-text); cursor: pointer;
+  }
+  .date-cell:hover { background: var(--color-primary-muted); }
+  .date-cell.current {
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+  .date-cell.selected {
+    background: var(--color-primary);
+    color: #fff; font-weight: 700;
+  }
+  .date-cell.muted { color: var(--color-text-muted); }
+  .date-cell.unavailable {
+    color: var(--color-text-muted); text-decoration: line-through; cursor: not-allowed;
+  }
+
+  /* ── TIME SLOTS ─────────────────────── */
+  .time-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  .time-slot {
+    background: var(--color-raised); border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm); padding: 10px 8px; text-align: center;
+    cursor: pointer; transition: border-color 150ms, background 150ms;
+  }
+  .time-slot.current {
+    border-color: var(--color-accent); background: var(--color-accent-light);
+  }
+  .time-slot.selected {
+    background: var(--color-primary-muted); border-color: var(--color-primary);
+  }
+  .time-slot.full { opacity: 0.4; cursor: not-allowed; background: #F9F9F9; }
+  .time-slot__hour { font-size: 14px; font-weight: 700; color: var(--color-text); }
+  .time-slot.current .time-slot__hour { color: var(--color-accent); }
+  .time-slot.selected .time-slot__hour { color: var(--color-primary); }
+  .time-slot__avail { font-size: 10px; color: var(--color-text-muted); margin-top: 2px; }
+
+  /* ── STEPPER ────────────────────────── */
+  .stepper {
+    display: flex; align-items: center; gap: 0;
+    background: var(--color-raised); border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm); overflow: hidden;
+  }
+  .stepper__btn {
+    width: 48px; height: 48px; border: none; background: transparent;
+    font-size: 20px; color: var(--color-primary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 120ms; font-weight: 700; font-family: var(--font-body);
+  }
+  .stepper__btn:hover { background: var(--color-primary-muted); }
+  .stepper__val {
+    flex: 1; text-align: center; font-size: 20px; font-weight: 700;
+    color: var(--color-text); border-left: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border); padding: 12px 0; line-height: 1;
+  }
+  .stepper__sub {
+    display: block; font-size: 9px; font-weight: 500;
+    color: var(--color-text-muted); text-transform: uppercase;
+    letter-spacing: 0.06em; margin-top: 2px;
+  }
+
+  /* ── INPUT ──────────────────────────── */
+  textarea.input-field {
+    width: 100%; height: 80px; padding: 12px 14px;
+    border: 1.5px solid var(--color-border); border-radius: var(--radius-sm);
+    background: var(--color-raised); font-family: var(--font-body);
+    font-size: 14px; color: var(--color-text); outline: none; resize: none;
+    line-height: 1.5; transition: border-color 150ms;
+  }
+  textarea.input-field:focus {
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 3px rgba(44,74,46,0.12);
+  }
+  textarea.input-field::placeholder { color: var(--color-text-muted); }
+
+  /* ── CHANGE SUMMARY ─────────────────── */
+  .change-summary {
+    background: var(--color-raised); border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); overflow: hidden;
+  }
+  .change-summary__header {
+    padding: 10px 14px; background: var(--color-primary-muted);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .change-summary__title {
+    font-family: var(--font-display);
+    font-size: 13px; font-weight: 700; color: var(--color-primary);
+  }
+  .change-diff-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-bottom: 1px solid var(--color-border);
+    gap: 8px;
+  }
+  .change-diff-row:last-child { border-bottom: none; }
+  .diff-field {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--color-text-muted); min-width: 60px;
+  }
+  .diff-from { font-size: 12px; color: var(--color-text-muted); text-decoration: line-through; }
+  .diff-arrow { font-size: 11px; color: var(--color-accent); }
+  .diff-to { font-size: 13px; font-weight: 700; color: var(--color-primary); }
+
+  /* ── CTA ─────────────────────────── */
+  .cta-block { padding: 4px 0 8px; }
+  .cta-btn {
+    width: 100%; height: 52px; background: var(--color-accent);
+    color: #fff; border: none; border-radius: var(--radius-sm);
+    font-family: var(--font-display); font-size: 15px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center;
+    justify-content: center; gap: 8px; transition: background 150ms;
+  }
+  .cta-btn:hover { background: #9A7A26; }
+  .cta-btn--secondary {
+    background: transparent; color: var(--color-text-sec);
+    border: 1.5px solid var(--color-border); font-size: 14px;
+    font-family: var(--font-body); height: 44px; margin-top: 8px;
+  }
+  .cta-btn--secondary:hover { background: var(--color-surface); }
+  .cta-note {
+    text-align: center; font-size: 11px;
+    color: var(--color-text-muted); margin-top: 8px;
+  }
+
+  /* ── SECTION DIVIDER ────────────────── */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-divider__line { flex: 1; height: 1px; background: var(--color-border); }
+  .section-divider__text {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--color-text-muted); white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <button class="back-btn">←</button>
+    <div class="header-center">
+      <div class="header-logo">La Mița Biciclista</div>
+      <div class="header-sub">Modificare rezervare</div>
+    </div>
+    <button class="lang-btn">EN</button>
+  </header>
+
+  <!-- HERO STRIP (Accent/Gold for modification context) -->
+  <div class="hero-strip">
+    <div>
+      <div class="hero-strip__title">Modifică rezervarea</div>
+      <div class="hero-strip__sub">Schimbă data, ora sau numărul de persoane</div>
+    </div>
+    <div class="hero-strip__id"># RZV-2026-04738</div>
+  </div>
+
+  <!-- CURRENT BOOKING SNAPSHOT -->
+  <div class="current-card">
+    <div class="current-card__header">
+      <span style="font-size:14px">🏛</span>
+      <div class="current-card__label">Rezervarea actuală</div>
+    </div>
+    <div class="current-card__chips">
+      <div class="chip">📅 Vineri, 3 Apr</div>
+      <div class="chip">🕖 19:30</div>
+      <div class="chip">👥 2 pers.</div>
+      <div class="chip">🎂 Aniversare</div>
+    </div>
+  </div>
+
+  <!-- WARNING -->
+  <div class="warn-banner">
+    <span style="font-size:14px;flex-shrink:0">⚠️</span>
+    <span>Poți modifica gratuit până pe <strong>2 Aprilie 2026, 23:59</strong>.
+    Modificările ulterioare pot fi supuse politicii de anulare.</span>
+  </div>
+
+  <!-- SCROLL BODY -->
+  <div class="scroll-body">
+
+    <!-- NEW DATE -->
+    <div>
+      <div class="field-label">Data nouă</div>
+      <div class="change-row">
+        <span class="change-old">Vineri, 3 Aprilie</span>
+        <span class="change-arrow">→</span>
+        <span class="change-new">Sâmbătă, 11 Aprilie</span>
+      </div>
+      <div class="date-nav">
+        <button class="date-nav__arrow">‹</button>
+        <div class="date-nav__month">Aprilie 2026</div>
+        <button class="date-nav__arrow">›</button>
+      </div>
+      <div class="date-row">
+        <div class="date-day-header">Lu</div>
+        <div class="date-day-header">Ma</div>
+        <div class="date-day-header">Mi</div>
+        <div class="date-day-header">Jo</div>
+        <div class="date-day-header">Vi</div>
+        <div class="date-day-header">Sâ</div>
+        <div class="date-day-header">Du</div>
+        <!-- Week 1 -->
+        <div class="date-cell muted">30</div>
+        <div class="date-cell">1</div>
+        <div class="date-cell">2</div>
+        <div class="date-cell current">3</div>
+        <div class="date-cell">4</div>
+        <div class="date-cell">5</div>
+        <div class="date-cell">6</div>
+        <!-- Week 2 -->
+        <div class="date-cell">7</div>
+        <div class="date-cell">8</div>
+        <div class="date-cell unavailable">9</div>
+        <div class="date-cell">10</div>
+        <div class="date-cell selected">11</div>
+        <div class="date-cell">12</div>
+        <div class="date-cell">13</div>
+        <!-- Week 3 -->
+        <div class="date-cell">14</div>
+        <div class="date-cell">15</div>
+        <div class="date-cell">16</div>
+        <div class="date-cell">17</div>
+        <div class="date-cell">18</div>
+        <div class="date-cell">19</div>
+        <div class="date-cell">20</div>
+      </div>
+    </div>
+
+    <!-- NEW TIME -->
+    <div>
+      <div class="field-label">Ora nouă — Sâmbătă, 11 Aprilie</div>
+      <div class="time-grid">
+        <div class="time-slot full">
+          <div class="time-slot__hour">18:00</div>
+          <div class="time-slot__avail">Complet</div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot__hour">18:30</div>
+          <div class="time-slot__avail">4 locuri</div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot__hour">19:00</div>
+          <div class="time-slot__avail">disponibil</div>
+        </div>
+        <div class="time-slot selected">
+          <div class="time-slot__hour">19:30</div>
+          <div class="time-slot__avail">disponibil</div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot__hour">20:00</div>
+          <div class="time-slot__avail">6 locuri</div>
+        </div>
+        <div class="time-slot full">
+          <div class="time-slot__hour">20:30</div>
+          <div class="time-slot__avail">Complet</div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot__hour">21:00</div>
+          <div class="time-slot__avail">disponibil</div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot__hour">21:30</div>
+          <div class="time-slot__avail">3 locuri</div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot__hour">22:00</div>
+          <div class="time-slot__avail">disponibil</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARTY SIZE -->
+    <div>
+      <div class="field-label">Număr persoane</div>
+      <div class="change-row">
+        <span class="change-old">2 persoane</span>
+        <span class="change-arrow">→</span>
+        <span class="change-new">4 persoane</span>
+      </div>
+      <div class="stepper">
+        <button class="stepper__btn">−</button>
+        <div class="stepper__val">
+          4
+          <span class="stepper__sub">persoane</span>
+        </div>
+        <button class="stepper__btn">+</button>
+      </div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="section-divider">
+      <div class="section-divider__line"></div>
+      <div class="section-divider__text">Mențiuni</div>
+      <div class="section-divider__line"></div>
+    </div>
+
+    <!-- NOTES UPDATE -->
+    <div>
+      <div class="field-label">Actualizează mențiunile</div>
+      <textarea class="input-field" placeholder="ex. Alergie la nuci, preferăm o masă lângă fereastră...">Aniversare — surpriză pentru partener. Alergie la nuci.</textarea>
+    </div>
+
+    <!-- CHANGE SUMMARY -->
+    <div class="change-summary">
+      <div class="change-summary__header">
+        <div class="change-summary__title">Sumar modificări</div>
+      </div>
+      <div class="change-diff-row">
+        <div class="diff-field">Data</div>
+        <div class="diff-from">3 Apr, Vineri</div>
+        <div class="diff-arrow">→</div>
+        <div class="diff-to">11 Apr, Sâmbătă</div>
+      </div>
+      <div class="change-diff-row">
+        <div class="diff-field">Ora</div>
+        <div class="diff-from">19:30</div>
+        <div class="diff-arrow">→</div>
+        <div class="diff-to">19:30 ✓</div>
+      </div>
+      <div class="change-diff-row">
+        <div class="diff-field">Pers.</div>
+        <div class="diff-from">2</div>
+        <div class="diff-arrow">→</div>
+        <div class="diff-to">4 persoane</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-block">
+      <button class="cta-btn">Salvează modificările →</button>
+      <button class="cta-btn cta-btn--secondary">Renunță la modificări</button>
+      <div class="cta-note">
+        Vei primi confirmare prin SMS la +40 723 456 789.
+      </div>
+    </div>
+
+  </div><!-- /scroll-body -->
+</div><!-- /phone-frame -->
+
+</body>
+</html>

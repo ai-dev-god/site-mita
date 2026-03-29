@@ -258,6 +258,9 @@ Breakpoints:
 | File | Screen | Viewport | Status |
 |---|---|---|---|
 | `designs/lmbsc-host-dashboard.html` | Host Dashboard — live floor view | 1024px (tablet) | ✅ Generated |
-| `designs/lmbsc-reservation-widget.html` | Reservation Booking Widget | 390px (mobile) | ✅ Generated |
+| `designs/lmbsc-reservation-widget.html` | Reservation — Booking Widget (`/reserve`) | 390px (mobile) | ✅ Generated |
+| `designs/lmbsc-reservation-confirmation.html` | Reservation — Confirmation Page (`/reserve/confirm/{id}`) | 390px (mobile) | ✅ Generated |
+| `designs/lmbsc-reservation-modify.html` | Reservation — Self-Service Modification (`/reserve/modify/{token}`) | 390px (mobile) | ✅ Generated |
+| `designs/lmbsc-reservation-cancel.html` | Reservation — Cancellation + Success State (`/reserve/cancel/{token}`) | 390px (mobile) | ✅ Generated |
 | `designs/lmbsc-component-library.html` | Admin Component Library | 1440px (desktop) | ✅ Generated |
 | `designs/index.html` | Marketing landing page | responsive | ✅ Existing |
