@@ -42,6 +42,9 @@ jobs:
             fi
 
             echo "==> Installing Python dependencies"
+            if [ ! -d /home/aurel/.venv ]; then
+              python3 -m venv /home/aurel/.venv
+            fi
             /home/aurel/.venv/bin/pip install --quiet --upgrade pip
             /home/aurel/.venv/bin/pip install --quiet -e apps/api
 
