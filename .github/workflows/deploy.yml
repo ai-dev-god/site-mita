@@ -26,10 +26,15 @@ jobs:
           script_stop: true   # abort on first failing command
           script: |
             set -euo pipefail
-            cd /home/mita/lmbsc
 
             echo "==> Pulling latest code"
-            git pull --ff-only
+            if [ -d /home/mita/lmbsc/.git ]; then
+              cd /home/mita/lmbsc
+              git pull --ff-only
+            else
+              git clone https://github.com/ai-dev-god/site-mita.git /home/mita/lmbsc
+              cd /home/mita/lmbsc
+            fi
 
             echo "==> Installing Python dependencies"
             /home/mita/.venv/bin/pip install --quiet --upgrade pip
