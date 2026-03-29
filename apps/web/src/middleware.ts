@@ -1,25 +1,11 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-// Routes that require authentication (all dashboard/admin routes)
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/admin(.*)",
-]);
-
-// Guest-facing routes that remain fully public
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/reserve(.*)",
-  "/login(.*)",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-]);
-
-export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req) && !isPublicRoute(req)) {
-    await auth.protect();
-  }
-});
+// Auth middleware is disabled until Clerk env vars are provisioned (LAM-25).
+// When NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY + CLERK_SECRET_KEY are added to the
+// production environment, restore the Clerk middleware from git history.
+export default function middleware() {
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
