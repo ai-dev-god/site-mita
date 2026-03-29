@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
-from app.routers import guests, reservations, tables, venues
+from app.routers import guests, reservations, tables, venues, waitlist
 
 logger = structlog.get_logger(__name__)
 settings = get_settings()
@@ -54,3 +54,5 @@ app.include_router(guests.router, prefix="/api/v1")
 app.include_router(venues.router, prefix="/api/v1")
 app.include_router(tables.router, prefix="/api/v1")
 app.include_router(tables.ws_router, prefix="/ws")
+app.include_router(waitlist.router, prefix="/api/v1")
+app.include_router(waitlist.ws_router, prefix="/ws")

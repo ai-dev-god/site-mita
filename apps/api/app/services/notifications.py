@@ -295,6 +295,29 @@ async def _deliver_reminder(reservation_id: uuid.UUID) -> None:
         await db.commit()
 
 
+async def _deliver_waitlist_ready(entry_id: uuid.UUID) -> None:
+    """Send 'table ready' SMS to a walk-in guest."""
+    from app.models.waitlist import WaitlistEntry  # local import avoids circular deps
+
+    _SMS_READY = "La Mița Biciclista: Masa ta este gata! Te rugăm să te prezinți la intrare în maxim 10 minute."
+
+    async with AsyncSessionLocal() as db:
+        result = await db.execute(select(WaitlistEntry).where(WaitlistEntry.id == entry_id))
+        entry = result.scalar_one_or_none()
+        if entry is None:
+            logger.error("notify.waitlist_entry_not_found", entry_id=str(entry_id))
+            return
+
+        if not entry.enc_guest_phone:
+            return
+
+        try:
+            phone = decrypt_pii(entry.enc_guest_phone)
+            _send_sms(phone, _SMS_READY)
+        except Exception:
+            logger.exception("notify.sms_waitlist_ready_failed", entry_id=str(entry_id))
+
+
 async def _deliver_cancellation(reservation_id: uuid.UUID) -> None:
     async with AsyncSessionLocal() as db:
         result = await db.execute(

@@ -11,6 +11,26 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
 const VENUE_ID =
   process.env.NEXT_PUBLIC_VENUE_ID ?? "146fd211-ae20-5ebe-a7af-3c195ab89ae8";
 
+// ── Waitlist types ────────────────────────────────────────────────────────────
+
+type WaitlistStatus = "waiting" | "notified" | "seated" | "expired" | "cancelled";
+
+interface WaitlistEntry {
+  id: string;
+  venue_id: string;
+  zone_id: string;
+  guest_name: string | null;
+  party_size: number;
+  notes: string | null;
+  queue_position: number;
+  joined_at: string;
+  estimated_wait_minutes: number | null;
+  notified_at: string | null;
+  seated_at: string | null;
+  table_id: string | null;
+  status: WaitlistStatus;
+}
+
 // ── Types ────────────────────────────────────────────────────────────────────
 
 type TableStatus =
@@ -120,6 +140,10 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [floorPlan, setFloorPlan] = useState<FloorPlan | null>(null);
 
+  // ── Waitlist state ─────────────────────────────────────────────────────────
+  const [queue, setQueue] = useState<WaitlistEntry[]>([]);
+  const [queueLoading, setQueueLoading] = useState(false);
+
   // ── Load floor plan layout ──────────────────────────────────────────────
   useEffect(() => {
     setFloorPlan(loadFloorPlan());
@@ -196,6 +220,99 @@ export default function DashboardPage() {
       ws?.close();
     };
   }, []);
+
+  // ── Waitlist load ──────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (tab !== "queue") return;
+    let cancelled = false;
+    async function load() {
+      setQueueLoading(true);
+      try {
+        const token = await getToken();
+        const resp = await fetch(
+          `${API_URL}/api/v1/waitlist?venue_id=${VENUE_ID}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (!resp.ok || cancelled) return;
+        const data: WaitlistEntry[] = await resp.json();
+        setQueue(data);
+      } finally {
+        if (!cancelled) setQueueLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
+
+  // ── Waitlist WebSocket live sync ───────────────────────────────────────────
+  useEffect(() => {
+    let ws: WebSocket | null = null;
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
+    let retries = 0;
+    let stopped = false;
+
+    function connect() {
+      if (stopped) return;
+      const wsBase = API_URL.replace(/^http/, "ws");
+      ws = new WebSocket(`${wsBase}/ws/waitlist/${VENUE_ID}`);
+
+      ws.onopen = () => { retries = 0; };
+
+      ws.onmessage = (e: MessageEvent) => {
+        try {
+          const updated: WaitlistEntry = JSON.parse(e.data as string);
+          setQueue((q) => {
+            const active: WaitlistStatus[] = ["waiting", "notified"];
+            if (!active.includes(updated.status)) {
+              return q.filter((x) => x.id !== updated.id);
+            }
+            const idx = q.findIndex((x) => x.id === updated.id);
+            if (idx === -1) return [...q, updated].sort((a, b) => a.queue_position - b.queue_position);
+            const next = [...q];
+            next[idx] = updated;
+            return next.sort((a, b) => a.queue_position - b.queue_position);
+          });
+        } catch {
+          // malformed frame — ignore
+        }
+      };
+
+      ws.onclose = () => {
+        if (stopped) return;
+        const delay = Math.min(1000 * 2 ** retries, 30_000);
+        retries++;
+        retryTimer = setTimeout(connect, delay);
+      };
+
+      ws.onerror = () => { ws?.close(); };
+    }
+
+    connect();
+    return () => {
+      stopped = true;
+      if (retryTimer) clearTimeout(retryTimer);
+      ws?.close();
+    };
+  }, []);
+
+  // ── Waitlist actions ──────────────────────────────────────────────────────
+  async function updateQueueEntry(id: string, newStatus: WaitlistStatus) {
+    try {
+      const token = await getToken();
+      await fetch(`${API_URL}/api/v1/waitlist/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      // WebSocket will push the updated entry back
+    } catch {
+      // silent — WS reconciles
+    }
+  }
 
   // ── Status update (API + local optimistic update) ─────────────────────────
   async function updateStatus(id: string, newStatus: TableStatus) {
@@ -395,37 +512,39 @@ export default function DashboardPage() {
           </div>
 
           {/* Legend */}
-          <div className="flex gap-4 mb-4 flex-wrap">
-            {(
-              [
-                "available",
-                "seated",
-                "reserved",
-                "turning",
-                "blocked",
-              ] as TableStatus[]
-            ).map((s) => (
-              <span
-                key={s}
-                className="flex items-center gap-1.5 text-[12px]"
-                style={{ color: "var(--color-text-secondary)" }}
-              >
+          {tab === "floor" && (
+            <div className="flex gap-4 mb-4 flex-wrap">
+              {(
+                [
+                  "available",
+                  "seated",
+                  "reserved",
+                  "turning",
+                  "blocked",
+                ] as TableStatus[]
+              ).map((s) => (
                 <span
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{
-                    background: ({
-                      available: "var(--color-available)",
-                      seated: "var(--color-seated)",
-                      reserved: "var(--color-reserved)",
-                      turning: "var(--color-turning)",
-                      blocked: "var(--color-blocked)",
-                    } as Record<string, string>)[s],
-                  }}
-                />
-                {statusLabel[s]}
-              </span>
-            ))}
-          </div>
+                  key={s}
+                  className="flex items-center gap-1.5 text-[12px]"
+                  style={{ color: "var(--color-text-secondary)" }}
+                >
+                  <span
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{
+                      background: ({
+                        available: "var(--color-available)",
+                        seated: "var(--color-seated)",
+                        reserved: "var(--color-reserved)",
+                        turning: "var(--color-turning)",
+                        blocked: "var(--color-blocked)",
+                      } as Record<string, string>)[s],
+                    }}
+                  />
+                  {statusLabel[s]}
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* Loading state */}
           {loading && (
@@ -434,6 +553,109 @@ export default function DashboardPage() {
               style={{ color: "var(--color-text-secondary)" }}
             >
               Se încarcă mesele…
+            </div>
+          )}
+
+          {/* Walk-in queue tab */}
+          {tab === "queue" && (
+            <div>
+              {queueLoading && (
+                <div className="text-sm py-8 text-center" style={{ color: "var(--color-text-secondary)" }}>
+                  Se încarcă coada…
+                </div>
+              )}
+              {!queueLoading && queue.length === 0 && (
+                <div className="py-12 text-center" style={{ color: "var(--color-text-secondary)" }}>
+                  <div className="text-3xl mb-3">🪑</div>
+                  <p className="text-sm">Nicio persoană în coadă momentan.</p>
+                  <p className="text-xs mt-1" style={{ color: "var(--color-text-muted)" }}>
+                    Oaspeții se pot adăuga via QR code la intrare.
+                  </p>
+                </div>
+              )}
+              {!queueLoading && queue.length > 0 && (
+                <div className="space-y-2">
+                  {queue.map((entry) => {
+                    const waitMin = Math.floor(
+                      (Date.now() - new Date(entry.joined_at).getTime()) / 60000
+                    );
+                    const isNotified = entry.status === "notified";
+                    return (
+                      <div
+                        key={entry.id}
+                        className="flex items-center gap-4 p-4 rounded-[8px] border"
+                        style={{
+                          background: isNotified ? "#FFFDF7" : "white",
+                          borderColor: isNotified ? "var(--color-reserved)" : "var(--color-border)",
+                        }}
+                      >
+                        {/* Position badge */}
+                        <div
+                          className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-white shrink-0"
+                          style={{ background: "var(--color-primary)" }}
+                        >
+                          {entry.queue_position}
+                        </div>
+
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-sm" style={{ color: "var(--color-text)" }}>
+                              {entry.guest_name ?? "Oaspete anonim"}
+                            </span>
+                            <span
+                              className="text-[11px] px-2 py-0.5 rounded-full font-medium"
+                              style={{
+                                background: isNotified ? "var(--color-reserved)" : "var(--color-surface)",
+                                color: isNotified ? "#7a6200" : "var(--color-text-secondary)",
+                              }}
+                            >
+                              {isNotified ? "Notificat" : "Așteaptă"}
+                            </span>
+                          </div>
+                          <div className="text-xs mt-0.5" style={{ color: "var(--color-text-secondary)" }}>
+                            {entry.party_size} pers · {waitMin}m așteptare
+                            {entry.notes && ` · ${entry.notes}`}
+                          </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex gap-2 shrink-0">
+                          {entry.status === "waiting" && (
+                            <button
+                              onClick={() => updateQueueEntry(entry.id, "notified")}
+                              className="px-3 h-8 rounded-[4px] border text-xs font-semibold"
+                              style={{
+                                borderColor: "var(--color-reserved)",
+                                color: "#7a6200",
+                              }}
+                            >
+                              Notifică
+                            </button>
+                          )}
+                          <button
+                            onClick={() => updateQueueEntry(entry.id, "seated")}
+                            className="px-3 h-8 rounded-[4px] text-white text-xs font-semibold"
+                            style={{ background: "var(--color-primary)" }}
+                          >
+                            Seat now
+                          </button>
+                          <button
+                            onClick={() => updateQueueEntry(entry.id, "cancelled")}
+                            className="px-3 h-8 rounded-[4px] border text-xs font-semibold"
+                            style={{
+                              borderColor: "var(--color-border)",
+                              color: "var(--color-text-secondary)",
+                            }}
+                          >
+                            Anulează
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
@@ -455,7 +677,7 @@ export default function DashboardPage() {
           )}
 
           {/* Table grid */}
-          {!loading && (
+          {!loading && tab === "floor" && (
             <div className="grid grid-cols-4 gap-3">
               {visible.map((t) => (
                 <button

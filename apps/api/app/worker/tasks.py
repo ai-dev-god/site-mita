@@ -55,6 +55,17 @@ def notify_reminder(self, reservation_id: str) -> None:  # type: ignore[no-untyp
         raise self.retry(exc=exc)
 
 
+@celery_app.task(bind=True, max_retries=3, default_retry_delay=30, name="app.worker.tasks.notify_waitlist_ready")
+def notify_waitlist_ready(self, entry_id: str) -> None:  # type: ignore[no-untyped-def]
+    """Send 'table ready' SMS to a walk-in guest when notified status is set."""
+    from app.services.notifications import _deliver_waitlist_ready
+    try:
+        _run(_deliver_waitlist_ready(uuid.UUID(entry_id)))
+    except Exception as exc:
+        logger.exception("notify_waitlist_ready.failed", entry_id=entry_id, exc=str(exc))
+        raise self.retry(exc=exc)
+
+
 # ── beat sweep ─────────────────────────────────────────────────────────────────
 
 @celery_app.task(name="app.worker.tasks.sweep_upcoming_reminders")
