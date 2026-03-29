@@ -135,7 +135,7 @@ export default function ReservePage() {
 
       // Step 2 — create reservation
       const reserved_at = new Date(year, month, day!, parseInt(time!.split(":")[0]), parseInt(time!.split(":")[1]));
-      const reservationRes = await fetch("/api/v1/reservations/", {
+      const reservationRes = await fetch("/api/v1/reservations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
