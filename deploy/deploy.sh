@@ -133,10 +133,28 @@ fi
 
 # ── 6. Static site — copy root HTML to public_html ──────────
 log "Syncing static site..."
-rsync -av --exclude='.git' --exclude='apps/' --exclude='deploy/' \
+rsync -a --delete \
+  --exclude='.git' --exclude='apps/' --exclude='deploy/' \
+  --exclude='.github/' --exclude='.stitch/' \
   "$REPO_DIR/" "$PUBLIC_HTML/"
 
-# ── 7. Apache config ─────────────────────────────────────────
+# ── 6a. Build Next.js frontend ──────────────────────────────
+log "Building Next.js frontend..."
+cd "$REPO_DIR/apps/web"
+npm ci --omit=dev
+npm run build
+# Copy static assets into the standalone output
+cp -r public .next/standalone/public
+cp -r .next/static .next/standalone/.next/static
+cd "$REPO_DIR"
+
+# ── 7. Apache config + systemd services ─────────────────────
+log "Installing systemd services..."
+sudo cp "$REPO_DIR/deploy/lmbsc-api.service" /etc/systemd/system/lmbsc-api.service
+sudo cp "$REPO_DIR/deploy/lmbsc-web.service" /etc/systemd/system/lmbsc-web.service
+sudo systemctl daemon-reload
+sudo systemctl enable lmbsc-api lmbsc-web
+
 log "Installing Apache VirtualHost..."
 sudo cp "$REPO_DIR/deploy/apache/lamitabiciclista.conf" \
   "/etc/apache2/sites-available/lamitabiciclista.conf"
@@ -160,6 +178,9 @@ fi
 # ── 9. Restart services ──────────────────────────────────────
 log "Restarting FastAPI service..."
 sudo systemctl restart "$SERVICE_NAME"
+
+log "Restarting Next.js frontend..."
+sudo systemctl restart lmbsc-web
 
 log "Reloading Apache..."
 sudo apache2ctl configtest && sudo systemctl reload apache2

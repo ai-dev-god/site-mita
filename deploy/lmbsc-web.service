@@ -1,0 +1,28 @@
+[Unit]
+Description=LMBSC Hospitality Platform — Next.js frontend
+After=network.target lmbsc-api.service
+Wants=lmbsc-api.service
+
+[Service]
+Type=exec
+User=mita
+Group=mita
+WorkingDirectory=/home/mita/lmbsc/apps/web/.next/standalone
+ExecStart=/usr/bin/node server.js
+Environment=PORT=3001
+Environment=HOSTNAME=127.0.0.1
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=lmbsc-web
+
+EnvironmentFile=/home/mita/lmbsc/.env.production
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/home/mita/lmbsc
+
+[Install]
+WantedBy=multi-user.target

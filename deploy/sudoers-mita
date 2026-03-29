@@ -1,0 +1,24 @@
+# Drop this file at /etc/sudoers.d/mita on the production server.
+# Allows the mita user to manage app services and Apache config — no full sudo.
+#
+# Install with:
+#   sudo visudo -c -f /path/to/sudoers-mita   # validate first
+#   sudo cp sudoers-mita /etc/sudoers.d/mita
+#   sudo chmod 440 /etc/sudoers.d/mita
+
+# Service management
+mita ALL=(root) NOPASSWD: /usr/bin/systemctl restart lmbsc-api
+mita ALL=(root) NOPASSWD: /usr/bin/systemctl restart lmbsc-web
+mita ALL=(root) NOPASSWD: /usr/bin/systemctl reload apache2
+mita ALL=(root) NOPASSWD: /usr/bin/systemctl daemon-reload
+mita ALL=(root) NOPASSWD: /usr/bin/systemctl enable lmbsc-api lmbsc-web
+
+# Service file installation
+mita ALL=(root) NOPASSWD: /usr/bin/cp /home/mita/lmbsc/deploy/lmbsc-api.service /etc/systemd/system/lmbsc-api.service
+mita ALL=(root) NOPASSWD: /usr/bin/cp /home/mita/lmbsc/deploy/lmbsc-web.service /etc/systemd/system/lmbsc-web.service
+
+# Apache config
+mita ALL=(root) NOPASSWD: /usr/bin/cp /home/mita/lmbsc/deploy/apache/lamitabiciclista.conf /etc/apache2/sites-available/lamitabiciclista.conf
+mita ALL=(root) NOPASSWD: /usr/sbin/a2enmod
+mita ALL=(root) NOPASSWD: /usr/sbin/a2ensite
+mita ALL=(root) NOPASSWD: /usr/sbin/apache2ctl

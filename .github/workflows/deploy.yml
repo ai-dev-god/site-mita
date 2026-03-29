@@ -1,0 +1,102 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false   # never cancel a running deploy mid-flight
+
+jobs:
+  deploy:
+    name: Deploy to production
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script_stop: true   # abort on first failing command
+          script: |
+            set -euo pipefail
+            cd /home/mita/lmbsc
+
+            echo "==> Pulling latest code"
+            git pull --ff-only
+
+            echo "==> Installing Python dependencies"
+            /home/mita/.venv/bin/pip install --quiet --upgrade pip
+            /home/mita/.venv/bin/pip install --quiet -e apps/api
+
+            echo "==> Running Alembic migrations"
+            cd /home/mita/lmbsc/apps/api
+            /home/mita/.venv/bin/alembic upgrade head
+            cd /home/mita/lmbsc
+
+            echo "==> Building Next.js frontend"
+            cd /home/mita/lmbsc/apps/web
+            npm ci --omit=dev
+            npm run build
+            # Copy static assets into the standalone output
+            cp -r public .next/standalone/public
+            cp -r .next/static .next/standalone/.next/static
+            cd /home/mita/lmbsc
+
+            echo "==> Syncing static marketing site to public_html"
+            rsync -a --delete \
+              --exclude='.git' \
+              --exclude='apps/' \
+              --exclude='deploy/' \
+              --exclude='.github/' \
+              --exclude='.stitch/' \
+              /home/mita/lmbsc/ /home/mita/public_html/
+
+            echo "==> Installing systemd services"
+            sudo cp /home/mita/lmbsc/deploy/lmbsc-api.service /etc/systemd/system/lmbsc-api.service
+            sudo cp /home/mita/lmbsc/deploy/lmbsc-web.service /etc/systemd/system/lmbsc-web.service
+            sudo systemctl daemon-reload
+            sudo systemctl enable lmbsc-api lmbsc-web
+
+            echo "==> Updating Apache config"
+            sudo cp /home/mita/lmbsc/deploy/apache/lamitabiciclista.conf \
+              /etc/apache2/sites-available/lamitabiciclista.conf
+            sudo a2enmod proxy proxy_http headers rewrite ssl 2>/dev/null || true
+            sudo a2ensite lamitabiciclista 2>/dev/null || true
+
+            echo "==> Restarting services"
+            sudo systemctl restart lmbsc-api
+            sudo systemctl restart lmbsc-web
+            sudo apache2ctl configtest && sudo systemctl reload apache2
+
+            echo "==> Smoke test"
+            sleep 3
+            curl -sf http://127.0.0.1:8001/health | grep -q '"status":"ok"'
+            echo "Health check passed"
+
+      - name: Notify Slack — success
+        if: success() && vars.SLACK_WEBHOOK_URL != ''
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": ":white_check_mark: *Deploy succeeded* — <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha_short }}`> by ${{ github.actor }}"
+            }
+
+      - name: Notify Slack — failure
+        if: failure() && vars.SLACK_WEBHOOK_URL != ''
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": ":x: *Deploy FAILED* — <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs> — triggered by ${{ github.actor }}"
+            }
