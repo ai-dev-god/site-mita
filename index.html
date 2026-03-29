@@ -108,21 +108,29 @@
             font-weight: 800;
             font-family: 'Manrope', sans-serif;
         }
+        /* Logo colour on light backgrounds */
+        #nav-logo {
+            transition: filter 0.3s ease;
+            filter: brightness(0) invert(1); /* white on dark */
+        }
+        #nav-logo.logo-on-light {
+            filter: brightness(0) invert(19%) sepia(91%) saturate(842%) hue-rotate(219deg) brightness(97%) contrast(105%); /* #2E3192 navy */
+        }
     </style>
 </head>
 <body class="bg-brand-navy text-white">
 <!-- Minimal Navigation -->
 <nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 md:px-12 py-8 bg-transparent">
 <a class="block" href="/" style="">
-<img alt="LA MIȚA BICICLISTA" class="h-12 w-auto brightness-0 invert object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uiB4SV9IpsKDME0vHR3AXgik6ioChFmW5lIm0tI4jFnnMvA7hNQzO2oxpeOMkAsb5JwcWX0Mk1X9K78QOueMTtrfOYoWwfRxSDjP4qGMci8S362rH1oHE-C6bhNgW7_6QlDVXRUdhK4oCaAQJb9Q2mnkxppGOJdFXhYThQzzyLWaNhRGNIcPrxPLo_R29_V4k_4K17g3hjDucXfqdnXGX-fkb1LglZU5l6OFkLE_iAWs-nXiShbwT9098a8zv7WtU8xN05HBYjq" style=""/>
+<img id="nav-logo" alt="LA MIȚA BICICLISTA" class="h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uiB4SV9IpsKDME0vHR3AXgik6ioChFmW5lIm0tI4jFnnMvA7hNQzO2oxpeOMkAsb5JwcWX0Mk1X9K78QOueMTtrfOYoWwfRxSDjP4qGMci8S362rH1oHE-C6bhNgW7_6QlDVXRUdhK4oCaAQJb9Q2mnkxppGOJdFXhYThQzzyLWaNhRGNIcPrxPLo_R29_V4k_4K17g3hjDucXfqdnXGX-fkb1LglZU5l6OFkLE_iAWs-nXiShbwT9098a8zv7WtU8xN05HBYjq"/>
 </a>
 <div class="flex items-center gap-6">
 <div class="hidden md:block">
-<button class="border border-white/40 hover:bg-brand-yellow hover:text-brand-navy transition-all px-6 py-2 text-[10px] font-fira-code tracking-widest uppercase" style="">
+<a href="https://ialoc.ro/restaurante-bucuresti/la-mita-biciclista-rezervari-4236" target="_blank" rel="noopener" class="border border-white/40 hover:bg-brand-yellow hover:text-brand-navy transition-all px-6 py-2 text-[10px] font-fira-code tracking-widest uppercase">
                 RESERVATIONS
-            </button>
+            </a>
 </div>
-<span class="font-fira-code text-[10px] tracking-widest font-bold border-b border-brand-yellow pb-1" style="">RO / EN</span>
+<a href="https://lamitabiciclista.ro/en/" target="_blank" rel="noopener" class="font-fira-code text-[10px] tracking-widest font-bold border-b border-brand-yellow pb-1">RO / EN</a>
 </div>
 </nav>
 <!-- Hero Section -->
@@ -193,9 +201,9 @@
 <span class="font-manrope font-bold" style="">10:00 – 00:00</span>
 </div>
 </div>
-<button class="bg-brand-yellow text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-white transition-colors" style="">
+<a href="https://ialoc.ro/restaurante-bucuresti/la-mita-biciclista-rezervari-4236" target="_blank" rel="noopener" class="bg-brand-yellow text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-white transition-colors inline-block">
                 REZERVĂRI SALON
-            </button>
+            </a>
 </div>
 <div class="md:col-span-4 relative">
 <div class="absolute -top-12 -right-12 opacity-10 pointer-events-none">
@@ -221,9 +229,9 @@
 <div class="font-fira-code text-lg font-bold tracking-tight text-brand-yellow" style="">
                         VIN – DUM · 12:00 – 21:00
                     </div>
-<button class="border-2 border-brand-yellow text-brand-yellow w-fit px-12 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all" style="">
+<a href="https://bilete.lamitabiciclista.ro/" target="_blank" rel="noopener" class="border-2 border-brand-yellow text-brand-yellow w-fit px-12 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all inline-block">
                         CUMPĂRĂ BILETE
-                    </button>
+                    </a>
 </div>
 </div>
 </div>
@@ -235,9 +243,9 @@
 <div>
 <h2 class="font-manrope font-extrabold text-5xl tracking-tighter uppercase mb-8" style="">VIENNOISERIE &amp; COFETĂRIE</h2>
 <p class="font-manrope font-light text-xl mb-12 opacity-80" style="">Aduceți savoarea 'La Mița Biciclista' acasă. Comandați produsele noastre artizanale direct la ușa dumneavoastră.</p>
-<button class="bg-brand-navy text-white px-12 py-6 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all" style="">
+<a href="https://shop.lamitabiciclista.ro/" target="_blank" rel="noopener" class="bg-brand-navy text-white px-12 py-6 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all inline-block">
                 SHOP ONLINE
-            </button>
+            </a>
 </div>
 <div class="flex flex-col gap-4 mt-4">
 <a class="border border-brand-navy/20 text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-navy hover:text-white transition-colors text-center" href="#meniuri">
@@ -861,6 +869,27 @@
 </section>
 
 <script>
+  // Logo colour: navy on light sections, white on dark sections
+  (function() {
+    var logo = document.getElementById('nav-logo');
+    var lightSections = document.querySelectorAll('.bg-white');
+    function updateLogo() {
+      var navH = 80;
+      var onLight = false;
+      lightSections.forEach(function(s) {
+        var r = s.getBoundingClientRect();
+        if (r.top <= navH && r.bottom >= 0) onLight = true;
+      });
+      if (onLight) {
+        logo.classList.add('logo-on-light');
+      } else {
+        logo.classList.remove('logo-on-light');
+      }
+    }
+    window.addEventListener('scroll', updateLogo, { passive: true });
+    updateLogo();
+  })();
+
   function switchMenu(id) {
     // Update tab styles
     document.querySelectorAll('.menu-tab').forEach(function(tab) {
@@ -905,13 +934,13 @@
 </div>
 <div class="md:col-span-4 flex flex-col items-end gap-12">
 <div class="flex gap-8">
-<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#" style="">Instagram</a>
-<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#" style="">Facebook</a>
-<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#" style="">TikTok</a>
-<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#">TripAdvisor</a>
-<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="#">Google Reviews</a></div>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="https://www.instagram.com/lamitabiciclista" target="_blank" rel="noopener">Instagram</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="https://www.facebook.com/lamitabiciclista" target="_blank" rel="noopener">Facebook</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="https://www.tiktok.com/@lamitabiciclista" target="_blank" rel="noopener">TikTok</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="https://www.tripadvisor.com/Restaurant_Review-g294458-d26359996-Reviews-La_Mika_Biciclista-Bucharest.html" target="_blank" rel="noopener">TripAdvisor</a>
+<a class="text-sm font-fira-code uppercase tracking-widest hover:text-brand-yellow transition-colors" href="https://www.google.com/search?q=La+Mi%C8%9Ba+Biciclista+Reviews" target="_blank" rel="noopener">Google Reviews</a></div>
 <div class="flex gap-4">
-<div class="px-3 py-1 border border-white/10 text-[8px] font-fira-code uppercase tracking-widest" style="">KAYAK GUIDES</div>
+<a href="https://www.kayak.com/Bucharest.25578.guide" target="_blank" rel="noopener" class="px-3 py-1 border border-white/10 text-[8px] font-fira-code uppercase tracking-widest hover:border-brand-yellow transition-colors">KAYAK GUIDES</a>
 <div class="px-3 py-1 border border-white/10 text-[8px] font-fira-code uppercase tracking-widest" style="">TRIPADVISOR</div>
 <div class="px-3 py-1 border border-white/10 text-[8px] font-fira-code uppercase tracking-widest">GOOGLE REVIEWS</div></div>
 </div>
