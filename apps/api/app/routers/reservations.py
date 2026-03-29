@@ -16,6 +16,7 @@ from app.core.security import require_manager, require_staff
 from app.models.reservation import Reservation, ReservationStatus
 from app.schemas.reservation import ReservationCreate, ReservationRead, ReservationUpdate
 from app.services.availability import find_table_for_slot, get_available_slots
+from app.worker.tasks import notify_cancelled, notify_confirmed
 
 StaffDep = Annotated[dict, Depends(require_staff)]
 ManagerDep = Annotated[dict, Depends(require_manager)]
@@ -144,9 +145,8 @@ async def create_reservation(body: ReservationCreate, db: DbDep) -> Reservation:
         party_size=body.party_size,
     )
 
-    # Notifications are fire-and-forget; wire up after guest CRM (LAM-20)
-    # await send_confirmation_email(reservation, guest_email)
-    # await send_confirmation_sms(reservation, guest_phone)
+    # Fire-and-forget: confirmation SMS + email via Celery
+    notify_confirmed.delay(str(reservation.id))
 
     return reservation
 
@@ -271,6 +271,7 @@ async def cancel_reservation(reservation_id: uuid.UUID, db: DbDep, _auth: StaffD
     reservation.status = ReservationStatus.CANCELLED_BY_VENUE
     await db.flush()
     logger.info("reservation.cancelled_by_venue", reservation_id=str(reservation_id))
+    notify_cancelled.delay(str(reservation_id))
 
 
 @router.delete(
@@ -307,6 +308,7 @@ async def cancel_reservation_by_token(cancellation_token: str, db: DbDep) -> Non
     await db.flush()
 
     logger.info("reservation.cancelled_by_guest", reservation_id=str(reservation.id))
+    notify_cancelled.delay(str(reservation.id))
 
 
 @router.patch(

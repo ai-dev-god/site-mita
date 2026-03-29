@@ -40,6 +40,18 @@ class Settings(BaseSettings):
     # CORS
     allowed_origins: list[str] = ["http://localhost:3000"]
 
+    # Twilio SMS
+    twilio_account_sid: SecretStr = Field(default="")
+    twilio_auth_token: SecretStr = Field(default="")
+    twilio_from_number: str = ""
+
+    # Resend email
+    resend_api_key: SecretStr = Field(default="")
+    resend_from_address: str = "reservations@lamitabiciclista.ro"
+
+    # App base URL (used in tokenized links)
+    app_base_url: str = "https://app.lamitabiciclista.ro"
+
     # Clerk auth
     clerk_publishable_key: SecretStr = Field(default="")
     clerk_secret_key: SecretStr = Field(default="")
