@@ -264,3 +264,9 @@ Breakpoints:
 | `designs/lmbsc-reservation-cancel.html` | Reservation — Cancellation + Success State (`/reserve/cancel/{token}`) | 390px (mobile) | ✅ Generated |
 | `designs/lmbsc-component-library.html` | Admin Component Library | 1440px (desktop) | ✅ Generated |
 | `designs/index.html` | Marketing landing page | responsive | ✅ Existing |
+| `designs/lmbsc-analytics-dashboard.html` | Admin — Analytics Dashboard (KPI cards, weekly trend chart, zone performance, top guests) | 1440px (desktop) | ✅ Generated |
+| `designs/lmbsc-guest-crm-profile.html` | Admin — Guest CRM Profile (visit history, spend chart, GDPR consent toggles, VIP tags, notes) | 1440px (desktop) | ✅ Generated |
+| `designs/lmbsc-admin-reservation-list.html` | Admin — Reservation List (filterable table, bulk actions, status badges, pagination) | 1440px (desktop) | ✅ Generated |
+| `designs/lmbsc-event-management.html` | Admin — Event Management (event cards, ticket availability, check-in progress, guest list preview) | 1440px (desktop) | ✅ Generated |
+| `designs/lmbsc-walkin-self-join.html` | Guest — Walk-in Self-Join Queue (name + phone + party stepper + zone preference + GDPR consent) | 390px (mobile) | ✅ Generated |
+| `designs/lmbsc-live-occupancy-dashboard.html` | Host/Admin — Live Occupancy Dashboard (`/dashboard`): real-time headcount KPIs, zone occupancy bars, smart alerts, hourly footfall chart, UniFi Protect camera status strip | 1440px (desktop) | ✅ Generated |

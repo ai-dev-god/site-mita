@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>LMBSC — Analytics Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-primary:       #2C4A2E;
+    --color-primary-light: #4A7A4C;
+    --color-primary-muted: #EAF0EA;
+    --color-accent:        #B8962E;
+    --color-accent-light:  #F5E9C4;
+    --color-surface:       #FAF6F0;
+    --color-raised:        #FFFFFF;
+    --color-text:          #1A1A1A;
+    --color-text-sec:      #5A5A5A;
+    --color-text-muted:    #9A9A9A;
+    --color-border:        #E4DDD5;
+    --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+    --shadow-md:  0 4px 12px rgba(44,74,46,0.10);
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  12px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-surface);
+    color: var(--color-text);
+    width: 1440px;
+    min-height: 900px;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────────── */
+  .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+  }
+
+  .sidebar__logo {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .sidebar__logo-text {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.3;
+  }
+
+  .sidebar__logo-sub {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .sidebar__section-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 20px 20px 8px;
+  }
+
+  .sidebar__nav { flex: 1; padding: 8px 0; }
+
+  .sidebar__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 44px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 120ms;
+  }
+
+  .sidebar__item:hover { background: rgba(255,255,255,0.07); }
+
+  .sidebar__item--active {
+    color: #FFFFFF;
+    background: rgba(255,255,255,0.10);
+    border-left-color: var(--color-accent);
+  }
+
+  .sidebar__icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .sidebar__divider {
+    height: 1px;
+    background: rgba(255,255,255,0.12);
+    margin: 8px 0;
+  }
+
+  /* ── MAIN ─────────────────────────────────── */
+  .main {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* ── PAGE HEADER ─────────────────────────────────── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .page-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .date-picker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 12px;
+    background: var(--color-raised);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  .btn { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 16px; border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+  .btn--primary { background: var(--color-primary); color: #fff; }
+  .btn--primary:hover { background: var(--color-primary-light); }
+  .btn--accent { background: var(--color-accent); color: #fff; }
+
+  /* ── KPI CARDS ─────────────────────────────────── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .kpi-card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .kpi-card__label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-sec);
+  }
+
+  .kpi-card__value {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .kpi-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  .kpi-card__sub {
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  .trend-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 100px;
+  }
+
+  .trend-chip--up { background: #EAF0EA; color: var(--color-primary); }
+  .trend-chip--down { background: #FEE2E2; color: #DC2626; }
+  .trend-chip--neutral { background: #FBF4E3; color: var(--color-accent); }
+
+  .progress-bar-wrap { margin-top: 8px; }
+  .progress-bar-track {
+    height: 6px;
+    background: var(--color-border);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: var(--color-accent);
+  }
+  .progress-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+  }
+
+  /* ── CHARTS ROW ─────────────────────────────────── */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+  }
+
+  .card__title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card__title-meta {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--color-text-muted);
+  }
+
+  /* SVG Line Chart */
+  .chart-container { position: relative; height: 200px; }
+
+  .chart-svg { width: 100%; height: 100%; }
+
+  .chart-axis-label {
+    font-size: 11px;
+    fill: var(--color-text-muted);
+    font-family: 'Inter', sans-serif;
+  }
+
+  .chart-grid-line { stroke: var(--color-border); stroke-width: 1; stroke-dasharray: 4,4; }
+  .chart-line { stroke: var(--color-primary); stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .chart-area { fill: url(#areaGrad); }
+  .chart-dot { fill: var(--color-raised); stroke: var(--color-primary); stroke-width: 2; }
+
+  /* tooltip mockup */
+  .chart-tooltip {
+    position: absolute;
+    top: 28px;
+    left: 72%;
+    background: var(--color-text);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    pointer-events: none;
+  }
+  .chart-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-bottom: none;
+    border-top-color: var(--color-text);
+  }
+
+  /* Bar chart */
+  .bar-chart { display: flex; flex-direction: column; gap: 12px; }
+
+  .bar-row { display: flex; flex-direction: column; gap: 4px; }
+
+  .bar-row__header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--color-text);
+  }
+
+  .bar-row__val { font-weight: 600; color: var(--color-primary); }
+
+  .bar-track {
+    height: 8px;
+    background: var(--color-border);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  }
+
+  /* ── TABLE SECTION ─────────────────────────────────── */
+  .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 12px;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead tr {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  thead th {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-sec);
+    padding: 10px 16px;
+    text-align: left;
+  }
+
+  thead th:hover { color: var(--color-primary); cursor: pointer; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--color-border);
+    transition: background 120ms;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #FAFAF8; }
+
+  td {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--color-text);
+  }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .rank-badge--gold { background: var(--color-accent-light); color: var(--color-accent); }
+  .rank-badge--silver { background: #F1F5F9; color: #64748B; }
+  .rank-badge--bronze { background: #FEF3C7; color: #D97706; }
+
+  .vip-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+    border: 1px solid rgba(184,150,46,0.3);
+  }
+
+  .table-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px 16px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .link-action {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .link-action:hover { color: var(--color-primary-light); }
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar__logo">
+    <div>
+      <div class="sidebar__logo-text">La Mița Biciclista</div>
+      <div class="sidebar__logo-sub">Hospitality Platform</div>
+    </div>
+  </div>
+
+  <nav class="sidebar__nav">
+    <div class="sidebar__section-label">Principal</div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">⌂</span> Dashboard
+    </div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">📋</span> Rezervări
+    </div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">⚑</span> Floor View
+    </div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">⏱</span> Coadă Walk-in
+    </div>
+    <div class="sidebar__divider"></div>
+    <div class="sidebar__section-label">Administrare</div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">👤</span> Oaspeți
+    </div>
+    <div class="sidebar__item sidebar__item--active">
+      <span class="sidebar__icon">📊</span> Analytics
+    </div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">🎫</span> Evenimente
+    </div>
+    <div class="sidebar__divider"></div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">⚙</span> Setări
+    </div>
+  </nav>
+</aside>
+
+<!-- ── MAIN CONTENT ─────────────────────────────────── -->
+<main class="main">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">Analytics</h1>
+    <div class="page-header__actions">
+      <div class="date-picker">
+        📅 Ultimele 7 zile ▾
+      </div>
+      <button class="btn btn--accent">↓ Export CSV</button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-card__label">Total Covers</div>
+      <div class="kpi-card__value">1,284</div>
+      <div class="kpi-card__footer">
+        <span class="kpi-card__sub">această săptămână</span>
+        <span class="trend-chip trend-chip--up">▲ +12%</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-card__label">Cheltuială medie / cover</div>
+      <div class="kpi-card__value">187 <span style="font-size:18px;font-family:var(--font-body);font-weight:500;">RON</span></div>
+      <div class="kpi-card__footer">
+        <span class="kpi-card__sub">vs. săpt. trecută 173 RON</span>
+        <span class="trend-chip trend-chip--up">▲ +8%</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-card__label">Rata de ocupare rezervări</div>
+      <div class="kpi-card__value">91<span style="font-size:20px;font-family:var(--font-body);font-weight:500;">%</span></div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" style="width:91%;"></div>
+        </div>
+        <div class="progress-bar-label">
+          <span>0%</span><span>100%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-card__label">Timp așteptare coadă</div>
+      <div class="kpi-card__value">18 <span style="font-size:18px;font-family:var(--font-body);font-weight:500;">min</span></div>
+      <div class="kpi-card__footer">
+        <span class="kpi-card__sub">medie azi</span>
+        <span class="trend-chip trend-chip--up">▼ −3 min</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-row">
+    <!-- Line Chart -->
+    <div class="card">
+      <div class="card__title">
+        Trend Covers Săptămânal
+        <span class="card__title-meta">Lun 24 – Dum 29 Mar</span>
+      </div>
+      <div class="chart-container">
+        <svg class="chart-svg" viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2C4A2E" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#2C4A2E" stop-opacity="0.02"/>
+            </linearGradient>
+          </defs>
+          <!-- grid lines -->
+          <line x1="60" y1="20" x2="620" y2="20" class="chart-grid-line"/>
+          <line x1="60" y1="68" x2="620" y2="68" class="chart-grid-line"/>
+          <line x1="60" y1="116" x2="620" y2="116" class="chart-grid-line"/>
+          <line x1="60" y1="164" x2="620" y2="164" class="chart-grid-line"/>
+          <!-- Y axis labels -->
+          <text x="50" y="24" class="chart-axis-label" text-anchor="end">300</text>
+          <text x="50" y="72" class="chart-axis-label" text-anchor="end">225</text>
+          <text x="50" y="120" class="chart-axis-label" text-anchor="end">150</text>
+          <text x="50" y="168" class="chart-axis-label" text-anchor="end">75</text>
+          <!-- area fill -->
+          <path d="M80,100 L173,80 L266,56 L359,90 L452,44 L545,32 L610,48 L610,164 L545,164 L452,164 L359,164 L266,164 L173,164 L80,164 Z" class="chart-area"/>
+          <!-- line -->
+          <path d="M80,100 L173,80 L266,56 L359,90 L452,44 L545,32 L610,48" class="chart-line"/>
+          <!-- dots -->
+          <circle cx="80" cy="100" r="4" class="chart-dot"/>
+          <circle cx="173" cy="80" r="4" class="chart-dot"/>
+          <circle cx="266" cy="56" r="4" class="chart-dot"/>
+          <circle cx="359" cy="90" r="4" class="chart-dot"/>
+          <circle cx="452" cy="44" r="4" class="chart-dot"/>
+          <circle cx="545" cy="32" r="5" fill="#2C4A2E"/>
+          <circle cx="610" cy="48" r="4" class="chart-dot"/>
+          <!-- X axis labels -->
+          <text x="80"  y="188" class="chart-axis-label" text-anchor="middle">Lun</text>
+          <text x="173" y="188" class="chart-axis-label" text-anchor="middle">Mar</text>
+          <text x="266" y="188" class="chart-axis-label" text-anchor="middle">Mie</text>
+          <text x="359" y="188" class="chart-axis-label" text-anchor="middle">Joi</text>
+          <text x="452" y="188" class="chart-axis-label" text-anchor="middle">Vin</text>
+          <text x="545" y="188" class="chart-axis-label" text-anchor="middle" fill="#2C4A2E" font-weight="600">Sâm</text>
+          <text x="610" y="188" class="chart-axis-label" text-anchor="middle">Dum</text>
+          <!-- highlighted vertical line -->
+          <line x1="545" y1="20" x2="545" y2="164" stroke="#2C4A2E" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4"/>
+        </svg>
+        <div class="chart-tooltip">Sâm: 248 covers</div>
+      </div>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="card">
+      <div class="card__title">
+        Performanță pe Zonă
+        <span class="card__title-meta">Covers totale</span>
+      </div>
+      <div class="bar-chart" style="margin-top:8px;">
+        <div class="bar-row">
+          <div class="bar-row__header">
+            <span>Brasserie Parter</span>
+            <span class="bar-row__val">532</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:100%;"></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-row__header">
+            <span>Salon Etaj 1</span>
+            <span class="bar-row__val">318</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:60%;"></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-row__header">
+            <span>Terasă</span>
+            <span class="bar-row__val">264</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:50%;"></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-row__header">
+            <span>Private Dining</span>
+            <span class="bar-row__val">170</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:32%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zone spend summary -->
+      <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--color-border);">
+        <div class="card__title" style="margin-bottom:8px;">Venit estimat</div>
+        <div style="font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--color-accent);">240,108 RON</div>
+        <div style="font-size:12px;color:var(--color-text-muted);margin-top:4px;">această săptămână · toate zonele</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Guests Table -->
+  <div class="card" style="padding:0;">
+    <div style="padding:20px 20px 0;">
+      <div class="section-title">Top Oaspeți această Săptămână</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Oaspete ↕</th>
+          <th>Vizite</th>
+          <th>Cheltuială totală ↕</th>
+          <th>Ultima vizită</th>
+          <th>Statut VIP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rank-badge rank-badge--gold">1</span></td>
+          <td><strong>Maria Popescu</strong><div style="font-size:11px;color:var(--color-text-muted);">0722 123 456</div></td>
+          <td>4</td>
+          <td style="font-weight:600;color:var(--color-accent);">2,240 RON</td>
+          <td style="color:var(--color-text-sec);">29 Mar, 20:30</td>
+          <td><span class="vip-badge">★ VIP Gold</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge rank-badge--silver">2</span></td>
+          <td><strong>Alexandru Ionescu</strong><div style="font-size:11px;color:var(--color-text-muted);">0744 987 321</div></td>
+          <td>3</td>
+          <td style="font-weight:600;color:var(--color-accent);">1,890 RON</td>
+          <td style="color:var(--color-text-sec);">28 Mar, 19:00</td>
+          <td><span class="vip-badge">★ VIP Silver</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge rank-badge--bronze">3</span></td>
+          <td><strong>Elena Constantin</strong><div style="font-size:11px;color:var(--color-text-muted);">0766 654 789</div></td>
+          <td>3</td>
+          <td style="font-weight:600;color:var(--color-accent);">1,644 RON</td>
+          <td style="color:var(--color-text-sec);">27 Mar, 21:00</td>
+          <td><span class="vip-badge">★ VIP Gold</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge rank-badge--silver">4</span></td>
+          <td><strong>Mihai Dumitrescu</strong><div style="font-size:11px;color:var(--color-text-muted);">0733 112 445</div></td>
+          <td>2</td>
+          <td style="font-weight:600;color:var(--color-accent);">1,200 RON</td>
+          <td style="color:var(--color-text-sec);">29 Mar, 13:00</td>
+          <td><span style="font-size:12px;color:var(--color-text-muted);">Regular</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge rank-badge--silver">5</span></td>
+          <td><strong>Andreea Popa</strong><div style="font-size:11px;color:var(--color-text-muted);">0755 890 123</div></td>
+          <td>2</td>
+          <td style="font-weight:600;color:var(--color-accent);">980 RON</td>
+          <td style="color:var(--color-text-sec);">26 Mar, 20:00</td>
+          <td><span class="vip-badge">★ VIP Silver</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table-footer">
+      <a href="#" class="link-action">Vizualizează toți oaspeții →</a>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>

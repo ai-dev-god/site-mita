@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>LMBSC — Admin Reservation List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-primary:       #2C4A2E;
+    --color-primary-light: #4A7A4C;
+    --color-primary-muted: #EAF0EA;
+    --color-accent:        #B8962E;
+    --color-accent-light:  #F5E9C4;
+    --color-surface:       #FAF6F0;
+    --color-raised:        #FFFFFF;
+    --color-text:          #1A1A1A;
+    --color-text-sec:      #5A5A5A;
+    --color-text-muted:    #9A9A9A;
+    --color-border:        #E4DDD5;
+    --color-error:         #DC2626;
+    --color-warning:       #D97706;
+    --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-surface);
+    color: var(--color-text);
+    width: 1440px;
+    min-height: 900px;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────────── */
+  .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .sidebar__logo {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .sidebar__logo-text {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+
+  .sidebar__logo-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .sidebar__nav { flex: 1; padding: 8px 0; }
+
+  .sidebar__section-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 20px 20px 8px;
+  }
+
+  .sidebar__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 44px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    border-left: 3px solid transparent;
+  }
+
+  .sidebar__item--active {
+    color: #FFFFFF;
+    background: rgba(255,255,255,0.10);
+    border-left-color: var(--color-accent);
+  }
+
+  .sidebar__divider { height: 1px; background: rgba(255,255,255,0.12); margin: 8px 0; }
+  .sidebar__icon { font-size: 16px; width: 20px; text-align: center; }
+
+  /* ── MAIN ─────────────────────────────────── */
+  .main {
+    flex: 1;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 16px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn--primary  { background: var(--color-primary); color: #fff; }
+  .btn--danger   { background: transparent; color: var(--color-error); border: 1px solid var(--color-error); }
+  .btn--ghost    { background: transparent; color: var(--color-text-sec); border: 1px solid var(--color-border); }
+  .btn--sm       { height: 30px; padding: 0 12px; font-size: 12px; }
+
+  /* ── FILTER BAR ─────────────────────────────────── */
+  .filter-bar {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .filter-select {
+    height: 34px;
+    padding: 0 10px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-text);
+    background: var(--color-raised);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .search-input {
+    flex: 1;
+    min-width: 200px;
+    height: 34px;
+    padding: 0 12px 0 32px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-text);
+    background: var(--color-raised) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239A9A9A' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat 10px center;
+    outline: none;
+  }
+
+  .filter-count {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  /* ── BULK ACTION BAR ─────────────────────────────────── */
+  .bulk-bar {
+    background: var(--color-primary-muted);
+    border: 1px solid rgba(44,74,46,0.2);
+    border-radius: var(--radius-md);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bulk-bar__label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-right: 8px;
+  }
+
+  /* ── TABLE ─────────────────────────────────── */
+  .table-card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    flex: 1;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead tr {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  thead th {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-sec);
+    padding: 10px 12px;
+    text-align: left;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  thead th:hover { color: var(--color-primary); }
+
+  thead th.sortable::after {
+    content: ' ↕';
+    opacity: 0.5;
+    font-size: 10px;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--color-border);
+    transition: background 100ms;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #FDFCF9; }
+  tbody tr.selected { background: #F5FAF5; }
+
+  td { padding: 11px 12px; font-size: 13px; vertical-align: middle; }
+
+  .checkbox {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .checkbox--checked {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+    font-size: 10px;
+  }
+
+  .time-cell { font-size: 14px; font-weight: 600; color: var(--color-primary); white-space: nowrap; }
+
+  .guest-cell__name { font-weight: 600; font-size: 13px; }
+  .guest-cell__phone { font-size: 11px; color: var(--color-text-muted); margin-top: 2px; }
+
+  .pax-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    white-space: nowrap;
+  }
+
+  .table-chip { font-size: 12px; font-weight: 600; color: var(--color-text-sec); }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: var(--radius-sm);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+
+  .status-badge--confirmed  { background: #EAF0EA; color: #2C4A2E; border-color: rgba(44,74,46,0.25); }
+  .status-badge--pending    { background: #FBF4E3; color: #B8962E; border-color: rgba(184,150,46,0.3); }
+  .status-badge--seated     { background: #EAF0EA; color: #1A3A1C; border-color: rgba(44,74,46,0.4); }
+  .status-badge--noshow     { background: #FEE2E2; color: #DC2626; border-color: rgba(220,38,38,0.3); }
+  .status-badge--cancelled  { background: #F3F4F6; color: #6B7280; border-color: rgba(107,114,128,0.2); }
+
+  .source-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 7px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .source-chip--online   { background: #EFF6FF; color: #2563EB; }
+  .source-chip--phone    { background: #F0FDF4; color: #16A34A; }
+  .source-chip--walkin   { background: #FEF9EC; color: #B8962E; }
+
+  .action-btn {
+    width: 28px; height: 28px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-raised);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--color-text-sec);
+  }
+
+  .action-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+  /* ── PAGINATION ─────────────────────────────────── */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-top: 1px solid var(--color-border);
+    font-size: 13px;
+    color: var(--color-text-sec);
+  }
+
+  .page-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-raised);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--color-text-sec);
+  }
+
+  .page-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+  .page-btn--active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar__logo">
+    <div>
+      <div class="sidebar__logo-text">La Mița Biciclista</div>
+      <div class="sidebar__logo-sub">Hospitality Platform</div>
+    </div>
+  </div>
+  <nav class="sidebar__nav">
+    <div class="sidebar__section-label">Principal</div>
+    <div class="sidebar__item"><span class="sidebar__icon">⌂</span> Dashboard</div>
+    <div class="sidebar__item sidebar__item--active"><span class="sidebar__icon">📋</span> Rezervări</div>
+    <div class="sidebar__item"><span class="sidebar__icon">⚑</span> Floor View</div>
+    <div class="sidebar__item"><span class="sidebar__icon">⏱</span> Coadă Walk-in</div>
+    <div class="sidebar__divider"></div>
+    <div class="sidebar__section-label">Administrare</div>
+    <div class="sidebar__item"><span class="sidebar__icon">👤</span> Oaspeți</div>
+    <div class="sidebar__item"><span class="sidebar__icon">📊</span> Analytics</div>
+    <div class="sidebar__item"><span class="sidebar__icon">🎫</span> Evenimente</div>
+    <div class="sidebar__divider"></div>
+    <div class="sidebar__item"><span class="sidebar__icon">⚙</span> Setări</div>
+  </nav>
+</aside>
+
+<!-- ── MAIN ─────────────────────────────────── -->
+<main class="main">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">Rezervări</h1>
+    <button class="btn btn--primary">+ Rezervare nouă</button>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="filter-select">📅 Azi, 29 Martie ▾</div>
+    <div class="filter-select">Toate schimburile ▾</div>
+    <div class="filter-select">Toate zonele ▾</div>
+    <div class="filter-select">Toate statusurile ▾</div>
+    <input class="search-input" type="text" placeholder="Caută după numele oaspetelui...">
+    <span class="filter-count">Filtre active: 0</span>
+  </div>
+
+  <!-- Bulk Action Bar (3 selected) -->
+  <div class="bulk-bar">
+    <span class="bulk-bar__label">3 rezervări selectate</span>
+    <button class="btn btn--primary btn--sm">✓ Confirmă toate</button>
+    <button class="btn btn--ghost btn--sm">⚑ Marchează absent</button>
+    <button class="btn btn--danger btn--sm">✕ Anulează selectate</button>
+    <button class="btn btn--ghost btn--sm">🖨 Printează bilete</button>
+    <button class="btn btn--ghost btn--sm" style="margin-left:auto;">✕ Deselectează</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:36px;"><div class="checkbox checkbox--checked">✓</div></th>
+          <th class="sortable">Oră</th>
+          <th>Oaspete</th>
+          <th>Persoane</th>
+          <th>Zonă</th>
+          <th>Masă</th>
+          <th class="sortable">Status</th>
+          <th>Sursă</th>
+          <th style="width:40px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="selected">
+          <td><div class="checkbox checkbox--checked">✓</div></td>
+          <td><span class="time-cell">12:00</span></td>
+          <td><div class="guest-cell__name">Ioan Radu</div><div class="guest-cell__phone">0722 441 892</div></td>
+          <td><span class="pax-chip">2 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Brasserie Parter</td>
+          <td><span class="table-chip">T-03</span></td>
+          <td><span class="status-badge status-badge--confirmed">Confirmat</span></td>
+          <td><span class="source-chip source-chip--online">Online</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr class="selected">
+          <td><div class="checkbox checkbox--checked">✓</div></td>
+          <td><span class="time-cell">12:30</span></td>
+          <td><div class="guest-cell__name">Anca Mihai</div><div class="guest-cell__phone">0744 228 310</div></td>
+          <td><span class="pax-chip">4 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Terasă</td>
+          <td><span class="table-chip">T-12</span></td>
+          <td><span class="status-badge status-badge--pending">În așteptare</span></td>
+          <td><span class="source-chip source-chip--phone">Telefon</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr class="selected">
+          <td><div class="checkbox checkbox--checked">✓</div></td>
+          <td><span class="time-cell">13:00</span></td>
+          <td><div class="guest-cell__name">Maria Popescu</div><div class="guest-cell__phone">0722 123 456</div></td>
+          <td><span class="pax-chip">2 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Brasserie Parter</td>
+          <td><span class="table-chip">T-07</span></td>
+          <td><span class="status-badge status-badge--seated">Așezat</span></td>
+          <td><span class="source-chip source-chip--online">Online</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr>
+          <td><div class="checkbox"></div></td>
+          <td><span class="time-cell">13:30</span></td>
+          <td><div class="guest-cell__name">Radu Florescu</div><div class="guest-cell__phone">0733 901 556</div></td>
+          <td><span class="pax-chip">6 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Salon Etaj 1</td>
+          <td><span class="table-chip">S-02</span></td>
+          <td><span class="status-badge status-badge--confirmed">Confirmat</span></td>
+          <td><span class="source-chip source-chip--phone">Telefon</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr>
+          <td><div class="checkbox"></div></td>
+          <td><span class="time-cell">14:00</span></td>
+          <td><div class="guest-cell__name">Elena Constantin</div><div class="guest-cell__phone">0766 654 789</div></td>
+          <td><span class="pax-chip">3 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Brasserie Parter</td>
+          <td><span class="table-chip">T-05</span></td>
+          <td><span class="status-badge status-badge--noshow">Absent</span></td>
+          <td><span class="source-chip source-chip--online">Online</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr>
+          <td><div class="checkbox"></div></td>
+          <td><span class="time-cell">19:00</span></td>
+          <td><div class="guest-cell__name">Bogdan Popa</div><div class="guest-cell__phone">0755 012 887</div></td>
+          <td><span class="pax-chip">2 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Terasă</td>
+          <td><span class="table-chip">T-15</span></td>
+          <td><span class="status-badge status-badge--confirmed">Confirmat</span></td>
+          <td><span class="source-chip source-chip--online">Online</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr>
+          <td><div class="checkbox"></div></td>
+          <td><span class="time-cell">19:30</span></td>
+          <td><div class="guest-cell__name">Cristina Vasile</div><div class="guest-cell__phone">0766 334 901</div></td>
+          <td><span class="pax-chip">5 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Salon Etaj 1</td>
+          <td><span class="table-chip">S-04</span></td>
+          <td><span class="status-badge status-badge--pending">În așteptare</span></td>
+          <td><span class="source-chip source-chip--walkin">Walk-in</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr>
+          <td><div class="checkbox"></div></td>
+          <td><span class="time-cell">20:00</span></td>
+          <td><div class="guest-cell__name">Alexandru Ionescu</div><div class="guest-cell__phone">0744 987 321</div></td>
+          <td><span class="pax-chip">4 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Brasserie Parter</td>
+          <td><span class="table-chip">T-09</span></td>
+          <td><span class="status-badge status-badge--confirmed">Confirmat</span></td>
+          <td><span class="source-chip source-chip--phone">Telefon</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr>
+          <td><div class="checkbox"></div></td>
+          <td><span class="time-cell">20:00</span></td>
+          <td><div class="guest-cell__name">Mihaela Dinu</div><div class="guest-cell__phone">0722 788 234</div></td>
+          <td><span class="pax-chip">2 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Brasserie Parter</td>
+          <td><span class="table-chip">T-11</span></td>
+          <td><span class="status-badge status-badge--confirmed">Confirmat</span></td>
+          <td><span class="source-chip source-chip--online">Online</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr>
+          <td><div class="checkbox"></div></td>
+          <td><span class="time-cell">20:30</span></td>
+          <td><div class="guest-cell__name">George Marin</div><div class="guest-cell__phone">0733 456 012</div></td>
+          <td><span class="pax-chip">8 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Salon Etaj 1</td>
+          <td><span class="table-chip">S-01</span></td>
+          <td><span class="status-badge status-badge--confirmed">Confirmat</span></td>
+          <td><span class="source-chip source-chip--phone">Telefon</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr>
+          <td><div class="checkbox"></div></td>
+          <td><span class="time-cell">21:00</span></td>
+          <td><div class="guest-cell__name">Nicoleta Stoica</div><div class="guest-cell__phone">0744 563 228</div></td>
+          <td><span class="pax-chip">2 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Terasă</td>
+          <td><span class="table-chip">T-18</span></td>
+          <td><span class="status-badge status-badge--pending">În așteptare</span></td>
+          <td><span class="source-chip source-chip--online">Online</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+        <tr>
+          <td><div class="checkbox"></div></td>
+          <td><span class="time-cell">21:30</span></td>
+          <td><div class="guest-cell__name">Andrei Lungu</div><div class="guest-cell__phone">0755 890 445</div></td>
+          <td><span class="pax-chip">3 pers.</span></td>
+          <td style="font-size:12px;color:var(--color-text-sec);">Brasserie Parter</td>
+          <td><span class="table-chip">T-02</span></td>
+          <td><span class="status-badge status-badge--cancelled">Anulat</span></td>
+          <td><span class="source-chip source-chip--online">Online</span></td>
+          <td><div class="action-btn">⋮</div></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <span>Se afișează 1–12 din <strong>47</strong> rezervări</span>
+      <div style="display:flex;gap:6px;">
+        <button class="page-btn">← Anterior</button>
+        <button class="page-btn page-btn--active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <button class="page-btn">Următor →</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>

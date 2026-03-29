@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface ZoneOption {
@@ -16,6 +16,14 @@ interface VenueOption {
 }
 
 export default function WalkInPage() {
+  return (
+    <Suspense fallback={null}>
+      <WalkInInner />
+    </Suspense>
+  );
+}
+
+function WalkInInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const preselectedZone = searchParams.get("zone_id");

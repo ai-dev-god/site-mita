@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>LMBSC — Dashboard Live (Ocupare & UniFi)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-primary:       #2C4A2E;
+    --color-primary-light: #4A7A4C;
+    --color-primary-muted: #EAF0EA;
+    --color-accent:        #B8962E;
+    --color-accent-light:  #F5E9C4;
+    --color-surface:       #FAF6F0;
+    --color-raised:        #FFFFFF;
+    --color-text:          #1A1A1A;
+    --color-text-sec:      #5A5A5A;
+    --color-text-muted:    #9A9A9A;
+    --color-border:        #E4DDD5;
+    --color-warning:       #D97706;
+    --color-warning-bg:    #FEF3C7;
+    --color-error:         #DC2626;
+    --color-error-bg:      #FEE2E2;
+    --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+    --shadow-md:  0 4px 12px rgba(44,74,46,0.10);
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  12px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-surface);
+    color: var(--color-text);
+    width: 1440px;
+    min-height: 900px;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────────── */
+  .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .sidebar__logo {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    gap: 10px;
+  }
+
+  .sidebar__monogram {
+    width: 34px;
+    height: 34px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: #FFFFFF;
+    flex-shrink: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .sidebar__logo-text {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+    line-height: 1.25;
+  }
+
+  .sidebar__logo-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+
+  .sidebar__nav { flex: 1; padding: 8px 0; }
+
+  .sidebar__item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    height: 44px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.72);
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 120ms;
+    user-select: none;
+  }
+
+  .sidebar__item:hover { background: rgba(255,255,255,0.07); }
+
+  .sidebar__item--active {
+    color: #FFFFFF;
+    background: rgba(255,255,255,0.10);
+    border-left-color: var(--color-accent);
+  }
+
+  .sidebar__icon { font-size: 15px; width: 18px; text-align: center; opacity: 0.9; }
+
+  .sidebar__divider {
+    height: 1px;
+    background: rgba(255,255,255,0.10);
+    margin: 6px 12px;
+  }
+
+  .sidebar__bottom {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.10);
+  }
+
+  .unifi-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+  }
+
+  .unifi-status__dot {
+    width: 8px;
+    height: 8px;
+    background: #4ADE80;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(74,222,128,0.25);
+    animation: pulse-green 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse-green {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(74,222,128,0.25); }
+    50% { box-shadow: 0 0 0 5px rgba(74,222,128,0.10); }
+  }
+
+  .unifi-status__label { font-weight: 500; }
+
+  /* ── MAIN WRAPPER ─────────────────────────────────── */
+  .main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── TOP BAR ─────────────────────────────────── */
+  .topbar {
+    height: 64px;
+    background: var(--color-raised);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    flex-shrink: 0;
+  }
+
+  .topbar__left {}
+
+  .topbar__title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .topbar__subtitle {
+    font-size: 12px;
+    color: var(--color-text-sec);
+    margin-top: 3px;
+    letter-spacing: 0.01em;
+  }
+
+  .topbar__right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    border: 1px solid rgba(44,74,46,0.25);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .status-pill__dot {
+    width: 7px;
+    height: 7px;
+    background: #4ADE80;
+    border-radius: 50%;
+  }
+
+  .topbar__divider {
+    width: 1px;
+    height: 20px;
+    background: var(--color-border);
+  }
+
+  .topbar__refresh {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+  }
+
+  .topbar__refresh:hover { color: var(--color-text-sec); }
+
+  /* ── CONTENT AREA ─────────────────────────────────── */
+  .content {
+    flex: 1;
+    padding: 24px 28px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--color-surface);
+  }
+
+  /* ── KPI ROW ─────────────────────────────────── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .kpi-card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .kpi-card--warning {
+    border-left: 3px solid var(--color-warning);
+  }
+
+  .kpi-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--color-text-sec);
+    margin-bottom: 14px;
+  }
+
+  /* KPI 1 — circular progress */
+  .kpi-ring-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .ring-svg { width: 72px; height: 72px; flex-shrink: 0; }
+
+  .ring-center-text {
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+
+  .ring-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    fill: var(--color-text);
+  }
+
+  .ring-denom {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    fill: var(--color-text-muted);
+  }
+
+  .kpi-ring-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .kpi-ring-info__pct {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  /* KPI 2/3 — big number */
+  .kpi-big-value {
+    font-family: var(--font-display);
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .kpi-big-value--primary { color: var(--color-primary); }
+  .kpi-big-value--muted   { color: var(--color-text-sec); }
+  .kpi-big-value--warning { color: var(--color-warning); }
+
+  .kpi-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+
+  .kpi-sub {
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  /* KPI 4 — walk-in queue warning */
+  .kpi-queue-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .pulse-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--color-warning);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse-amber 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-amber {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(217,119,6,0.4); }
+    50%       { box-shadow: 0 0 0 6px rgba(217,119,6,0.0); }
+  }
+
+  /* chips / badges */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .chip--green   { background: #EAF0EA; color: var(--color-primary); }
+  .chip--amber   { background: var(--color-warning-bg); color: var(--color-warning); }
+  .chip--gray    { background: #F3F4F6; color: #6B7280; }
+  .chip--accent  { background: var(--color-accent-light); color: var(--color-accent); }
+
+  .badge-status {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .badge--occupied   { background: #EAF0EA; color: #2C4A2E; border: 1px solid rgba(44,74,46,0.25); }
+  .badge--available  { background: #F0F7F0; color: #4A7A4C; border: 1px solid rgba(74,122,76,0.20); }
+
+  /* ── ROW 2 — ZONES + ALERTS ─────────────────────────────────── */
+  .row2 {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .card__title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .card__meta {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  /* zone rows */
+  .zone-list { display: flex; flex-direction: column; gap: 18px; }
+
+  .zone-row { display: flex; flex-direction: column; gap: 6px; }
+
+  .zone-row__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .zone-row__name {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .zone-cam-icon {
+    color: var(--color-accent);
+    font-size: 13px;
+    opacity: 0.9;
+  }
+
+  .zone-row__count {
+    font-size: 12px;
+    color: var(--color-text-sec);
+  }
+
+  .zone-row__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 7px;
+    background: var(--color-border);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-right: 12px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 0.6s ease;
+  }
+
+  .progress-fill--high    { background: var(--color-primary); }
+  .progress-fill--medium  { background: var(--color-primary-light); }
+  .progress-fill--warning { background: var(--color-warning); }
+
+  /* alerts panel */
+  .alert-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: var(--color-warning-bg);
+    color: var(--color-warning);
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .alert-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .alert-item {
+    border-radius: var(--radius-sm);
+    padding: 10px 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .alert-item--error  { background: #FEE2E2; border-left: 4px solid var(--color-error); }
+  .alert-item--warn   { background: #FEF3C7; border-left: 4px solid var(--color-warning); }
+  .alert-item--ok     { background: #F0F7F0; border-left: 4px solid var(--color-primary-light); }
+
+  .alert-icon { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+
+  .alert-body { flex: 1; }
+
+  .alert-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .alert-text--resolved {
+    text-decoration: line-through;
+    color: var(--color-text-muted);
+  }
+
+  .alert-sub {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+
+  .alert-footer {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .alert-settings-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .alert-settings-link:hover { text-decoration: underline; }
+
+  /* ── ROW 3 — FOOTFALL CHART ─────────────────────────────────── */
+  .chart-card { background: var(--color-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 20px 24px; box-shadow: var(--shadow-sm); }
+
+  .chart-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--color-text-sec);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  .legend-dot--primary { background: var(--color-primary); }
+  .legend-dot--accent  { background: var(--color-accent); border-top: 2px dashed var(--color-accent); background: transparent; width: 14px; }
+
+  .chart-range {
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 190px;
+  }
+
+  .chart-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* ── ROW 4 — CAMERA STRIP ─────────────────────────────────── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--color-text-muted);
+    margin-bottom: 10px;
+  }
+
+  .camera-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .cam-card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .cam-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .cam-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cam-badge--live { background: var(--color-primary-muted); color: var(--color-primary); }
+  .cam-badge--live::before { content: '●'; font-size: 8px; animation: blink-live 1.5s step-end infinite; }
+
+  @keyframes blink-live {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+
+  .cam-badge--warn { background: var(--color-warning-bg); color: var(--color-warning); }
+
+  .cam-model {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+
+  .cam-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 8px;
+  }
+
+  .cam-preview {
+    width: 100%;
+    height: 76px;
+    background: #1A1A1A;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cam-preview__label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .cam-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .cam-count--warning { color: var(--color-warning); }
+
+  .cam-event {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  SIDEBAR                                                       -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar__logo">
+    <div class="sidebar__monogram">LM·B</div>
+    <div>
+      <div class="sidebar__logo-text">La Mița Biciclista</div>
+      <div class="sidebar__logo-sub">Hospitality Platform</div>
+    </div>
+  </div>
+
+  <nav class="sidebar__nav">
+    <div class="sidebar__item sidebar__item--active">
+      <span class="sidebar__icon">⊞</span> Dashboard
+    </div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">📅</span> Rezervări
+    </div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">⊡</span> Planul Sălii
+    </div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">👥</span> Walk-in Queue
+    </div>
+    <div class="sidebar__divider"></div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">👤</span> Oaspeți CRM
+    </div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">📊</span> Analitics
+    </div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">⭐</span> Evenimente
+    </div>
+    <div class="sidebar__divider"></div>
+    <div class="sidebar__item">
+      <span class="sidebar__icon">⚙</span> Setări
+    </div>
+  </nav>
+
+  <div class="sidebar__bottom">
+    <div class="unifi-status">
+      <div class="unifi-status__dot"></div>
+      <div>
+        <div class="unifi-status__label" style="font-size:11px;color:rgba(255,255,255,0.75);font-weight:600;">UniFi Protect</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:1px;">4 camere active</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  MAIN WRAPPER                                                  -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="main-wrapper">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar__left">
+      <div class="topbar__title">Dashboard Live</div>
+      <div class="topbar__subtitle">Duminică, 29 Martie 2026 &middot; Schimb Seară &middot; 18:00 – 24:00</div>
+    </div>
+    <div class="topbar__right">
+      <div class="status-pill">
+        <div class="status-pill__dot"></div>
+        UniFi Protect · Conectat
+      </div>
+      <div class="topbar__divider"></div>
+      <div class="topbar__refresh">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" style="margin-right:2px;">
+          <path d="M12.5 2.5A6.5 6.5 0 1 0 13 7" stroke="#9A9A9A" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M13 2.5V5.5H10" stroke="#9A9A9A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Actualizat acum 12s
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- ── ROW 1: KPI CARDS ──────────────────────────────────────── -->
+    <div class="kpi-grid">
+
+      <!-- KPI 1: Capacitate Curentă -->
+      <div class="kpi-card">
+        <div class="kpi-label">Capacitate Curentă</div>
+        <div class="kpi-ring-wrap">
+          <!-- Circular progress ring: 71% = circumference 207.35 → filled = 147.2 -->
+          <svg class="ring-svg" viewBox="0 0 72 72">
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#B8962E"/>
+                <stop offset="100%" stop-color="#D4AF6A"/>
+              </linearGradient>
+            </defs>
+            <!-- Track -->
+            <circle cx="36" cy="36" r="30" fill="none" stroke="#E4DDD5" stroke-width="6"/>
+            <!-- Fill: r=30 → C=188.5 → 71% = 133.8 -->
+            <circle cx="36" cy="36" r="30" fill="none"
+              stroke="url(#ringGrad)" stroke-width="6"
+              stroke-dasharray="133.8 188.5"
+              stroke-linecap="round"
+              transform="rotate(-90 36 36)"/>
+            <text x="36" y="32" text-anchor="middle" dominant-baseline="middle"
+              font-family="'Playfair Display', serif" font-size="14" font-weight="700" fill="#1A1A1A">127</text>
+            <text x="36" y="46" text-anchor="middle"
+              font-family="'Inter', sans-serif" font-size="9" fill="#9A9A9A">/180 locuri</text>
+          </svg>
+          <div class="kpi-ring-info">
+            <div class="kpi-ring-info__pct">71%</div>
+            <div style="font-size:12px;color:var(--color-text-sec);margin-top:2px;">ocupat acum</div>
+            <div class="chip chip--green" style="margin-top:6px;font-size:10px;">Capacitate normală</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI 2: Intrări Azi -->
+      <div class="kpi-card">
+        <div class="kpi-label">Intrări Azi</div>
+        <div class="kpi-big-value kpi-big-value--primary">342</div>
+        <div class="kpi-footer">
+          <span class="chip chip--green">↑ 18% față de ieri</span>
+        </div>
+        <div class="kpi-sub" style="margin-top:8px;">față de ieri: 290 intrări</div>
+      </div>
+
+      <!-- KPI 3: Ieșiri Azi -->
+      <div class="kpi-card">
+        <div class="kpi-label">Ieșiri Azi</div>
+        <div class="kpi-big-value kpi-big-value--muted">215</div>
+        <div class="kpi-footer">
+          <span style="font-size:13px;font-weight:600;color:var(--color-text);">127 în interior acum</span>
+        </div>
+        <div class="kpi-sub" style="margin-top:8px;">Bilanț: +127 față de intrări</div>
+      </div>
+
+      <!-- KPI 4: Coadă Walk-in (WARNING) -->
+      <div class="kpi-card kpi-card--warning">
+        <div class="kpi-label">Coadă Walk-in</div>
+        <div class="kpi-queue-main">
+          <div class="kpi-big-value kpi-big-value--warning" style="margin-bottom:0">8</div>
+          <div style="font-size:16px;font-weight:600;color:var(--color-warning);align-self:flex-end;padding-bottom:5px;">persoane</div>
+          <div class="pulse-dot" style="margin-left:4px;margin-bottom:6px;"></div>
+        </div>
+        <div class="kpi-footer">
+          <span class="chip chip--amber">Coadă activă</span>
+        </div>
+        <div class="kpi-sub" style="margin-top:8px;">~12 min așteptare estimată</div>
+      </div>
+
+    </div><!-- /kpi-grid -->
+
+
+    <!-- ── ROW 2: ZONE OCCUPANCY + ALERTS ────────────────────────── -->
+    <div class="row2">
+
+      <!-- Zone Occupancy -->
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Ocupare pe Zone</span>
+          <span class="card__meta">actualizat live &middot; UniFi AI</span>
+        </div>
+
+        <div class="zone-list">
+          <!-- Brasserie -->
+          <div class="zone-row">
+            <div class="zone-row__header">
+              <div class="zone-row__name">
+                <span class="zone-cam-icon">📷</span>
+                Brasserie · Parter
+              </div>
+              <span class="zone-row__count">62 / 80 locuri</span>
+            </div>
+            <div class="zone-row__footer">
+              <div class="progress-track">
+                <div class="progress-fill progress-fill--high" style="width:78%"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:11px;font-weight:600;color:var(--color-text-sec);">78%</span>
+                <span class="badge-status badge--occupied">Ocupat</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Salon Istoric -->
+          <div class="zone-row">
+            <div class="zone-row__header">
+              <div class="zone-row__name">
+                <span class="zone-cam-icon">📷</span>
+                Salon Istoric · Etaj 1
+              </div>
+              <span class="zone-row__count">44 / 80 locuri</span>
+            </div>
+            <div class="zone-row__footer">
+              <div class="progress-track">
+                <div class="progress-fill progress-fill--medium" style="width:55%"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:11px;font-weight:600;color:var(--color-text-sec);">55%</span>
+                <span class="badge-status badge--available">Disponibil</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terasă & Expo -->
+          <div class="zone-row">
+            <div class="zone-row__header">
+              <div class="zone-row__name">
+                <span class="zone-cam-icon">📷</span>
+                Terasă &amp; Expo
+              </div>
+              <span class="zone-row__count">21 / 52 locuri</span>
+            </div>
+            <div class="zone-row__footer">
+              <div class="progress-track">
+                <div class="progress-fill progress-fill--medium" style="width:40%"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:11px;font-weight:600;color:var(--color-text-sec);">40%</span>
+                <span class="badge-status badge--available">Disponibil</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /zone-list -->
+      </div><!-- /zone card -->
+
+      <!-- Smart Alerts -->
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Alerte Active</span>
+          <span class="alert-badge">3</span>
+        </div>
+
+        <div class="alert-list">
+          <div class="alert-item alert-item--error">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-body">
+              <div class="alert-text">Coadă depășit pragul de 5 pers.</div>
+              <div class="alert-sub">Zona Walk-in · 3 min în urmă</div>
+            </div>
+          </div>
+
+          <div class="alert-item alert-item--warn">
+            <span class="alert-icon">ℹ️</span>
+            <div class="alert-body">
+              <div class="alert-text">Zona Brasserie &gt;75% capacitate</div>
+              <div class="alert-sub">CAM-02 · 8 min în urmă</div>
+            </div>
+          </div>
+
+          <div class="alert-item alert-item--ok">
+            <span class="alert-icon">✅</span>
+            <div class="alert-body">
+              <div class="alert-text alert-text--resolved">Intrare deblocată — flux normal</div>
+              <div class="alert-sub">Rezolvat · 22 min în urmă</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-footer">
+          <a class="alert-settings-link">Configurează alerte &rarr;</a>
+        </div>
+      </div><!-- /alerts card -->
+
+    </div><!-- /row2 -->
+
+
+    <!-- ── ROW 3: FOOTFALL CHART ──────────────────────────────────── -->
+    <div class="chart-card">
+      <div class="chart-card__header">
+        <span class="card__title">Flux Persoane — Azi</span>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-dot legend-dot--primary" style="height:3px;width:12px;border-radius:2px;background:#2C4A2E;"></div>
+            <span>Intrări</span>
+          </div>
+          <div class="legend-item">
+            <svg width="14" height="4" viewBox="0 0 14 4"><line x1="0" y1="2" x2="14" y2="2" stroke="#B8962E" stroke-width="2" stroke-dasharray="3,3"/></svg>
+            <span>Ieșiri</span>
+          </div>
+          <span class="chart-range">10:00 – 22:00</span>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <svg class="chart-svg" viewBox="0 0 1100 190" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="areaGradIn" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2C4A2E" stop-opacity="0.13"/>
+              <stop offset="100%" stop-color="#2C4A2E" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="areaGradOut" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#B8962E" stop-opacity="0.10"/>
+              <stop offset="100%" stop-color="#B8962E" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Y-axis labels -->
+          <text x="0" y="168" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">0</text>
+          <text x="0" y="133" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">10</text>
+          <text x="0" y="98"  font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">20</text>
+          <text x="0" y="63"  font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">30</text>
+          <text x="0" y="28"  font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">40</text>
+
+          <!-- Grid lines -->
+          <line x1="24" y1="170" x2="1100" y2="170" stroke="#E4DDD5" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="24" y1="135" x2="1100" y2="135" stroke="#E4DDD5" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="24" y1="100" x2="1100" y2="100" stroke="#E4DDD5" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="24" y1="65"  x2="1100" y2="65"  stroke="#E4DDD5" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="24" y1="30"  x2="1100" y2="30"  stroke="#E4DDD5" stroke-width="1" stroke-dasharray="4,4"/>
+
+          <!--
+            X positions for 13 hours (10..22):
+            x = 24 + i * 84 (84px per hour)
+            0→10h=24, 1→11h=108, 2→12h=192, 3→13h=276, 4→14h=360,
+            5→15h=444, 6→16h=528, 7→17h=612, 8→18h=696, 9→19h=780,
+            10→20h=864, 11→21h=948, 12→22h=1032
+            Y = 170 - (value * (170-30)/50) = 170 - value*2.8
+            Intrări data: 8,15,28,47,35,22,18,24,38,42,35,28,12
+            Ieșiri data:  2, 8,18,32,28,18,14,19,29,35,28,22,10
+          -->
+
+          <!-- Intrări area fill -->
+          <path d="M24,147.6 C52,147.6 80,128 108,128
+                   C136,128 164,92.4 192,92.4
+                   C220,92.4 248,39.4 276,39.4
+                   C304,39.4 332,72 360,72
+                   C388,72 416,108.4 444,108.4
+                   C472,108.4 500,119.6 528,119.6
+                   C556,119.6 584,102.8 612,102.8
+                   C640,102.8 668,63.6 696,63.6
+                   C724,63.6 752,52.4 780,52.4
+                   C808,52.4 836,72 864,72
+                   C892,72 920,92.4 948,92.4
+                   C976,92.4 1004,136.4 1032,136.4
+                   L1032,170 L24,170 Z"
+            fill="url(#areaGradIn)"/>
+
+          <!-- Intrări line -->
+          <path d="M24,147.6 C52,147.6 80,128 108,128
+                   C136,128 164,92.4 192,92.4
+                   C220,92.4 248,39.4 276,39.4
+                   C304,39.4 332,72 360,72
+                   C388,72 416,108.4 444,108.4
+                   C472,108.4 500,119.6 528,119.6
+                   C556,119.6 584,102.8 612,102.8
+                   C640,102.8 668,63.6 696,63.6
+                   C724,63.6 752,52.4 780,52.4
+                   C808,52.4 836,72 864,72
+                   C892,72 920,92.4 948,92.4
+                   C976,92.4 1004,136.4 1032,136.4"
+            fill="none" stroke="#2C4A2E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Ieșiri area fill -->
+          <path d="M24,164.4 C52,164.4 80,147.6 108,147.6
+                   C136,147.6 164,119.6 192,119.6
+                   C220,119.6 248,80.4 276,80.4
+                   C304,80.4 332,92.4 360,92.4
+                   C388,92.4 416,119.6 444,119.6
+                   C472,119.6 500,130.8 528,130.8
+                   C556,130.8 584,117 612,117
+                   C640,117 668,89 696,89
+                   C724,89 752,72 780,72
+                   C808,72 836,92.4 864,92.4
+                   C892,92.4 920,108.4 948,108.4
+                   C976,108.4 1004,142 1032,142
+                   L1032,170 L24,170 Z"
+            fill="url(#areaGradOut)"/>
+
+          <!-- Ieșiri line (dashed) -->
+          <path d="M24,164.4 C52,164.4 80,147.6 108,147.6
+                   C136,147.6 164,119.6 192,119.6
+                   C220,119.6 248,80.4 276,80.4
+                   C304,80.4 332,92.4 360,92.4
+                   C388,92.4 416,119.6 444,119.6
+                   C472,119.6 500,130.8 528,130.8
+                   C556,130.8 584,117 612,117
+                   C640,117 668,89 696,89
+                   C724,89 752,72 780,72
+                   C808,72 836,92.4 864,92.4
+                   C892,92.4 920,108.4 948,108.4
+                   C976,108.4 1004,142 1032,142"
+            fill="none" stroke="#B8962E" stroke-width="2" stroke-dasharray="5,3" stroke-linecap="round"/>
+
+          <!-- Peak dot at 13:00 (x=276, y=39.4) -->
+          <circle cx="276" cy="39.4" r="5" fill="#FFFFFF" stroke="#2C4A2E" stroke-width="2"/>
+
+          <!-- Peak tooltip -->
+          <rect x="230" y="8" width="100" height="24" rx="4" fill="#2C4A2E"/>
+          <text x="280" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#FFFFFF">Vârf: 47 intrări</text>
+          <polygon points="276,32 272,38.4 280,38.4" fill="#2C4A2E"/>
+
+          <!-- Current hour line: 18:00 x=696 -->
+          <line x1="696" y1="18" x2="696" y2="170" stroke="#D97706" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <rect x="672" y="8" width="50" height="16" rx="3" fill="#FEF3C7"/>
+          <text x="697" y="20" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#D97706">Acum</text>
+
+          <!-- X-axis labels -->
+          <text x="24"   y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">10:00</text>
+          <text x="108"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">11:00</text>
+          <text x="192"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">12:00</text>
+          <text x="276"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">13:00</text>
+          <text x="360"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">14:00</text>
+          <text x="444"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">15:00</text>
+          <text x="528"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">16:00</text>
+          <text x="612"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">17:00</text>
+          <text x="696"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#D97706">18:00</text>
+          <text x="780"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">19:00</text>
+          <text x="864"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">20:00</text>
+          <text x="948"  y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">21:00</text>
+          <text x="1032" y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9A9A9A">22:00</text>
+        </svg>
+      </div>
+    </div><!-- /chart card -->
+
+
+    <!-- ── ROW 4: CAMERA STATUS STRIP ────────────────────────────── -->
+    <div>
+      <div class="section-label">
+        <span>Starea Camerelor UniFi</span>
+        <span>4 camere active</span>
+      </div>
+
+      <div class="camera-grid">
+
+        <!-- CAM-01 -->
+        <div class="cam-card">
+          <div class="cam-card__header">
+            <span class="cam-badge cam-badge--live">&nbsp;LIVE</span>
+            <span class="cam-model">AI Theta</span>
+          </div>
+          <div class="cam-name">CAM-01 · Intrare Principală</div>
+          <div class="cam-preview">
+            <!-- Corner brackets decoration -->
+            <svg style="position:absolute;top:6px;left:6px;" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M0 10 L0 0 L10 0" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            </svg>
+            <svg style="position:absolute;top:6px;right:6px;" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M12 10 L12 0 L2 0" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            </svg>
+            <svg style="position:absolute;bottom:6px;left:6px;" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M0 2 L0 12 L10 12" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            </svg>
+            <svg style="position:absolute;bottom:6px;right:6px;" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M12 2 L12 12 L2 12" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            </svg>
+            <!-- Person silhouettes -->
+            <svg width="60" height="44" viewBox="0 0 60 44" fill="none">
+              <circle cx="20" cy="10" r="5" fill="rgba(255,255,255,0.5)"/>
+              <path d="M10 28 Q20 20 30 28" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none"/>
+              <circle cx="40" cy="12" r="4" fill="rgba(255,255,255,0.4)"/>
+              <path d="M30 30 Q40 22 50 30" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none"/>
+              <text x="30" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="rgba(255,255,255,0.25)" font-weight="500">CAM-01 · LIVE</text>
+            </svg>
+          </div>
+          <div class="cam-count">3 pers. detectate</div>
+          <div class="cam-event">Ultimul eveniment: 1 min</div>
+        </div>
+
+        <!-- CAM-02 -->
+        <div class="cam-card">
+          <div class="cam-card__header">
+            <span class="cam-badge cam-badge--live">&nbsp;LIVE</span>
+            <span class="cam-model">G5 Pro</span>
+          </div>
+          <div class="cam-name">CAM-02 · Brasserie Interior</div>
+          <div class="cam-preview" style="overflow:hidden;">
+            <!-- Heatmap simulation -->
+            <svg width="100%" height="100%" viewBox="0 0 200 76" preserveAspectRatio="xMidYMid slice">
+              <rect width="200" height="76" fill="#1A1A1A"/>
+              <ellipse cx="70" cy="40" rx="55" ry="30" fill="rgba(220,38,38,0.55)" style="filter:blur(8px)"/>
+              <ellipse cx="140" cy="28" rx="35" ry="22" fill="rgba(234,88,12,0.50)" style="filter:blur(6px)"/>
+              <ellipse cx="100" cy="55" rx="28" ry="16" fill="rgba(251,191,36,0.35)" style="filter:blur(5px)"/>
+              <ellipse cx="70" cy="40" rx="25" ry="14" fill="rgba(239,68,68,0.65)" style="filter:blur(4px)"/>
+              <text x="100" y="72" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="rgba(255,255,255,0.25)" font-weight="500">HEATMAP · CAM-02</text>
+            </svg>
+          </div>
+          <div class="cam-count">Heatmap activ</div>
+          <div class="cam-event">Densitate ridicată la bar</div>
+        </div>
+
+        <!-- CAM-03 -->
+        <div class="cam-card">
+          <div class="cam-card__header">
+            <span class="cam-badge cam-badge--live">&nbsp;LIVE</span>
+            <span class="cam-model">AI Bullet</span>
+          </div>
+          <div class="cam-name">CAM-03 · Salon Etaj 1</div>
+          <div class="cam-preview">
+            <svg style="position:absolute;top:6px;left:6px;" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M0 10 L0 0 L10 0" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            </svg>
+            <svg style="position:absolute;top:6px;right:6px;" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M12 10 L12 0 L2 0" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            </svg>
+            <svg style="position:absolute;bottom:6px;left:6px;" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M0 2 L0 12 L10 12" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            </svg>
+            <svg style="position:absolute;bottom:6px;right:6px;" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M12 2 L12 12 L2 12" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            </svg>
+            <svg width="60" height="44" viewBox="0 0 60 44" fill="none">
+              <circle cx="22" cy="12" r="6" fill="rgba(255,255,255,0.45)"/>
+              <path d="M10 32 Q22 22 34 32" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/>
+              <circle cx="42" cy="14" r="5" fill="rgba(255,255,255,0.35)"/>
+              <path d="M30 34 Q42 24 54 34" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none"/>
+              <text x="30" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="rgba(255,255,255,0.25)" font-weight="500">CAM-03 · LIVE</text>
+            </svg>
+          </div>
+          <div class="cam-count">2 pers. detectate</div>
+          <div class="cam-event">Ultimul eveniment: 4 min</div>
+        </div>
+
+        <!-- CAM-04 WARNING -->
+        <div class="cam-card" style="border-left:3px solid var(--color-warning);">
+          <div class="cam-card__header">
+            <span class="cam-badge cam-badge--warn">⚠ ATENȚIE</span>
+            <span class="cam-model">G4 Bullet</span>
+          </div>
+          <div class="cam-name">CAM-04 · Ieșire / Terasă</div>
+          <div class="cam-preview" style="overflow:hidden;">
+            <!-- Warning overlay -->
+            <svg width="100%" height="100%" viewBox="0 0 200 76" preserveAspectRatio="xMidYMid slice">
+              <rect width="200" height="76" fill="#1A1A1A"/>
+              <!-- Diagonal stripes -->
+              <line x1="-10" y1="0" x2="80" y2="76" stroke="rgba(217,119,6,0.15)" stroke-width="8"/>
+              <line x1="20"  y1="0" x2="110" y2="76" stroke="rgba(217,119,6,0.15)" stroke-width="8"/>
+              <line x1="50"  y1="0" x2="140" y2="76" stroke="rgba(217,119,6,0.15)" stroke-width="8"/>
+              <line x1="80"  y1="0" x2="170" y2="76" stroke="rgba(217,119,6,0.15)" stroke-width="8"/>
+              <line x1="110" y1="0" x2="200" y2="76" stroke="rgba(217,119,6,0.15)" stroke-width="8"/>
+              <line x1="140" y1="0" x2="210" y2="76" stroke="rgba(217,119,6,0.15)" stroke-width="8"/>
+              <!-- Warning triangle -->
+              <polygon points="100,22 84,50 116,50" fill="rgba(217,119,6,0.85)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+              <text x="100" y="43" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">!</text>
+              <text x="100" y="68" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="rgba(255,255,255,0.3)" font-weight="500">CAM-04 · OBSTRUCȚIONAT</text>
+            </svg>
+          </div>
+          <div class="cam-count cam-count--warning">Unghi parțial obstrucționat</div>
+          <div class="cam-event">Recalibrare necesară</div>
+        </div>
+
+      </div><!-- /camera-grid -->
+    </div><!-- /row4 -->
+
+  </main>
+</div><!-- /main-wrapper -->
+
+</body>
+</html>

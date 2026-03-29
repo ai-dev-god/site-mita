@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>LMBSC — Guest CRM Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-primary:       #2C4A2E;
+    --color-primary-light: #4A7A4C;
+    --color-primary-muted: #EAF0EA;
+    --color-accent:        #B8962E;
+    --color-accent-light:  #F5E9C4;
+    --color-surface:       #FAF6F0;
+    --color-raised:        #FFFFFF;
+    --color-text:          #1A1A1A;
+    --color-text-sec:      #5A5A5A;
+    --color-text-muted:    #9A9A9A;
+    --color-border:        #E4DDD5;
+    --color-error:         #DC2626;
+    --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  12px;
+    --radius-full: 9999px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-surface);
+    color: var(--color-text);
+    width: 1440px;
+    min-height: 900px;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────────── */
+  .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .sidebar__logo {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .sidebar__logo-text {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+
+  .sidebar__logo-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .sidebar__nav { flex: 1; padding: 8px 0; }
+
+  .sidebar__section-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 20px 20px 8px;
+  }
+
+  .sidebar__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 44px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    border-left: 3px solid transparent;
+  }
+
+  .sidebar__item--active {
+    color: #FFFFFF;
+    background: rgba(255,255,255,0.10);
+    border-left-color: var(--color-accent);
+  }
+
+  .sidebar__divider { height: 1px; background: rgba(255,255,255,0.12); margin: 8px 0; }
+
+  .sidebar__icon { font-size: 16px; width: 20px; text-align: center; }
+
+  /* ── MAIN ─────────────────────────────────── */
+  .main {
+    flex: 1;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ── PAGE HEADER ─────────────────────────────────── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .back-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-sec);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .page-header__actions { display: flex; gap: 10px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 36px; padding: 0 16px; border-radius: var(--radius-sm);
+    font-family: var(--font-body); font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none;
+  }
+  .btn--primary { background: var(--color-primary); color: #fff; }
+  .btn--secondary { background: transparent; color: var(--color-primary); border: 1.5px solid var(--color-primary); }
+
+  /* ── PROFILE HERO ─────────────────────────────────── */
+  .profile-hero {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-primary);
+    flex-shrink: 0;
+  }
+
+  .profile-hero__info { flex: 1; }
+
+  .profile-hero__name {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .profile-hero__sub {
+    font-size: 13px;
+    color: var(--color-text-sec);
+    margin-top: 2px;
+  }
+
+  .profile-hero__contacts {
+    display: flex;
+    gap: 20px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--color-text-sec);
+  }
+
+  .profile-hero__stats {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .stat-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .stat-chip--green { background: var(--color-primary-muted); color: var(--color-primary); }
+  .stat-chip--gold  { background: var(--color-accent-light); color: var(--color-accent); }
+  .stat-chip--gray  { background: #F1F5F9; color: var(--color-text-sec); }
+
+  .vip-badge-lg {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 16px;
+    border-radius: var(--radius-sm);
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── TWO COLUMN LAYOUT ─────────────────────────────────── */
+  .two-col { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+
+  .card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+  }
+
+  .card--no-pad { padding: 0; }
+
+  .card__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .link-sm {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  /* ── VISIT HISTORY TABLE ─────────────────────────────────── */
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-sec);
+    padding: 10px 16px;
+    text-align: left;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  tbody tr { border-bottom: 1px solid var(--color-border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:nth-child(even) { background: #FDFCFA; }
+
+  td {
+    padding: 11px 16px;
+    font-size: 13px;
+    color: var(--color-text);
+  }
+
+  .zone-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .zone-chip--brasserie { background: var(--color-primary-muted); color: var(--color-primary); }
+  .zone-chip--salon     { background: var(--color-accent-light); color: var(--color-accent); }
+
+  /* ── NOTES & TAGS ─────────────────────────────────── */
+  .note-item {
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--color-text);
+    line-height: 1.5;
+  }
+
+  .note-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: 6px;
+  }
+
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: var(--radius-full);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-sec);
+    cursor: pointer;
+  }
+
+  .tag:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+  .tag--add {
+    border-style: dashed;
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  /* ── SPEND CHART MINI ─────────────────────────────────── */
+  .mini-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; margin: 8px 0; }
+
+  .mini-bar {
+    flex: 1;
+    background: linear-gradient(0deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+    border-radius: 3px 3px 0 0;
+    transition: opacity 120ms;
+  }
+
+  .mini-bar-label { font-size: 10px; color: var(--color-text-muted); text-align: center; margin-top: 4px; }
+
+  .mini-bar-labels { display: flex; gap: 6px; }
+
+  /* ── GDPR TOGGLES ─────────────────────────────────── */
+  .gdpr-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .gdpr-row:last-of-type { border-bottom: none; }
+
+  .gdpr-row__label { font-size: 13px; color: var(--color-text); }
+
+  .toggle {
+    width: 36px;
+    height: 20px;
+    border-radius: 100px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .toggle--on { background: var(--color-primary); }
+  .toggle--off { background: var(--color-border); }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 100px;
+    transition: left 120ms;
+  }
+
+  .toggle--on::after { left: 18px; }
+  .toggle--off::after { left: 2px; }
+
+  .gdpr-footer {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .gdpr-footer a {
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .gdpr-footer a.download { color: var(--color-primary); }
+  .gdpr-footer a.danger   { color: var(--color-error); }
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar__logo">
+    <div>
+      <div class="sidebar__logo-text">La Mița Biciclista</div>
+      <div class="sidebar__logo-sub">Hospitality Platform</div>
+    </div>
+  </div>
+  <nav class="sidebar__nav">
+    <div class="sidebar__section-label">Principal</div>
+    <div class="sidebar__item"><span class="sidebar__icon">⌂</span> Dashboard</div>
+    <div class="sidebar__item"><span class="sidebar__icon">📋</span> Rezervări</div>
+    <div class="sidebar__item"><span class="sidebar__icon">⚑</span> Floor View</div>
+    <div class="sidebar__item"><span class="sidebar__icon">⏱</span> Coadă Walk-in</div>
+    <div class="sidebar__divider"></div>
+    <div class="sidebar__section-label">Administrare</div>
+    <div class="sidebar__item sidebar__item--active"><span class="sidebar__icon">👤</span> Oaspeți</div>
+    <div class="sidebar__item"><span class="sidebar__icon">📊</span> Analytics</div>
+    <div class="sidebar__item"><span class="sidebar__icon">🎫</span> Evenimente</div>
+    <div class="sidebar__divider"></div>
+    <div class="sidebar__item"><span class="sidebar__icon">⚙</span> Setări</div>
+  </nav>
+</aside>
+
+<!-- ── MAIN CONTENT ─────────────────────────────────── -->
+<main class="main">
+
+  <!-- Header -->
+  <div>
+    <a href="#" class="back-link">← Oaspeți</a>
+    <div class="page-header">
+      <h1 class="page-title">Profil Oaspete</h1>
+      <div class="page-header__actions">
+        <button class="btn btn--secondary">✎ Editează profil</button>
+        <button class="btn btn--primary">+ Adaugă notă</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Hero -->
+  <div class="profile-hero">
+    <div class="avatar">M.P.</div>
+    <div class="profile-hero__info">
+      <div class="profile-hero__name">Maria Popescu</div>
+      <div class="profile-hero__sub">Oaspete VIP · Membră din Martie 2024</div>
+      <div class="profile-hero__contacts">
+        <span>📞 0722 123 456</span>
+        <span>✉ maria.popescu@email.ro</span>
+      </div>
+    </div>
+    <div class="profile-hero__stats">
+      <span class="stat-chip stat-chip--green">24 vizite</span>
+      <span class="stat-chip stat-chip--gold">4,488 RON cheltuiți</span>
+      <span class="stat-chip stat-chip--gray">Ultima vizită acum 2 zile</span>
+      <span class="vip-badge-lg">★ VIP Gold</span>
+    </div>
+  </div>
+
+  <!-- Two Column -->
+  <div class="two-col">
+
+    <!-- LEFT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Visit History -->
+      <div class="card card--no-pad">
+        <div style="padding:20px 20px 0;">
+          <div class="card__title">Istoric vizite <a href="#" class="link-sm">Filtrează</a></div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Dată</th>
+              <th>Oră</th>
+              <th>Persoane</th>
+              <th>Zonă</th>
+              <th>Cheltuială</th>
+              <th>Notă</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>29 Mar 2026</strong></td>
+              <td style="color:var(--color-text-sec);">20:30</td>
+              <td>2</td>
+              <td><span class="zone-chip zone-chip--salon">Salon Etaj 1</span></td>
+              <td style="font-weight:600;color:var(--color-accent);">320 RON</td>
+              <td style="color:var(--color-text-muted);font-size:12px;">—</td>
+            </tr>
+            <tr>
+              <td><strong>22 Mar 2026</strong></td>
+              <td style="color:var(--color-text-sec);">13:00</td>
+              <td>4</td>
+              <td><span class="zone-chip zone-chip--brasserie">Brasserie Parter</span></td>
+              <td style="font-weight:600;color:var(--color-accent);">580 RON</td>
+              <td style="font-size:12px;">Masă la fereastră</td>
+            </tr>
+            <tr>
+              <td><strong>15 Mar 2026</strong></td>
+              <td style="color:var(--color-text-sec);">20:00</td>
+              <td>2</td>
+              <td><span class="zone-chip zone-chip--salon">Salon Etaj 1</span></td>
+              <td style="font-weight:600;color:var(--color-accent);">440 RON</td>
+              <td style="color:var(--color-text-muted);font-size:12px;">—</td>
+            </tr>
+            <tr>
+              <td><strong>8 Mar 2026</strong></td>
+              <td style="color:var(--color-text-sec);">19:30</td>
+              <td>6</td>
+              <td><span class="zone-chip zone-chip--brasserie">Brasserie Parter</span></td>
+              <td style="font-weight:600;color:var(--color-accent);">1,100 RON</td>
+              <td style="font-size:12px;">Zi de naștere</td>
+            </tr>
+            <tr>
+              <td><strong>2 Mar 2026</strong></td>
+              <td style="color:var(--color-text-sec);">12:30</td>
+              <td>2</td>
+              <td><span class="zone-chip zone-chip--brasserie">Brasserie Parter</span></td>
+              <td style="font-weight:600;color:var(--color-accent);">220 RON</td>
+              <td style="color:var(--color-text-muted);font-size:12px;">—</td>
+            </tr>
+            <tr>
+              <td><strong>24 Feb 2026</strong></td>
+              <td style="color:var(--color-text-sec);">21:00</td>
+              <td>2</td>
+              <td><span class="zone-chip zone-chip--salon">Salon Etaj 1</span></td>
+              <td style="font-weight:600;color:var(--color-accent);">370 RON</td>
+              <td style="color:var(--color-text-muted);font-size:12px;">—</td>
+            </tr>
+            <tr>
+              <td><strong>18 Feb 2026</strong></td>
+              <td style="color:var(--color-text-sec);">20:00</td>
+              <td>3</td>
+              <td><span class="zone-chip zone-chip--brasserie">Brasserie Parter</span></td>
+              <td style="font-weight:600;color:var(--color-accent);">490 RON</td>
+              <td style="color:var(--color-text-muted);font-size:12px;">—</td>
+            </tr>
+            <tr>
+              <td><strong>10 Feb 2026</strong></td>
+              <td style="color:var(--color-text-sec);">13:30</td>
+              <td>2</td>
+              <td><span class="zone-chip zone-chip--brasserie">Brasserie Parter</span></td>
+              <td style="font-weight:600;color:var(--color-accent);">268 RON</td>
+              <td style="color:var(--color-text-muted);font-size:12px;">—</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="padding:12px 16px;border-top:1px solid var(--color-border);display:flex;justify-content:flex-end;">
+          <a href="#" class="link-sm">Toate vizitele (24) →</a>
+        </div>
+      </div>
+
+      <!-- Preferences & Notes -->
+      <div class="card">
+        <div class="card__title">Preferințe și Note</div>
+
+        <div class="note-item">
+          "Doamna Popescu preferă întotdeauna o masă la fereastră cu vedere spre grădină. Evitați nucile și alunele — alergie confirmată."
+          <div class="note-meta">
+            <span>Andrei Munteanu (Host)</span>
+            <span>22 Mar 2026</span>
+          </div>
+        </div>
+
+        <div class="note-item">
+          "A solicitat un tort surpriză pentru data de naștere (8 mai). De pregătit cu 30 min avans."
+          <div class="note-meta">
+            <span>Ruxandra Vișan (Manager)</span>
+            <span>8 Mar 2026</span>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-sec);margin-bottom:10px;">Etichete preferințe</div>
+          <div class="tag-cloud">
+            <span class="tag">🪟 Masă la fereastră</span>
+            <span class="tag">🥜 Alergie nuci</span>
+            <span class="tag">🎂 Naștere în Mai</span>
+            <span class="tag">🍷 Iubitor de vin</span>
+            <span class="tag tag--add">+ Adaugă etichetă</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Spend Analytics -->
+      <div class="card">
+        <div class="card__title">Cheltuieli lunare</div>
+        <div style="font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--color-accent);margin-bottom:12px;">4,488 RON</div>
+        <div class="mini-bars">
+          <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+            <div class="mini-bar" style="height:40%;width:100%;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+            <div class="mini-bar" style="height:60%;width:100%;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+            <div class="mini-bar" style="height:50%;width:100%;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+            <div class="mini-bar" style="height:75%;width:100%;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+            <div class="mini-bar" style="height:55%;width:100%;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+            <div class="mini-bar" style="height:100%;width:100%;opacity:1;"></div>
+          </div>
+        </div>
+        <div class="mini-bar-labels">
+          <div class="mini-bar-label" style="flex:1;">Oct</div>
+          <div class="mini-bar-label" style="flex:1;">Nov</div>
+          <div class="mini-bar-label" style="flex:1;">Dec</div>
+          <div class="mini-bar-label" style="flex:1;">Ian</div>
+          <div class="mini-bar-label" style="flex:1;">Feb</div>
+          <div class="mini-bar-label" style="flex:1;color:var(--color-accent);font-weight:600;">Mar</div>
+        </div>
+      </div>
+
+      <!-- GDPR & Consent -->
+      <div class="card">
+        <div class="card__title" style="margin-bottom:4px;">GDPR & Consimțământ</div>
+        <div style="font-size:11px;color:var(--color-text-muted);margin-bottom:12px;">Actualizat ultima dată: 15 Ian 2026</div>
+
+        <div class="gdpr-row">
+          <div class="gdpr-row__label">E-mailuri marketing</div>
+          <div class="toggle toggle--on"></div>
+        </div>
+        <div class="gdpr-row">
+          <div class="gdpr-row__label">Remindere SMS</div>
+          <div class="toggle toggle--on"></div>
+        </div>
+        <div class="gdpr-row">
+          <div class="gdpr-row__label">Retenție date (24 luni)</div>
+          <div class="toggle toggle--on"></div>
+        </div>
+        <div class="gdpr-row">
+          <div class="gdpr-row__label">Partajare cu terți</div>
+          <div class="toggle toggle--off"></div>
+        </div>
+
+        <div class="gdpr-footer">
+          <span>Gestionat de oaspete via link personal</span>
+          <a href="#" class="download">↓ Descarcă datele mele</a>
+          <a href="#" class="danger">⚠ Solicită ștergerea contului</a>
+        </div>
+      </div>
+
+      <!-- VIP Tags -->
+      <div class="card">
+        <div class="card__title">Etichete VIP</div>
+        <div class="tag-cloud">
+          <span class="tag" style="background:var(--color-primary-muted);border-color:rgba(44,74,46,0.25);color:var(--color-primary);font-weight:600;">✓ Regular</span>
+          <span class="tag" style="background:var(--color-accent-light);border-color:rgba(184,150,46,0.3);color:var(--color-accent);font-weight:600;">★ VIP Gold</span>
+          <span class="tag">🍷 Iubitor de vin</span>
+          <span class="tag">🕯 Private dining</span>
+          <span class="tag">🎭 Client eveniment</span>
+          <span class="tag tag--add">+ Adaugă</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+</body>
+</html>

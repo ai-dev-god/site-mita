@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>LMBSC — Walk-in Self-Join Queue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-primary:       #2C4A2E;
+    --color-primary-light: #4A7A4C;
+    --color-primary-muted: #EAF0EA;
+    --color-accent:        #B8962E;
+    --color-accent-light:  #F5E9C4;
+    --color-surface:       #FAF6F0;
+    --color-raised:        #FFFFFF;
+    --color-text:          #1A1A1A;
+    --color-text-sec:      #5A5A5A;
+    --color-text-muted:    #9A9A9A;
+    --color-border:        #E4DDD5;
+    --color-border-focus:  #2C4A2E;
+    --color-error:         #DC2626;
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  16px;
+    --radius-full: 9999px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', sans-serif;
+    --font-mono:    'Fira Code', monospace;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-surface);
+    color: var(--color-text);
+    width: 390px;
+    min-height: 844px;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO TOP ─────────────────────────────────── */
+  .hero {
+    background: var(--color-primary);
+    padding: 40px 24px 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .hero__logo {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+  }
+
+  .hero__heading {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .hero__sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  .queue-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 16px;
+    background: rgba(255,255,255,0.15);
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 500;
+    color: #FFFFFF;
+    backdrop-filter: blur(4px);
+  }
+
+  .queue-chip__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 100px;
+    background: #FFEE58;
+    flex-shrink: 0;
+  }
+
+  /* ── FORM CARD ─────────────────────────────────── */
+  .form-card {
+    background: var(--color-raised);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin-top: -20px;
+    padding: 28px 24px 40px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-primary);
+    margin-bottom: 16px;
+  }
+
+  /* ── FIELDS ─────────────────────────────────── */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  .field__label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-sec);
+  }
+
+  .field__input {
+    height: 48px;
+    padding: 0 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--color-text);
+    background: var(--color-raised);
+    outline: none;
+    transition: border-color 150ms, box-shadow 150ms;
+    width: 100%;
+  }
+
+  .field__input:focus {
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 3px rgba(44,74,46,0.12);
+  }
+
+  .field__input::placeholder { color: var(--color-text-muted); }
+
+  .field__helper {
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  /* ── PHONE FIELD ─────────────────────────────────── */
+  .phone-wrap {
+    display: flex;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    height: 48px;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+
+  .phone-wrap:focus-within {
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 3px rgba(44,74,46,0.12);
+  }
+
+  .phone-prefix {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px;
+    border-right: 1.5px solid var(--color-border);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    background: #FAFAF8;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .phone-input {
+    flex: 1;
+    height: 100%;
+    padding: 0 14px;
+    border: none;
+    outline: none;
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--color-text);
+    background: transparent;
+  }
+
+  .phone-input::placeholder { color: var(--color-text-muted); }
+
+  /* ── STEPPER ─────────────────────────────────── */
+  .stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 52px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .stepper__btn {
+    width: 52px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--color-primary);
+    background: #FAFAF8;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    flex-shrink: 0;
+    user-select: none;
+    transition: background 100ms;
+  }
+
+  .stepper__btn:active { background: var(--color-primary-muted); }
+
+  .stepper__divider {
+    width: 1.5px;
+    height: 100%;
+    background: var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .stepper__value {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary);
+    background: var(--color-raised);
+  }
+
+  /* ── ZONE CHIPS ─────────────────────────────────── */
+  .zone-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .zone-option {
+    flex: 1;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-sec);
+    cursor: pointer;
+    transition: all 120ms;
+    user-select: none;
+  }
+
+  .zone-option:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+  .zone-option--active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  /* ── CONSENT ─────────────────────────────────── */
+  .consent-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .consent-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--color-primary);
+    border-radius: 3px;
+    background: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    cursor: pointer;
+  }
+
+  .consent-checkbox__mark {
+    font-size: 11px;
+    color: white;
+    font-weight: 700;
+  }
+
+  .consent-text {
+    font-size: 12px;
+    color: var(--color-text-sec);
+    line-height: 1.5;
+  }
+
+  .consent-link {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  /* ── CTA ─────────────────────────────────── */
+  .cta-btn {
+    width: 100%;
+    height: 52px;
+    background: var(--color-primary);
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 150ms;
+  }
+
+  .cta-btn:hover { background: var(--color-primary-light); }
+  .cta-btn:active { background: #1E3520; }
+
+  .bottom-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    padding-bottom: 8px;
+  }
+
+  /* ── DIVIDER ─────────────────────────────────── */
+  .section-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: 0 -24px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ─────────────────────────────────── -->
+<div class="hero">
+  <div class="hero__logo">La Mița Biciclista</div>
+  <h1 class="hero__heading">Bine ați venit!</h1>
+  <p class="hero__sub">Alăturați-vă listei de așteptare</p>
+  <div class="queue-chip">
+    <span class="queue-chip__dot"></span>
+    ⏱ Timp estimat: ~25 min · 6 grupuri în față
+  </div>
+</div>
+
+<!-- ── FORM CARD ─────────────────────────────────── -->
+<div class="form-card">
+
+  <div class="section-label">Detaliile dvs.</div>
+
+  <!-- Name -->
+  <div class="field">
+    <label class="field__label">Nume complet</label>
+    <input class="field__input" type="text" placeholder="Ion Ionescu" value="">
+    <span class="field__helper">Cum să vă strigăm</span>
+  </div>
+
+  <!-- Phone -->
+  <div class="field">
+    <label class="field__label">Telefon</label>
+    <div class="phone-wrap">
+      <div class="phone-prefix">🇷🇴 +40</div>
+      <input class="phone-input" type="tel" placeholder="0722 000 000">
+    </div>
+    <span class="field__helper">Veți primi un SMS când masa e gata</span>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Party Size -->
+  <div class="field">
+    <label class="field__label">Număr persoane</label>
+    <div class="stepper">
+      <button class="stepper__btn">−</button>
+      <div class="stepper__divider"></div>
+      <div class="stepper__value">2</div>
+      <div class="stepper__divider"></div>
+      <button class="stepper__btn">+</button>
+    </div>
+    <span class="field__helper">Maximum 8 persoane per grup</span>
+  </div>
+
+  <!-- Zone Preference -->
+  <div class="field">
+    <label class="field__label">Preferință zonă <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opțional)</span></label>
+    <div class="zone-row">
+      <div class="zone-option zone-option--active">Brasserie</div>
+      <div class="zone-option">Salon</div>
+      <div class="zone-option">Terasă</div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Consent -->
+  <div class="consent-row">
+    <div class="consent-checkbox">
+      <span class="consent-checkbox__mark">✓</span>
+    </div>
+    <p class="consent-text">
+      Sunt de acord cu prelucrarea datelor conform GDPR.
+      <a href="#" class="consent-link">Politica de confidențialitate</a>
+    </p>
+  </div>
+
+  <!-- CTA -->
+  <button class="cta-btn">
+    Alătură-te listei &rarr;
+  </button>
+
+  <!-- Bottom Note -->
+  <p class="bottom-note">
+    Veți primi un SMS când masa dvs. este pregătită.<br>
+    Nu este necesară o aplicație.
+  </p>
+
+</div>
+
+</body>
+</html>
