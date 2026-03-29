@@ -64,6 +64,16 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60
     refresh_token_expire_days: int = 30
 
+    # UniFi Protect — local NVR integration for live headcount
+    # Set UNIFI_PROTECT_URL to the NVR base URL, e.g. "https://192.168.1.1"
+    # UNIFI_ZONE_MAP is a JSON string mapping "camera_id:zone_idx" -> "venue_zone_uuid"
+    # Example: '{"abc123:0": "zone-uuid-here", "abc123:1": "other-zone-uuid"}'
+    unifi_protect_url: str = ""
+    unifi_protect_username: SecretStr = Field(default="")
+    unifi_protect_password: SecretStr = Field(default="")
+    unifi_zone_map: str = "{}"  # JSON — populated once NVR credentials are available
+    unifi_poll_interval_seconds: int = 30
+
 
 @lru_cache
 def get_settings() -> Settings:

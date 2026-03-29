@@ -9,16 +9,25 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
-from app.routers import analytics, campaigns, events, guests, menu, reservations, seating, shifts, shop, tables, venues, waitlist
+from app.core.database import AsyncSessionLocal
+from app.routers import analytics, campaigns, events, guests, menu, occupancy, reservations, seating, shifts, shop, tables, venues, waitlist
+from app.services.unifi_protect import UniFiOccupancyPoller
 
 logger = structlog.get_logger(__name__)
 settings = get_settings()
 
+_unifi_poller: UniFiOccupancyPoller | None = None
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    global _unifi_poller
     logger.info("startup", version=settings.app_version, env=settings.environment)
+    _unifi_poller = UniFiOccupancyPoller(settings, AsyncSessionLocal)
+    await _unifi_poller.start()
     yield
+    if _unifi_poller:
+        await _unifi_poller.stop()
     logger.info("shutdown")
 
 
@@ -64,3 +73,4 @@ app.include_router(shifts.router, prefix="/api/v1")
 app.include_router(shop.router, prefix="/api/v1")
 app.include_router(menu.router, prefix="/api/v1")
 app.include_router(menu.ws_router, prefix="/ws")
+app.include_router(occupancy.router, prefix="/api/v1")

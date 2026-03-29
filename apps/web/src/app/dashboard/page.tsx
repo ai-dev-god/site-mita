@@ -11,6 +11,19 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
 const VENUE_ID =
   process.env.NEXT_PUBLIC_VENUE_ID ?? "146fd211-ae20-5ebe-a7af-3c195ab89ae8";
 
+// ── Live occupancy types ──────────────────────────────────────────────────────
+
+interface LiveZoneOccupancy {
+  zone_id: string;
+  zone_name: string;
+  zone_slug: string;
+  headcount: number;
+  capacity: number | null;
+  pct_capacity: number | null;
+  last_updated: string;
+  source: string;
+}
+
 // ── Waitlist types ────────────────────────────────────────────────────────────
 
 type WaitlistStatus = "waiting" | "notified" | "seated" | "expired" | "cancelled";
@@ -161,6 +174,28 @@ export default function DashboardPage() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [menuSearch, setMenuSearch] = useState("");
   const [addingItemId, setAddingItemId] = useState<string | null>(null);
+
+  // ── Live camera occupancy ─────────────────────────────────────────────────
+  const [liveOccupancy, setLiveOccupancy] = useState<LiveZoneOccupancy[]>([]);
+
+  useEffect(() => {
+    let stopped = false;
+    async function fetchOccupancy() {
+      try {
+        const token = await getToken();
+        const resp = await fetch(
+          `${API_URL}/api/v1/occupancy/live?venue_id=${VENUE_ID}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (!resp.ok || stopped) return;
+        const data = await resp.json();
+        if (!stopped) setLiveOccupancy(Array.isArray(data) ? data : []);
+      } catch { /* silent — cameras may be offline */ }
+    }
+    fetchOccupancy();
+    const interval = setInterval(fetchOccupancy, 30_000);
+    return () => { stopped = true; clearInterval(interval); };
+  }, [getToken]);
 
   // ── Load floor plan layout ──────────────────────────────────────────────
   useEffect(() => {
@@ -530,6 +565,68 @@ export default function DashboardPage() {
           </button>
         ))}
       </div>
+
+      {/* Live camera occupancy bar */}
+      {liveOccupancy.length > 0 && (
+        <div
+          className="flex items-center gap-4 px-6 py-2 border-b shrink-0 overflow-x-auto"
+          style={{ background: "#F8FBF8", borderColor: "var(--color-border)" }}
+        >
+          <span
+            className="text-[11px] font-semibold uppercase tracking-[0.08em] shrink-0"
+            style={{ color: "var(--color-text-muted)" }}
+          >
+            Ocupanță live
+          </span>
+          {liveOccupancy.map((z) => (
+            <div key={z.zone_id} className="flex items-center gap-2 shrink-0">
+              <span
+                className="text-xs font-medium"
+                style={{ color: "var(--color-text)" }}
+              >
+                {z.zone_name}
+              </span>
+              <span
+                className="text-sm font-bold"
+                style={{ color: "var(--color-primary)" }}
+              >
+                {z.headcount}
+              </span>
+              {z.capacity != null && (
+                <span
+                  className="text-[11px]"
+                  style={{ color: "var(--color-text-muted)" }}
+                >
+                  / {z.capacity}
+                </span>
+              )}
+              {z.pct_capacity != null && (
+                <div
+                  className="w-16 h-1.5 rounded-full overflow-hidden"
+                  style={{ background: "var(--color-border)" }}
+                >
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${Math.min(z.pct_capacity, 100)}%`,
+                      background:
+                        z.pct_capacity >= 90
+                          ? "#DC2626"
+                          : z.pct_capacity >= 70
+                            ? "var(--color-accent)"
+                            : "var(--color-primary)",
+                    }}
+                  />
+                </div>
+              )}
+              <span
+                className="w-px h-4 shrink-0"
+                style={{ background: "var(--color-border)" }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Main layout */}
       <div className="flex flex-1 overflow-hidden">
