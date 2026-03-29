@@ -130,20 +130,20 @@
                 RESERVATIONS
             </a>
 </div>
-<a href="https://lamitabiciclista.ro/en/" target="_blank" rel="noopener" class="font-fira-code text-[10px] tracking-widest font-bold border-b border-brand-yellow pb-1">RO / EN</a>
+<button id="lang-toggle" onclick="setLang(currentLang==='ro'?'en':'ro')" class="font-fira-code text-[10px] tracking-widest font-bold border-b border-brand-yellow pb-1 bg-transparent text-white cursor-pointer">RO / EN</button>
 </div>
 </nav>
 <!-- Hero Section -->
 <section class="min-h-screen flex flex-col justify-center px-8 md:px-24 pt-24">
 <div class="max-w-6xl">
 <span class="font-fira-code text-xs uppercase tracking-[0.4em] text-brand-yellow mb-6 block" style="">LA MITA BICICLISTA</span>
-<h1 class="font-manrope font-extrabold text-huge tracking-tighter uppercase mb-8" style="">
+<h1 class="font-manrope font-extrabold text-huge tracking-tighter uppercase mb-8" data-i18n-html="hero-headline">
             STABILIMENT<br/>
-<span class="text-brand-yellow" style="">CREATIV</span>
+<span class="text-brand-yellow">CREATIV</span>
 </h1>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-end">
-<p class="font-manrope font-light text-2xl md:text-3xl text-white/90 leading-tight max-w-xl" style="">
-                Brasserie, salon istoric și spațiu expozițional în inima Bucureștiului. <span class="font-bold border-b-2 border-brand-yellow" style="">BISERICA AMZEI 9</span>
+<p class="font-manrope font-light text-2xl md:text-3xl text-white/90 leading-tight max-w-xl" data-i18n-html="hero-desc">
+                Brasserie, salon istoric și spațiu expozițional în inima Bucureștiului. <span class="font-bold border-b-2 border-brand-yellow">BISERICA AMZEI 9</span>
 </p>
 <div class="flex flex-col gap-4">
 <div class="flex flex-col border-l border-brand-yellow/30 pl-6 py-2">
@@ -159,15 +159,15 @@
 <!-- Brasserie -->
 <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
 <div class="md:col-span-2">
-<span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" style="">01 / PARTER</span>
+<span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" data-i18n="brasserie-floor">01 / PARTER</span>
 </div>
 <div class="md:col-span-6">
 <h2 class="font-manrope font-extrabold text-6xl tracking-tighter uppercase mb-8" style="">BRASSERIE</h2>
-<p class="font-manrope font-light text-xl text-white/70 leading-relaxed mb-10" style="">
+<p class="font-manrope font-light text-xl text-white/70 leading-relaxed mb-10" data-i18n="brasserie-desc">
                 Un spațiu vibrant unde tradiția întâlnește modernitatea. Zilnic între 08:00 și 00:00, transformăm momentele obișnuite în experiențe memorabile.
             </p>
 <div class="flex flex-wrap gap-4">
-<a class="bg-white text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow transition-colors" href="#meniuri" onclick="switchMenu('brasserie')">
+<a class="bg-white text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow transition-colors" href="#meniuri" onclick="switchMenu('brasserie')" data-i18n="brasserie-cta">
                     MENIU BRASSERIE
                 </a>
 </div>
@@ -184,24 +184,24 @@
 <!-- Salon -->
 <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
 <div class="md:col-span-2">
-<span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" style="">02 / ETAJ 1</span>
+<span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" data-i18n="salon-floor">02 / ETAJ 1</span>
 </div>
 <div class="md:col-span-6">
-<h2 class="font-manrope font-extrabold text-6xl tracking-tighter uppercase mb-8" style="">SALON ISTORIC</h2>
-<p class="font-manrope font-light text-xl text-white/70 leading-relaxed mb-10" style="">
+<h2 class="font-manrope font-extrabold text-6xl tracking-tighter uppercase mb-8" data-i18n="salon-name">SALON ISTORIC</h2>
+<p class="font-manrope font-light text-xl text-white/70 leading-relaxed mb-10" data-i18n="salon-desc">
                 Eleganța de odinioară a casei, oferind un refugiu liniștit pentru conversații lungi și momente de introspecție, acompaniate de o selecție premium.
             </p>
 <div class="space-y-4 mb-10">
 <div class="flex justify-between border-b border-white/10 pb-2">
-<span class="font-fira-code text-[10px] uppercase opacity-60" style="">LUNI – JOI</span>
+<span class="font-fira-code text-[10px] uppercase opacity-60" data-i18n="salon-days-1">LUNI – JOI</span>
 <span class="font-manrope font-bold" style="">12:00 – 22:00</span>
 </div>
 <div class="flex justify-between border-b border-white/10 pb-2">
-<span class="font-fira-code text-[10px] uppercase opacity-60" style="">VINERI – DUMINICĂ</span>
+<span class="font-fira-code text-[10px] uppercase opacity-60" data-i18n="salon-days-2">VINERI – DUMINICĂ</span>
 <span class="font-manrope font-bold" style="">10:00 – 00:00</span>
 </div>
 </div>
-<a href="https://ialoc.ro/restaurante-bucuresti/la-mita-biciclista-rezervari-4236" target="_blank" rel="noopener" class="bg-brand-yellow text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-white transition-colors inline-block">
+<a href="https://ialoc.ro/restaurante-bucuresti/la-mita-biciclista-rezervari-4236" target="_blank" rel="noopener" class="bg-brand-yellow text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-white transition-colors inline-block" data-i18n="salon-cta">
                 REZERVĂRI SALON
             </a>
 </div>
@@ -217,19 +217,19 @@
 <span class="font-fira-code text-xs uppercase tracking-widest text-brand-yellow/60" style="">03 / EXPO</span>
 </div>
 <div class="md:col-span-10">
-<span class="font-fira-code text-[10px] uppercase tracking-widest text-brand-yellow mb-4 block" style="">EXPOZIȚIA ANUALĂ</span>
-<h2 class="font-manrope font-extrabold text-display md:text-7xl tracking-tighter uppercase mb-12 max-w-4xl" style="">
+<span class="font-fira-code text-[10px] uppercase tracking-widest text-brand-yellow mb-4 block" data-i18n="expo-label">EXPOZIȚIA ANUALĂ</span>
+<h2 class="font-manrope font-extrabold text-display md:text-7xl tracking-tighter uppercase mb-12 max-w-4xl" data-i18n="expo-headline">
                 ÎNTÂLNIRI. SAU CUM SE NAȘTE O LUME NOUĂ
             </h2>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-<p class="font-manrope font-light italic text-xl text-white/60 leading-relaxed" style="">
+<p class="font-manrope font-light italic text-xl text-white/60 leading-relaxed" data-i18n="expo-desc">
                     O explorare a legăturilor umane prin lentila artei contemporane. Expoziția curentă reunește artiști locali care redefinesc peisajul cultural bucureștean.
                 </p>
 <div class="flex flex-col gap-6">
-<div class="font-fira-code text-lg font-bold tracking-tight text-brand-yellow" style="">
+<div class="font-fira-code text-lg font-bold tracking-tight text-brand-yellow" data-i18n="expo-hours">
                         VIN – DUM · 12:00 – 21:00
                     </div>
-<a href="https://bilete.lamitabiciclista.ro/" target="_blank" rel="noopener" class="border-2 border-brand-yellow text-brand-yellow w-fit px-12 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all inline-block">
+<a href="https://bilete.lamitabiciclista.ro/" target="_blank" rel="noopener" class="border-2 border-brand-yellow text-brand-yellow w-fit px-12 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all inline-block" data-i18n="expo-cta">
                         CUMPĂRĂ BILETE
                     </a>
 </div>
@@ -241,14 +241,14 @@
 <section class="bg-white text-brand-navy py-32 px-8 md:px-24">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
 <div>
-<h2 class="font-manrope font-extrabold text-5xl tracking-tighter uppercase mb-8" style="">VIENNOISERIE &amp; COFETĂRIE</h2>
-<p class="font-manrope font-light text-xl mb-12 opacity-80" style="">Aduceți savoarea 'La Mița Biciclista' acasă. Comandați produsele noastre artizanale direct la ușa dumneavoastră.</p>
-<a href="https://shop.lamitabiciclista.ro/" target="_blank" rel="noopener" class="bg-brand-navy text-white px-12 py-6 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all inline-block">
+<h2 class="font-manrope font-extrabold text-5xl tracking-tighter uppercase mb-8" data-i18n="shop-headline">VIENNOISERIE &amp; COFETĂRIE</h2>
+<p class="font-manrope font-light text-xl mb-12 opacity-80" data-i18n="shop-desc">Aduceți savoarea 'La Mița Biciclista' acasă. Comandați produsele noastre artizanale direct la ușa dumneavoastră.</p>
+<a href="https://shop.lamitabiciclista.ro/" target="_blank" rel="noopener" class="bg-brand-navy text-white px-12 py-6 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow hover:text-brand-navy transition-all inline-block" data-i18n="shop-cta">
                 SHOP ONLINE
             </a>
 </div>
 <div class="flex flex-col gap-4 mt-4">
-<a class="border border-brand-navy/20 text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-navy hover:text-white transition-colors text-center" href="#meniuri">
+<a class="border border-brand-navy/20 text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-navy hover:text-white transition-colors text-center" href="#meniuri" data-i18n="menus-cta">
   EXPLOREAZĂ MENIURILE
 </a>
 </div>
@@ -262,8 +262,8 @@
 
   <!-- Section header -->
   <div class="px-8 md:px-24 mb-12">
-    <span class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow/60 block mb-4">MENIURILE NOASTRE</span>
-    <h2 class="font-manrope font-extrabold text-5xl md:text-6xl tracking-tighter uppercase">MENIURI</h2>
+    <span class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow/60 block mb-4" data-i18n="menus-label">MENIURILE NOASTRE</span>
+    <h2 class="font-manrope font-extrabold text-5xl md:text-6xl tracking-tighter uppercase" data-i18n="menus-headline">MENIURI</h2>
   </div>
 
   <!-- Tab Bar — horizontal scroll on mobile -->
@@ -271,24 +271,20 @@
     <div class="flex min-w-max px-8 md:px-24 gap-0">
       <button id="tab-brasserie"
         onclick="switchMenu('brasserie')"
-        class="menu-tab active-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-brand-yellow text-brand-yellow whitespace-nowrap transition-all">
-        BRASSERIE
-      </button>
+        class="menu-tab active-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-brand-yellow text-brand-yellow whitespace-nowrap transition-all"
+        data-i18n="tab-brasserie">BRASSERIE</button>
       <button id="tab-mic-dejun"
         onclick="switchMenu('mic-dejun')"
-        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all">
-        MIC DEJUN
-      </button>
+        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all"
+        data-i18n="tab-breakfast">MIC DEJUN</button>
       <button id="tab-principal"
         onclick="switchMenu('principal')"
-        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all">
-        PRINCIPAL
-      </button>
+        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all"
+        data-i18n="tab-principal">PRINCIPAL</button>
       <button id="tab-bauturi"
         onclick="switchMenu('bauturi')"
-        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all">
-        BĂUTURI
-      </button>
+        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all"
+        data-i18n="tab-drinks">BĂUTURI</button>
     </div>
   </div>
 
@@ -869,6 +865,88 @@
 </section>
 
 <script>
+  // ── Bilingual i18n ────────────────────────────────────────────
+  var currentLang = 'ro';
+  var translations = {
+    ro: {
+      'hero-headline': 'STABILIMENT<br/><span class="text-brand-yellow">CREATIV</span>',
+      'hero-desc': 'Brasserie, salon istoric și spațiu expozițional în inima Bucureștiului. <span class="font-bold border-b-2 border-brand-yellow">BISERICA AMZEI 9</span>',
+      'brasserie-floor': '01 / PARTER',
+      'brasserie-desc': 'Un spațiu vibrant unde tradiția întâlnește modernitatea. Zilnic între 08:00 și 00:00, transformăm momentele obișnuite în experiențe memorabile.',
+      'brasserie-cta': 'MENIU BRASSERIE',
+      'salon-floor': '02 / ETAJ 1',
+      'salon-name': 'SALON ISTORIC',
+      'salon-desc': 'Eleganța de odinioară a casei, oferind un refugiu liniștit pentru conversații lungi și momente de introspecție, acompaniate de o selecție premium.',
+      'salon-days-1': 'LUNI – JOI',
+      'salon-days-2': 'VINERI – DUMINICĂ',
+      'salon-cta': 'REZERVĂRI SALON',
+      'expo-label': 'EXPOZIȚIA ANUALĂ',
+      'expo-headline': 'ÎNTÂLNIRI. SAU CUM SE NAȘTE O LUME NOUĂ',
+      'expo-desc': 'O explorare a legăturilor umane prin lentila artei contemporane. Expoziția curentă reunește artiști locali care redefinesc peisajul cultural bucureștean.',
+      'expo-hours': 'VIN – DUM · 12:00 – 21:00',
+      'expo-cta': 'CUMPĂRĂ BILETE',
+      'shop-headline': 'VIENNOISERIE & COFETĂRIE',
+      'shop-desc': "Aduceți savoarea 'La Mița Biciclista' acasă. Comandați produsele noastre artizanale direct la ușa dumneavoastră.",
+      'shop-cta': 'SHOP ONLINE',
+      'menus-cta': 'EXPLOREAZĂ MENIURILE',
+      'menus-label': 'MENIURILE NOASTRE',
+      'menus-headline': 'MENIURI',
+      'tab-brasserie': 'BRASSERIE',
+      'tab-breakfast': 'MIC DEJUN',
+      'tab-principal': 'PRINCIPAL',
+      'tab-drinks': 'BĂUTURI',
+      'footer-address': 'STR. BISERICA AMZEI 9<br/>BUCUREȘTI, SECTOR 1<br/>CONTACT@LAMITABICICLISTA.RO',
+      'footer-copyright': 'LA MIȚA BICICLISTA STABILIMENT CREATIV © COPYRIGHT 2025'
+    },
+    en: {
+      'hero-headline': 'CREATIVE<br/><span class="text-brand-yellow">ESTABLISHMENT</span>',
+      'hero-desc': 'Brasserie, historic salon and exhibition space in the heart of Bucharest. <span class="font-bold border-b-2 border-brand-yellow">AMZEI CHURCH 9</span>',
+      'brasserie-floor': '01 / GROUND FLOOR',
+      'brasserie-desc': 'A vibrant space where tradition meets modernity. Daily from 08:00 to 00:00, we transform ordinary moments into memorable experiences.',
+      'brasserie-cta': 'BRASSERIE MENU',
+      'salon-floor': '02 / FIRST FLOOR',
+      'salon-name': 'HISTORICAL SALON',
+      'salon-desc': 'The elegance of the house of old, offering a quiet refuge for long conversations and moments of introspection, accompanied by a premium selection.',
+      'salon-days-1': 'MONDAY – THURSDAY',
+      'salon-days-2': 'FRIDAY – SUNDAY',
+      'salon-cta': 'HISTORICAL SALON RESERVATIONS',
+      'expo-label': 'ANNUAL EXHIBITION',
+      'expo-headline': 'ENCOUNTERS. OR HOW A NEW WORLD BEGINS',
+      'expo-desc': 'An exploration of human connections through the lens of contemporary art. The current exhibition brings together local artists redefining the Bucharest cultural landscape.',
+      'expo-hours': 'FRI – SUN · 12:00 – 21:00',
+      'expo-cta': 'BUY TICKETS',
+      'shop-headline': 'VIENNOISERIE & PASTRY',
+      'shop-desc': "Bring the flavors of 'La Mița Biciclista' home. Order our artisanal products delivered directly to your door.",
+      'shop-cta': 'SHOP ONLINE',
+      'menus-cta': 'EXPLORE MENUS',
+      'menus-label': 'OUR MENUS',
+      'menus-headline': 'MENUS',
+      'tab-brasserie': 'BRASSERIE',
+      'tab-breakfast': 'BREAKFAST',
+      'tab-principal': 'MAIN MENU',
+      'tab-drinks': 'DRINKS',
+      'footer-address': 'AMZEI CHURCH ST. 9<br/>BUCHAREST, SECTOR 1<br/>CONTACT@LAMITABICICLISTA.RO',
+      'footer-copyright': 'LA MIȚA BICICLISTA CREATIVE ESTABLISHMENT © COPYRIGHT 2025'
+    }
+  };
+
+  function setLang(lang) {
+    currentLang = lang;
+    var t = translations[lang];
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (t[key] !== undefined) el.textContent = t[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n-html');
+      if (t[key] !== undefined) el.innerHTML = t[key];
+    });
+    var toggle = document.getElementById('lang-toggle');
+    if (toggle) toggle.textContent = lang === 'ro' ? 'RO / EN' : 'EN / RO';
+    document.documentElement.lang = lang;
+  }
+  // ──────────────────────────────────────────────────────────────
+
   // Logo colour: navy on light sections, white on dark sections
   (function() {
     var logo = document.getElementById('nav-logo');
@@ -919,7 +997,7 @@
 <div class="mb-8">
 <img alt="LA MIȚA BICICLISTA" class="h-20 w-auto brightness-0 invert object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uiB4SV9IpsKDME0vHR3AXgik6ioChFmW5lIm0tI4jFnnMvA7hNQzO2oxpeOMkAsb5JwcWX0Mk1X9K78QOueMTtrfOYoWwfRxSDjP4qGMci8S362rH1oHE-C6bhNgW7_6QlDVXRUdhK4oCaAQJb9Q2mnkxppGOJdFXhYThQzzyLWaNhRGNIcPrxPLo_R29_V4k_4K17g3hjDucXfqdnXGX-fkb1LglZU5l6OFkLE_iAWs-nXiShbwT9098a8zv7WtU8xN05HBYjq" style=""/>
 </div>
-<p class="font-fira-code text-xs opacity-60 leading-relaxed max-w-xs" style="">
+<p class="font-fira-code text-xs opacity-60 leading-relaxed max-w-xs" data-i18n-html="footer-address">
                 STR. BISERICA AMZEI 9<br/>
                 BUCUREȘTI, SECTOR 1<br/>
                 CONTACT@LAMITABICICLISTA.RO
@@ -946,7 +1024,7 @@
 </div>
 </div>
 <div class="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/10 gap-8">
-<span class="font-fira-code text-[8px] tracking-[0.3em] opacity-40 uppercase text-center md:text-left" style="">
+<span class="font-fira-code text-[8px] tracking-[0.3em] opacity-40 uppercase text-center md:text-left" data-i18n="footer-copyright">
             LA MIȚA BICICLISTA STABILIMENT CREATIV © COPYRIGHT 2025
         </span>
 <div class="flex items-center gap-2">
