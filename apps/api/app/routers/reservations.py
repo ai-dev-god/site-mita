@@ -12,9 +12,13 @@ from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
+from app.core.security import require_manager, require_staff
 from app.models.reservation import Reservation, ReservationStatus
 from app.schemas.reservation import ReservationCreate, ReservationRead, ReservationUpdate
 from app.services.availability import find_table_for_slot, get_available_slots
+
+StaffDep = Annotated[dict, Depends(require_staff)]
+ManagerDep = Annotated[dict, Depends(require_manager)]
 
 logger = structlog.get_logger(__name__)
 
@@ -176,6 +180,7 @@ async def update_reservation(
     reservation_id: uuid.UUID,
     body: ReservationUpdate,
     db: DbDep,
+    _auth: StaffDep,
 ) -> Reservation:
     """Modify time, party size, notes, or status.
 
@@ -240,7 +245,7 @@ async def update_reservation(
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Cancel a reservation",
 )
-async def cancel_reservation(reservation_id: uuid.UUID, db: DbDep) -> None:
+async def cancel_reservation(reservation_id: uuid.UUID, db: DbDep, _auth: StaffDep) -> None:
     """Cancel via reservation ID (staff/admin path).
 
     Self-service guest cancellation uses the tokenized route below.
@@ -377,6 +382,7 @@ async def modify_reservation_by_token(
 )
 async def list_reservations(
     db: DbDep,
+    _auth: StaffDep,
     zone_id: Annotated[uuid.UUID | None, Query()] = None,
     slot_date: Annotated[date | None, Query(description="Filter by date (YYYY-MM-DD)")] = None,
     reservation_status: Annotated[ReservationStatus | None, Query(alias="status")] = None,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { UserButton } from "@clerk/nextjs";
 import Badge from "@/components/Badge";
 
 type TableStatus = "available" | "seated" | "reserved" | "turning" | "blocked";
@@ -91,6 +92,9 @@ export default function DashboardPage() {
         </div>
         <button className="ml-2 px-4 h-9 rounded-[4px] text-white text-sm font-semibold"
           style={{ background: "var(--color-primary)" }}>Check-in</button>
+        <div className="ml-3 flex items-center">
+          <UserButton afterSignOutUrl="/login" />
+        </div>
       </div>
 
       {/* Nav tabs */}

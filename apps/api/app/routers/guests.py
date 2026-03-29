@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
 from app.core.encryption import decrypt_pii, encrypt_pii
+from app.core.security import require_admin, require_staff
 from app.models.guest import GuestProfile
 from app.models.reservation import Reservation, ReservationStatus
 from app.schemas.guest import GuestProfileCreate, GuestProfileRead, GuestProfileUpdate
@@ -21,6 +22,8 @@ logger = structlog.get_logger(__name__)
 router = APIRouter(prefix="/guests", tags=["guests"])
 
 DbDep = Annotated[AsyncSession, Depends(get_db)]
+StaffDep = Annotated[dict, Depends(require_staff)]
+AdminDep = Annotated[dict, Depends(require_admin)]
 
 
 # ── PII helpers ───────────────────────────────────────────────────────────────
@@ -83,7 +86,7 @@ def _enrich_read(guest: GuestProfile) -> GuestProfileRead:
     response_model=GuestProfileRead,
     summary="Create a guest profile",
 )
-async def create_guest(body: GuestProfileCreate, db: DbDep) -> GuestProfileRead:
+async def create_guest(body: GuestProfileCreate, db: DbDep, _auth: StaffDep) -> GuestProfileRead:
     """Create a new guest profile, encrypting PII at rest."""
     guest = GuestProfile(
         venue_id=body.venue_id,
@@ -111,7 +114,7 @@ async def create_guest(body: GuestProfileCreate, db: DbDep) -> GuestProfileRead:
     response_model=GuestProfileRead,
     summary="Get a guest profile",
 )
-async def get_guest(guest_id: uuid.UUID, db: DbDep) -> GuestProfileRead:
+async def get_guest(guest_id: uuid.UUID, db: DbDep, _auth: StaffDep) -> GuestProfileRead:
     guest = await _get_active(guest_id, db)
     return _enrich_read(guest)
 
@@ -123,6 +126,7 @@ async def get_guest(guest_id: uuid.UUID, db: DbDep) -> GuestProfileRead:
 )
 async def search_guests(
     db: DbDep,
+    _auth: StaffDep,
     q: Annotated[str | None, Query(min_length=2, description="Name search term")] = None,
     is_vip: Annotated[bool | None, Query()] = None,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
@@ -159,7 +163,7 @@ async def search_guests(
     response_model=GuestProfileRead,
     summary="Update guest preferences, notes, or VIP tags",
 )
-async def update_guest(guest_id: uuid.UUID, body: GuestProfileUpdate, db: DbDep) -> GuestProfileRead:
+async def update_guest(guest_id: uuid.UUID, body: GuestProfileUpdate, db: DbDep, _auth: StaffDep) -> GuestProfileRead:
     guest = await _get_active(guest_id, db)
 
     updates = body.model_dump(exclude_none=True)
@@ -187,6 +191,7 @@ async def update_guest(guest_id: uuid.UUID, body: GuestProfileUpdate, db: DbDep)
 async def get_guest_visits(
     guest_id: uuid.UUID,
     db: DbDep,
+    _auth: StaffDep,
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> list[dict]:
@@ -254,7 +259,7 @@ async def update_consent(
     "/{guest_id}/export",
     summary="GDPR data subject export",
 )
-async def export_guest_data(guest_id: uuid.UUID, db: DbDep) -> JSONResponse:
+async def export_guest_data(guest_id: uuid.UUID, db: DbDep, _auth: StaffDep) -> JSONResponse:
     """Return all personal data held for a guest (GDPR Art. 20 — data portability)."""
     guest = await _get_active(guest_id, db)
 
@@ -327,7 +332,7 @@ async def export_guest_data(guest_id: uuid.UUID, db: DbDep) -> JSONResponse:
     status_code=status.HTTP_204_NO_CONTENT,
     summary="GDPR right to erasure — anonymise PII and soft-delete profile",
 )
-async def erase_guest(guest_id: uuid.UUID, db: DbDep) -> None:
+async def erase_guest(guest_id: uuid.UUID, db: DbDep, _auth: AdminDep) -> None:
     """GDPR Art. 17 — Right to erasure.
 
     - Clears all PII fields (email, phone, name, notes).

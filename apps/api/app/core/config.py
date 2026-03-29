@@ -40,7 +40,14 @@ class Settings(BaseSettings):
     # CORS
     allowed_origins: list[str] = ["http://localhost:3000"]
 
-    # JWT
+    # Clerk auth
+    clerk_publishable_key: SecretStr = Field(default="")
+    clerk_secret_key: SecretStr = Field(default="")
+    # The Clerk Frontend API domain, e.g. "clerk.lamitabiciclista.ro" or the
+    # auto-generated "<slug>.clerk.accounts.dev" domain from the Clerk dashboard.
+    clerk_frontend_api: str = ""
+
+    # JWT (legacy / internal tokens)
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
     refresh_token_expire_days: int = 30
