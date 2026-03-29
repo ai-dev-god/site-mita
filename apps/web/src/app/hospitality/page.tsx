@@ -60,6 +60,7 @@ function formatDate(iso: string) {
 export default function HospitalityPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [eventsLoading, setEventsLoading] = useState(true);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/events?venue_id=${VENUE_ID}&status=published&limit=4`)
@@ -77,27 +78,88 @@ export default function HospitalityPage() {
         position: "sticky", top: 0, zIndex: 50,
         background: "var(--color-surface-raised)",
         borderBottom: "1px solid var(--color-border)",
-        padding: "0 24px", height: 64,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
-        <Link href="/" style={{ textDecoration: "none" }}>
-          <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 18, color: "var(--color-primary)", lineHeight: 1.2 }}>
-            La Mița Biciclista
-          </div>
-          <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--color-text-muted)", fontFamily: "var(--font-mono)" }}>
-            Ospitalitate & Cultură
-          </div>
-        </Link>
-        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <Link href="/reserve" style={{
-            height: 38, padding: "0 20px", borderRadius: "var(--radius-md)",
-            background: "var(--color-primary)", color: "white",
-            fontSize: 14, fontWeight: 600, textDecoration: "none",
-            display: "flex", alignItems: "center",
-          }}>
-            Rezervă
+        <div style={{
+          padding: "0 24px", height: 64,
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          maxWidth: 1200, margin: "0 auto", width: "100%",
+        }}>
+          <Link href="/" style={{ textDecoration: "none", flexShrink: 0 }}>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 18, color: "var(--color-primary)", lineHeight: 1.2 }}>
+              La Mița Biciclista
+            </div>
+            <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--color-text-muted)", fontFamily: "var(--font-mono)" }}>
+              Ospitalitate & Cultură
+            </div>
           </Link>
+
+          {/* Desktop nav links */}
+          <div className="hidden sm:flex" style={{ gap: 24, alignItems: "center" }}>
+            <a href="#spatii" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none", fontWeight: 500 }}>Spații</a>
+            <a href="#agenda" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none", fontWeight: 500 }}>Agenda</a>
+            <a href="#contact" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none", fontWeight: 500 }}>Contact</a>
+            <Link href="/reserve" style={{
+              height: 38, padding: "0 20px", borderRadius: "var(--radius-md)",
+              background: "var(--color-primary)", color: "white",
+              fontSize: 14, fontWeight: 600, textDecoration: "none",
+              display: "flex", alignItems: "center",
+            }}>
+              Rezervă
+            </Link>
+          </div>
+
+          {/* Mobile: hamburger + CTA */}
+          <div className="flex sm:hidden" style={{ gap: 8, alignItems: "center" }}>
+            <Link href="/reserve" style={{
+              height: 34, padding: "0 14px", borderRadius: "var(--radius-md)",
+              background: "var(--color-primary)", color: "white",
+              fontSize: 13, fontWeight: 600, textDecoration: "none",
+              display: "flex", alignItems: "center",
+            }}>
+              Rezervă
+            </Link>
+            <button
+              onClick={() => setMobileNavOpen(o => !o)}
+              aria-label="Toggle menu"
+              style={{
+                background: "none", border: "1px solid var(--color-border)",
+                cursor: "pointer", color: "var(--color-text)",
+                fontSize: 18, padding: "4px 8px",
+                borderRadius: "var(--radius-sm)", lineHeight: 1,
+              }}
+            >
+              {mobileNavOpen ? "✕" : "☰"}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile dropdown */}
+        {mobileNavOpen && (
+          <div className="sm:hidden" style={{
+            borderTop: "1px solid var(--color-border)",
+            background: "var(--color-surface-raised)",
+            padding: "8px 0 12px",
+          }}>
+            {[
+              { href: "#spatii", label: "Spații" },
+              { href: "#agenda", label: "Agenda" },
+              { href: "#contact", label: "Contact" },
+            ].map(item => (
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileNavOpen(false)}
+                style={{
+                  display: "block", padding: "10px 24px",
+                  fontSize: 15, color: "var(--color-text)",
+                  textDecoration: "none", fontWeight: 500,
+                }}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        )}
       </nav>
 
       {/* Hero */}
@@ -177,7 +239,7 @@ export default function HospitalityPage() {
       </section>
 
       {/* Spaces */}
-      <section style={{ background: "var(--color-primary-muted)", padding: "64px 24px" }}>
+      <section id="spatii" style={{ background: "var(--color-primary-muted)", padding: "64px 24px" }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.16em", color: "var(--color-accent)", fontFamily: "var(--font-mono)", marginBottom: 10 }}>
@@ -230,7 +292,7 @@ export default function HospitalityPage() {
       </section>
 
       {/* Events */}
-      <section style={{ maxWidth: 960, margin: "0 auto", padding: "64px 24px" }}>
+      <section id="agenda" style={{ maxWidth: 960, margin: "0 auto", padding: "64px 24px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 36, flexWrap: "wrap", gap: 12 }}>
           <div>
             <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.16em", color: "var(--color-accent)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>
