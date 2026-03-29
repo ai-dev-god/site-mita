@@ -31,15 +31,13 @@ jobs:
             set -euo pipefail
 
             echo "==> Pulling latest code"
-            echo "  git version: $(git --version 2>&1 || echo 'git not found')"
-            echo "  lmbsc dir exists: $(test -d /home/mita/lmbsc && echo yes || echo no)"
-            echo "  lmbsc/.git exists: $(test -d /home/mita/lmbsc/.git && echo yes || echo no)"
             if [ -d /home/mita/lmbsc/.git ]; then
               cd /home/mita/lmbsc
-              git pull --ff-only 2>&1
+              git pull --ff-only
             else
-              mkdir -p /home/mita/lmbsc
-              git clone "https://x-access-token:${GH_TOKEN}@github.com/ai-dev-god/site-mita.git" /home/mita/lmbsc 2>&1
+              # Directory exists but isn't a git repo (or doesn't exist) — fresh clone
+              rm -rf /home/mita/lmbsc
+              git clone "https://x-access-token:${GH_TOKEN}@github.com/ai-dev-god/site-mita.git" /home/mita/lmbsc
               cd /home/mita/lmbsc
             fi
 
