@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1024">
+<title>LMBSC — Check-in Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-primary:       #2C4A2E;
+    --color-primary-light: #4A7A4C;
+    --color-primary-muted: #EAF0EA;
+    --color-accent:        #B8962E;
+    --color-accent-light:  #F5E9C4;
+    --color-surface:       #FAF6F0;
+    --color-raised:        #FFFFFF;
+    --color-text:          #1A1A1A;
+    --color-text-sec:      #5A5A5A;
+    --color-text-muted:    #9A9A9A;
+    --color-border:        #E4DDD5;
+    --color-success:       #2C4A2E;
+    --color-success-bg:    #EAF0EA;
+    --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+    --shadow-md:  0 4px 12px rgba(44,74,46,0.10);
+    --shadow-lg:  0 8px 32px rgba(44,74,46,0.14);
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  12px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-surface);
+    color: var(--color-text);
+    width: 1024px;
+    height: 768px;
+    overflow: hidden;
+  }
+
+  /* ── TOP BAR ────────────────────────────────────── */
+  .top-bar {
+    height: 60px; background: var(--color-raised); border-bottom: 1px solid var(--color-border);
+    display: flex; align-items: center; padding: 0 20px; gap: 14px; flex-shrink: 0;
+  }
+  .brand { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--color-primary); letter-spacing: -0.01em; white-space: nowrap; }
+  .divider-v { width: 1px; height: 26px; background: var(--color-border); flex-shrink: 0; }
+  .shift-block { display: flex; flex-direction: column; gap: 1px; }
+  .shift-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); }
+  .shift-value { font-size: 12px; font-weight: 600; color: var(--color-text); }
+  .stat-pills { display: flex; gap: 6px; margin-left: 4px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    height: 26px; padding: 0 10px; background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: 999px; font-size: 11px; font-weight: 600; color: var(--color-text); white-space: nowrap;
+  }
+  .pill__dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .spacer { flex: 1; }
+  .clock { font-size: 13px; font-weight: 600; color: var(--color-text-sec); white-space: nowrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px;
+    border: none; border-radius: var(--radius-sm); font-family: var(--font-body);
+    font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 150ms;
+  }
+  .btn--primary { background: var(--color-primary); color: #fff; }
+  .btn--primary:hover { background: var(--color-primary-light); }
+  .btn--ghost { background: transparent; color: var(--color-text-sec); border: 1.5px solid var(--color-border); }
+
+  /* ── NAV TABS ───────────────────────────────────── */
+  .nav-tabs {
+    height: 44px; background: var(--color-raised); border-bottom: 1px solid var(--color-border);
+    display: flex; align-items: stretch; padding: 0 20px; flex-shrink: 0;
+  }
+  .nav-tab {
+    display: flex; align-items: center; padding: 0 18px;
+    font-size: 13px; font-weight: 600; color: var(--color-text-sec);
+    cursor: pointer; border: none; background: transparent; font-family: var(--font-body);
+    position: relative; transition: color 150ms; white-space: nowrap;
+  }
+  .nav-tab.active { color: var(--color-primary); }
+  .nav-tab.active::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: var(--color-primary); border-radius: 2px 2px 0 0;
+  }
+  .nav-tab__count {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 999px;
+    font-size: 10px; font-weight: 700; margin-left: 6px;
+  }
+
+  /* ── MAIN LAYOUT ────────────────────────────────── */
+  .layout { display: flex; height: calc(768px - 60px - 44px); }
+
+  /* ── SEARCH PANEL (left) ────────────────────────── */
+  .search-panel {
+    width: 380px;
+    background: var(--color-raised);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .search-header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+  .search-title {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+  }
+
+  .search-methods {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .method-btn {
+    flex: 1;
+    height: 34px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: all 150ms;
+  }
+  .method-btn.active {
+    background: var(--color-primary-muted);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    font-size: 14px;
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    height: 42px;
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    padding: 0 12px 0 36px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(44,74,46,0.1);
+  }
+  .search-input::placeholder { color: var(--color-text-muted); }
+
+  /* Search results */
+  .results-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+
+  .result-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 120ms;
+  }
+  .result-item:last-child { border-bottom: none; }
+  .result-item:hover { background: var(--color-surface); }
+  .result-item.selected { background: #F5FAF5; border-left: 3px solid var(--color-primary); padding-left: 17px; }
+
+  .result-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .result-avatar--gold { background: var(--color-accent-light); color: var(--color-accent); }
+
+  .result-info { flex: 1; min-width: 0; }
+  .result-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+  }
+  .vip-tag {
+    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    background: var(--color-accent-light); color: var(--color-accent);
+    padding: 2px 5px; border-radius: 3px; border: 1px solid rgba(184,150,46,0.2);
+  }
+  .result-meta { font-size: 11px; color: var(--color-text-sec); display: flex; gap: 10px; }
+
+  .result-time {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary);
+    flex-shrink: 0;
+  }
+
+  /* Upcoming reservations section label */
+  .section-label {
+    padding: 8px 20px 4px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  /* ── GUEST CARD PANEL (right) ───────────────────── */
+  .guest-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: var(--color-surface);
+  }
+
+  .guest-panel-header {
+    padding: 18px 24px 14px;
+    background: var(--color-raised);
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+  .guest-panel-title {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 2px;
+  }
+  .guest-panel-sub { font-size: 12px; color: var(--color-text-sec); }
+
+  .guest-card-area {
+    flex: 1;
+    padding: 18px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Identity block */
+  .identity-card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .identity-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 2px solid rgba(184,150,46,0.3);
+  }
+  .identity-details { flex: 1; min-width: 0; }
+  .identity-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .identity-vip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(184,150,46,0.3);
+  }
+  .identity-sub { font-size: 12px; color: var(--color-text-sec); line-height: 1.6; }
+
+  /* Reservation details */
+  .rez-card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .rez-card-header {
+    padding: 12px 16px;
+    background: var(--color-primary-muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(44,74,46,0.15);
+  }
+  .rez-card-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+  }
+  .rez-time {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .rez-details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 14px 16px;
+    gap: 12px;
+  }
+  .rez-cell { }
+  .rez-cell-label {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-muted);
+    margin-bottom: 3px;
+  }
+  .rez-cell-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  /* Visit history */
+  .history-card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+  }
+  .history-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: 10px;
+  }
+  .history-items { display: flex; flex-direction: column; gap: 8px; }
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--color-text-sec);
+  }
+  .history-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-primary-muted);
+    flex-shrink: 0;
+  }
+
+  /* Flags & notes */
+  .flags-card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+  }
+  .flags-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: 10px;
+  }
+  .flags-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .flag--green { background: #F0F7F0; color: #2C4A2E; }
+  .flag--amber { background: #FEF3C7; color: #D97706; }
+  .flag--gold  { background: var(--color-accent-light); color: var(--color-accent); }
+  .flag--red   { background: #FEE2E2; color: #DC2626; }
+
+  /* Notes input */
+  .notes-card {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+  }
+  .notes-field {
+    width: 100%;
+    height: 56px;
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-text);
+    resize: none;
+    outline: none;
+  }
+  .notes-field::placeholder { color: var(--color-text-muted); }
+  .notes-field:focus { border-color: var(--color-primary); }
+
+  /* ── CONFIRM FOOTER ─────────────────────────────── */
+  .confirm-footer {
+    padding: 14px 24px;
+    background: var(--color-raised);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .table-assign {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .table-assign-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    white-space: nowrap;
+  }
+  .table-select {
+    height: 38px;
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+    outline: none;
+    min-width: 160px;
+    cursor: pointer;
+  }
+  .table-select:focus { border-color: var(--color-primary); }
+
+  .confirm-btn {
+    height: 44px;
+    padding: 0 24px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 150ms;
+    white-space: nowrap;
+  }
+  .confirm-btn:hover { background: var(--color-primary-light); }
+
+  .cancel-btn {
+    height: 44px;
+    padding: 0 16px;
+    background: transparent;
+    color: var(--color-text-sec);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="brand">La Mița Biciclista</div>
+  <div class="divider-v"></div>
+  <div class="shift-block">
+    <span class="shift-label">Seară / 18:00–23:00</span>
+    <span class="shift-value">Sâmbătă, 29 Mar 2026</span>
+  </div>
+  <div class="stat-pills">
+    <div class="pill"><span class="pill__dot" style="background:#2C4A2E"></span>12 Acoperiți</div>
+    <div class="pill"><span class="pill__dot" style="background:#B8962E"></span>4 Rezervate</div>
+    <div class="pill"><span class="pill__dot" style="background:#D97706"></span>2 Walk-in</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="clock">20:34</div>
+  <button class="btn btn--ghost" style="margin-left:8px">Note tură</button>
+  <button class="btn btn--primary" style="margin-left:6px">+ Check-in</button>
+</header>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs">
+  <button class="nav-tab">
+    Plan Sală
+    <span class="nav-tab__count" style="background:var(--color-primary-muted);color:var(--color-primary);">12</span>
+  </button>
+  <button class="nav-tab">
+    Coadă Walk-in
+    <span class="nav-tab__count" style="background:#FBF4E3;color:#B8962E;">2</span>
+  </button>
+  <button class="nav-tab active">Check-in</button>
+</nav>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- SEARCH PANEL -->
+  <aside class="search-panel">
+
+    <div class="search-header">
+      <div class="search-title">Caută rezervare</div>
+      <div class="search-methods">
+        <button class="method-btn active">🔍 Nume</button>
+        <button class="method-btn">📱 Telefon</button>
+        <button class="method-btn">📷 QR Scan</button>
+      </div>
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" placeholder="Ionescu..." value="Ionescu">
+      </div>
+    </div>
+
+    <!-- Search results -->
+    <div class="section-label">Rezultate — 3 găsite</div>
+    <div class="results-list">
+
+      <div class="result-item selected">
+        <div class="result-avatar result-avatar--gold">DI</div>
+        <div class="result-info">
+          <div class="result-name">Dl. Dan Ionescu <span class="vip-tag">VIP</span></div>
+          <div class="result-meta"><span>👥 8 pax</span><span>🎂 Aniversare</span></div>
+        </div>
+        <div class="result-time">20:00</div>
+      </div>
+
+      <div class="result-item">
+        <div class="result-avatar">MI</div>
+        <div class="result-info">
+          <div class="result-name">Maria Ionescu</div>
+          <div class="result-meta"><span>👥 2 pax</span><span>Brasserie</span></div>
+        </div>
+        <div class="result-time">21:30</div>
+      </div>
+
+      <div class="result-item">
+        <div class="result-avatar">RI</div>
+        <div class="result-info">
+          <div class="result-name">R. Ionescu-Popa</div>
+          <div class="result-meta"><span>👥 4 pax</span><span>Brasserie</span></div>
+        </div>
+        <div class="result-time">22:00</div>
+      </div>
+
+    </div>
+
+    <!-- Upcoming check-ins section -->
+    <div class="section-label">Sosiri în curând</div>
+    <div class="results-list" style="flex:0;max-height:160px;">
+
+      <div class="result-item">
+        <div class="result-avatar">VM</div>
+        <div class="result-info">
+          <div class="result-name">Vasilescu M.</div>
+          <div class="result-meta"><span>👥 3 pax</span><span>🕐 20:30</span></div>
+        </div>
+        <div class="result-time" style="color:var(--color-accent)">26m</div>
+      </div>
+
+      <div class="result-item">
+        <div class="result-avatar">CM</div>
+        <div class="result-info">
+          <div class="result-name">Constantin & Mihai</div>
+          <div class="result-meta"><span>👥 6 pax</span><span>🕐 21:00</span></div>
+        </div>
+        <div class="result-time" style="color:var(--color-accent)">56m</div>
+      </div>
+
+    </div>
+
+  </aside>
+
+  <!-- GUEST CARD + CONFIRM -->
+  <main class="guest-panel">
+
+    <div class="guest-panel-header">
+      <div class="guest-panel-title">Card pre-sosire</div>
+      <div class="guest-panel-sub">Rezervare confirmată · Masa 7 · Salon Istoric</div>
+    </div>
+
+    <div class="guest-card-area">
+
+      <!-- Identity -->
+      <div class="identity-card">
+        <div class="identity-avatar">DI</div>
+        <div class="identity-details">
+          <div class="identity-name">
+            Dl. Dan Ionescu
+            <span class="identity-vip">★ VIP</span>
+          </div>
+          <div class="identity-sub">
+            ★ Client fidel — 12 vizite &nbsp;·&nbsp; +40 721 234 567<br>
+            Ultima vizită: 15 Feb 2026 · 3 vizite în sezonul curent
+          </div>
+        </div>
+      </div>
+
+      <!-- Reservation details -->
+      <div class="rez-card">
+        <div class="rez-card-header">
+          <span class="rez-card-title">Detalii rezervare</span>
+          <span class="rez-time">20:00 · Astăzi</span>
+        </div>
+        <div class="rez-details-grid">
+          <div class="rez-cell">
+            <div class="rez-cell-label">Persoane</div>
+            <div class="rez-cell-val">8 pax</div>
+          </div>
+          <div class="rez-cell">
+            <div class="rez-cell-label">Zona</div>
+            <div class="rez-cell-val">Salon Ist.</div>
+          </div>
+          <div class="rez-cell">
+            <div class="rez-cell-label">Masă preferată</div>
+            <div class="rez-cell-val">M7 / colț</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes & flags row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+        <div class="flags-card">
+          <div class="flags-label">Restricții alimentare</div>
+          <div class="flags-row">
+            <span class="flag flag--green">🌱 Vegetarian (2)</span>
+            <span class="flag flag--amber">⚠ Fără gluten (1)</span>
+          </div>
+        </div>
+
+        <div class="flags-card">
+          <div class="flags-label">Ocazii speciale</div>
+          <div class="flags-row">
+            <span class="flag flag--gold">🎂 Aniversare 50 ani</span>
+            <span class="flag flag--gold">🎁 Tort comandat</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Visit history -->
+      <div class="history-card">
+        <div class="history-label">Istoric vizite recente</div>
+        <div class="history-items">
+          <div class="history-item">
+            <div class="history-dot"></div>
+            <span>15 Feb 2026 — Cină romantică, 2 pax, ~340 RON · Sala Brasserie</span>
+          </div>
+          <div class="history-item">
+            <div class="history-dot"></div>
+            <span>02 Ian 2026 — Cină Revelion, 6 pax, ~1.200 RON · Salon Istoric</span>
+          </div>
+          <div class="history-item">
+            <div class="history-dot"></div>
+            <span>10 Dec 2025 — Prânz de afaceri, 4 pax, ~540 RON · Sala Brasserie</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pre-arrival note -->
+      <div class="notes-card">
+        <div class="history-label" style="margin-bottom:8px">Notă host (vizibilă intern)</div>
+        <textarea class="notes-field" placeholder="Adaugă o notă pentru această sosire...">Aniversare 50 ani — tort comandat. Preferință vin roșu. VIP — atenție specială.</textarea>
+      </div>
+
+    </div><!-- /guest-card-area -->
+
+    <!-- Confirm arrival footer -->
+    <div class="confirm-footer">
+      <div class="table-assign">
+        <span class="table-assign-label">Atribuie masa:</span>
+        <select class="table-select">
+          <option>Masa 7 — Salon Ist. (8 locuri) ✓</option>
+          <option>Masa 3 — Brasserie (6 locuri)</option>
+          <option>Masa 11 — Brasserie (4 locuri)</option>
+        </select>
+      </div>
+      <button class="cancel-btn">Anulează</button>
+      <button class="confirm-btn">✓ Confirmă Sosirea</button>
+    </div>
+
+  </main>
+
+</div><!-- /layout -->
+</body>
+</html>

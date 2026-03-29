@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1024">
+<title>LMBSC — Walk-in Queue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-primary:       #2C4A2E;
+    --color-primary-light: #4A7A4C;
+    --color-primary-muted: #EAF0EA;
+    --color-accent:        #B8962E;
+    --color-accent-light:  #F5E9C4;
+    --color-surface:       #FAF6F0;
+    --color-raised:        #FFFFFF;
+    --color-text:          #1A1A1A;
+    --color-text-sec:      #5A5A5A;
+    --color-text-muted:    #9A9A9A;
+    --color-border:        #E4DDD5;
+    --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+    --shadow-md:  0 4px 12px rgba(44,74,46,0.10);
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  12px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-surface);
+    color: var(--color-text);
+    width: 1024px;
+    height: 768px;
+    overflow: hidden;
+  }
+
+  /* ── TOP BAR ────────────────────────────────────── */
+  .top-bar {
+    height: 60px;
+    background: var(--color-raised);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+  .brand {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .divider-v {
+    width: 1px;
+    height: 26px;
+    background: var(--color-border);
+    flex-shrink: 0;
+  }
+  .shift-block { display: flex; flex-direction: column; gap: 1px; }
+  .shift-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); }
+  .shift-value { font-size: 12px; font-weight: 600; color: var(--color-text); }
+  .stat-pills { display: flex; gap: 6px; margin-left: 4px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    height: 26px; padding: 0 10px;
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: 999px; font-size: 11px; font-weight: 600; color: var(--color-text); white-space: nowrap;
+  }
+  .pill__dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .spacer { flex: 1; }
+  .clock { font-size: 13px; font-weight: 600; color: var(--color-text-sec); white-space: nowrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 34px; padding: 0 14px; border: none; border-radius: var(--radius-sm);
+    font-family: var(--font-body); font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 150ms;
+  }
+  .btn--primary { background: var(--color-primary); color: #fff; }
+  .btn--primary:hover { background: var(--color-primary-light); }
+  .btn--ghost { background: transparent; color: var(--color-text-sec); border: 1.5px solid var(--color-border); }
+
+  /* ── NAV TABS ───────────────────────────────────── */
+  .nav-tabs {
+    height: 44px; background: var(--color-raised); border-bottom: 1px solid var(--color-border);
+    display: flex; align-items: stretch; padding: 0 20px; gap: 0; flex-shrink: 0;
+  }
+  .nav-tab {
+    display: flex; align-items: center; padding: 0 18px;
+    font-size: 13px; font-weight: 600; color: var(--color-text-sec);
+    cursor: pointer; border: none; background: transparent; font-family: var(--font-body);
+    position: relative; transition: color 150ms; white-space: nowrap;
+  }
+  .nav-tab.active { color: var(--color-primary); }
+  .nav-tab.active::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: var(--color-primary); border-radius: 2px 2px 0 0;
+  }
+  .nav-tab__count {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 999px;
+    font-size: 10px; font-weight: 700; margin-left: 6px;
+  }
+
+  /* ── MAIN LAYOUT ────────────────────────────────── */
+  .layout {
+    display: flex;
+    height: calc(768px - 60px - 44px);
+  }
+
+  /* ── QUEUE LIST PANEL ───────────────────────────── */
+  .queue-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-right: 1px solid var(--color-border);
+  }
+
+  .queue-header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+    background: var(--color-raised);
+  }
+  .queue-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+  }
+  .queue-meta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .meta-stat {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    text-align: center;
+    min-width: 80px;
+  }
+  .meta-stat__val {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .meta-stat__lbl {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-muted);
+  }
+
+  /* Search / add bar */
+  .add-bar {
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    background: var(--color-raised);
+  }
+  .input-field {
+    flex: 1;
+    height: 38px;
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-text);
+    outline: none;
+  }
+  .input-field::placeholder { color: var(--color-text-muted); }
+  .input-field:focus { border-color: var(--color-primary); }
+
+  .btn--accent {
+    background: var(--color-accent);
+    color: #fff;
+    height: 38px;
+    padding: 0 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn--accent:hover { background: #9A7D25; }
+
+  /* Queue items */
+  .queue-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+
+  .queue-item {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: background 120ms;
+  }
+  .queue-item:last-child { border-bottom: none; }
+  .queue-item:hover { background: var(--color-surface); }
+  .queue-item.active { background: #F5FAF5; }
+
+  .position-bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-right: 14px;
+    align-self: center;
+  }
+  .pos--normal { background: var(--color-primary-muted); color: var(--color-primary); }
+  .pos--vip    { background: var(--color-accent-light); color: var(--color-accent); }
+  .pos--urgent { background: #FEE2E2; color: #DC2626; }
+
+  .item-body { flex: 1; min-width: 0; }
+  .item-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .vip-tag {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid rgba(184,150,46,0.2);
+  }
+  .item-details {
+    display: flex;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--color-text-sec);
+    flex-wrap: wrap;
+  }
+  .item-detail { display: flex; align-items: center; gap: 4px; }
+
+  .item-wait {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+  .wait-time {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text-sec);
+    font-variant-numeric: tabular-nums;
+  }
+  .wait-long { color: #D97706; }
+  .wait-urgent { color: #DC2626; }
+  .wait-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+  }
+  .seat-now-btn {
+    height: 34px;
+    padding: 0 12px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font-body);
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .seat-now-btn:hover { background: var(--color-primary-light); }
+
+  /* ── QR PANEL ───────────────────────────────────── */
+  .qr-panel {
+    width: 300px;
+    background: var(--color-raised);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .qr-header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .qr-title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 4px;
+  }
+  .qr-sub {
+    font-size: 12px;
+    color: var(--color-text-sec);
+    line-height: 1.5;
+  }
+
+  .qr-display {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* QR code SVG placeholder */
+  .qr-code-wrapper {
+    width: 180px;
+    height: 180px;
+    background: var(--color-raised);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 12px;
+  }
+  .qr-svg {
+    width: 156px;
+    height: 156px;
+  }
+
+  .qr-url-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    width: 100%;
+    font-size: 11px;
+  }
+  .qr-url-text {
+    flex: 1;
+    color: var(--color-primary);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .qr-copy-btn {
+    height: 26px;
+    padding: 0 8px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .qr-instructions {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-align: center;
+    line-height: 1.55;
+  }
+
+  /* Wait estimate config */
+  .wait-config {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+  .config-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
+  }
+  .wait-options {
+    display: flex;
+    gap: 6px;
+  }
+  .wait-opt {
+    flex: 1;
+    height: 34px;
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    cursor: pointer;
+    transition: all 150ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wait-opt.selected {
+    background: var(--color-primary-muted);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  /* Notifications toggle */
+  .notif-section {
+    padding: 14px 20px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .notif-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .notif-label { font-size: 13px; font-weight: 600; color: var(--color-text); }
+  .notif-sub { font-size: 11px; color: var(--color-text-muted); margin-top: 2px; }
+  .toggle {
+    width: 40px;
+    height: 22px;
+    background: var(--color-primary);
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  /* Capacity widget */
+  .capacity-widget {
+    padding: 14px 20px;
+    flex: 1;
+    background: var(--color-surface);
+  }
+  .cap-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+  }
+  .cap-bar-wrap { margin-bottom: 8px; }
+  .cap-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--color-text-sec);
+    margin-bottom: 4px;
+  }
+  .cap-bar {
+    height: 8px;
+    background: var(--color-border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .cap-bar__fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--color-primary);
+  }
+  .cap-bar__fill--warn { background: #D97706; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="brand">La Mița Biciclista</div>
+  <div class="divider-v"></div>
+  <div class="shift-block">
+    <span class="shift-label">Seară / 18:00–23:00</span>
+    <span class="shift-value">Sâmbătă, 29 Mar 2026</span>
+  </div>
+  <div class="stat-pills">
+    <div class="pill"><span class="pill__dot" style="background:#2C4A2E"></span>12 Acoperiți</div>
+    <div class="pill"><span class="pill__dot" style="background:#B8962E"></span>4 Rezervate</div>
+    <div class="pill"><span class="pill__dot" style="background:#D97706"></span>2 Walk-in</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="clock">20:34</div>
+  <button class="btn btn--ghost" style="margin-left:8px">Note tură</button>
+  <button class="btn btn--primary" style="margin-left:6px">+ Check-in</button>
+</header>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs">
+  <button class="nav-tab">
+    Plan Sală
+    <span class="nav-tab__count" style="background:var(--color-primary-muted);color:var(--color-primary);">12</span>
+  </button>
+  <button class="nav-tab active">
+    Coadă Walk-in
+    <span class="nav-tab__count" style="background:#FBF4E3;color:#B8962E;">2</span>
+  </button>
+  <button class="nav-tab">Check-in</button>
+</nav>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- QUEUE LIST -->
+  <main class="queue-panel">
+
+    <div class="queue-header">
+      <div class="queue-title">Coadă Walk-in</div>
+      <div class="queue-meta-row">
+        <div class="meta-stat">
+          <div class="meta-stat__val">2</div>
+          <div class="meta-stat__lbl">În coadă</div>
+        </div>
+        <div class="meta-stat">
+          <div class="meta-stat__val" style="color:#D97706">~25m</div>
+          <div class="meta-stat__lbl">Așteptare est.</div>
+        </div>
+        <div class="meta-stat">
+          <div class="meta-stat__val">4</div>
+          <div class="meta-stat__lbl">Mese libere</div>
+        </div>
+        <div class="meta-stat">
+          <div class="meta-stat__val" style="color:#4A7A4C">1</div>
+          <div class="meta-stat__lbl">Se eliberează</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add to queue bar -->
+    <div class="add-bar">
+      <input class="input-field" type="text" placeholder="Nume + număr persoane...">
+      <button class="btn--accent">+ Adaugă în coadă</button>
+    </div>
+
+    <!-- Queue items -->
+    <div class="queue-list">
+
+      <!-- Item 1 — VIP, top of queue -->
+      <div class="queue-item active">
+        <div class="position-bubble pos--vip">1</div>
+        <div class="item-body">
+          <div class="item-name">
+            Andrei Constantin
+            <span class="vip-tag">★ VIP</span>
+          </div>
+          <div class="item-details">
+            <div class="item-detail">👥 3 persoane</div>
+            <div class="item-detail">🕐 Intrat 20:12</div>
+            <div class="item-detail">🌱 Vegetarian (1)</div>
+          </div>
+        </div>
+        <div class="item-wait">
+          <div class="wait-time wait-long">22m</div>
+          <div class="wait-label">Așteptare</div>
+          <button class="seat-now-btn">Plasează ▶</button>
+        </div>
+      </div>
+
+      <!-- Item 2 — normal -->
+      <div class="queue-item">
+        <div class="position-bubble pos--normal">2</div>
+        <div class="item-body">
+          <div class="item-name">Munteanu G.</div>
+          <div class="item-details">
+            <div class="item-detail">👥 2 persoane</div>
+            <div class="item-detail">🕐 Intrat 20:27</div>
+          </div>
+        </div>
+        <div class="item-wait">
+          <div class="wait-time">7m</div>
+          <div class="wait-label">Așteptare</div>
+          <button class="seat-now-btn">Plasează ▶</button>
+        </div>
+      </div>
+
+      <!-- Empty state hint -->
+      <div style="padding:32px 24px;text-align:center;color:var(--color-text-muted);">
+        <div style="font-size:28px;margin-bottom:8px;">🪑</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;color:var(--color-text-sec)">Coada este scurtă</div>
+        <div style="font-size:12px;line-height:1.5">Afișați codul QR pentru a permite<br>clienților să se înscrie singuri.</div>
+      </div>
+
+    </div><!-- /queue-list -->
+
+  </main><!-- /queue-panel -->
+
+  <!-- QR PANEL -->
+  <aside class="qr-panel">
+
+    <div class="qr-header">
+      <div class="qr-title">Înscrierea în coadă</div>
+      <div class="qr-sub">Afișați codul pentru ca oaspeții să se<br>înscrie din telefonul lor.</div>
+    </div>
+
+    <div class="qr-display">
+      <!-- QR Code (generated pattern using SVG) -->
+      <div class="qr-code-wrapper">
+        <svg class="qr-svg" viewBox="0 0 156 156" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+          <rect width="156" height="156" fill="white"/>
+          <!-- QR finder pattern — top-left -->
+          <rect x="6" y="6" width="42" height="42" fill="#1A1A1A"/>
+          <rect x="12" y="12" width="30" height="30" fill="white"/>
+          <rect x="18" y="18" width="18" height="18" fill="#1A1A1A"/>
+          <!-- QR finder pattern — top-right -->
+          <rect x="108" y="6" width="42" height="42" fill="#1A1A1A"/>
+          <rect x="114" y="12" width="30" height="30" fill="white"/>
+          <rect x="120" y="18" width="18" height="18" fill="#1A1A1A"/>
+          <!-- QR finder pattern — bottom-left -->
+          <rect x="6" y="108" width="42" height="42" fill="#1A1A1A"/>
+          <rect x="12" y="114" width="30" height="30" fill="white"/>
+          <rect x="18" y="120" width="18" height="18" fill="#1A1A1A"/>
+          <!-- Timing patterns -->
+          <rect x="54" y="6" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="66" y="6" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="78" y="6" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="90" y="6" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="6" y="54" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="6" y="66" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="6" y="78" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="6" y="90" width="6" height="6" fill="#1A1A1A"/>
+          <!-- Data modules (representative pattern) -->
+          <rect x="54" y="54" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="54" y="66" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="66" y="54" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="78" y="66" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="78" y="78" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="90" y="54" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="90" y="78" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="66" y="90" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="78" y="90" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="54" y="78" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="102" y="54" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="102" y="66" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="114" y="66" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="114" y="78" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="126" y="54" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="138" y="66" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="126" y="78" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="138" y="78" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="54" y="102" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="66" y="102" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="66" y="114" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="78" y="102" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="90" y="114" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="90" y="126" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="102" y="102" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="114" y="114" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="126" y="102" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="138" y="102" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="126" y="126" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="138" y="126" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="138" y="138" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="114" y="138" width="6" height="6" fill="#1A1A1A"/>
+          <!-- Brand center logo square -->
+          <rect x="66" y="66" width="24" height="24" rx="3" fill="white" stroke="#E4DDD5" stroke-width="1"/>
+          <rect x="70" y="70" width="16" height="16" rx="2" fill="#2C4A2E"/>
+        </svg>
+      </div>
+
+      <div class="qr-url-chip">
+        <span class="qr-url-text">lamitabiciclista.ro/queue</span>
+        <button class="qr-copy-btn">Copiază</button>
+      </div>
+
+      <div class="qr-instructions">
+        Oaspeții scanează codul, introduc<br>
+        numele și numărul de persoane.<br>
+        Sunt notificați prin SMS când masa e gata.
+      </div>
+    </div>
+
+    <!-- Estimated wait config -->
+    <div class="wait-config">
+      <div class="config-label">Timp așteptare afișat</div>
+      <div class="wait-options">
+        <button class="wait-opt">15m</button>
+        <button class="wait-opt selected">25m</button>
+        <button class="wait-opt">35m</button>
+        <button class="wait-opt">45m</button>
+      </div>
+    </div>
+
+    <!-- SMS notifications toggle -->
+    <div class="notif-section">
+      <div class="notif-row">
+        <div>
+          <div class="notif-label">Notificări SMS</div>
+          <div class="notif-sub">Alertă automată când masa e pregătită</div>
+        </div>
+        <div class="toggle"></div>
+      </div>
+    </div>
+
+    <!-- Capacity widget -->
+    <div class="capacity-widget">
+      <div class="cap-title">Capacitate sală</div>
+      <div class="cap-bar-wrap">
+        <div class="cap-bar-label"><span>Brasserie</span><span>46/60</span></div>
+        <div class="cap-bar"><div class="cap-bar__fill cap-bar__fill--warn" style="width:77%"></div></div>
+      </div>
+      <div class="cap-bar-wrap">
+        <div class="cap-bar-label"><span>Salon Istoric</span><span>18/40</span></div>
+        <div class="cap-bar"><div class="cap-bar__fill" style="width:45%"></div></div>
+      </div>
+    </div>
+
+  </aside><!-- /qr-panel -->
+
+</div><!-- /layout -->
+</body>
+</html>

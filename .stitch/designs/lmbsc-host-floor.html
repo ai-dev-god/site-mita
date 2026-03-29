@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1024">
+<title>LMBSC — Host Floor View</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-primary:       #2C4A2E;
+    --color-primary-light: #4A7A4C;
+    --color-primary-muted: #EAF0EA;
+    --color-accent:        #B8962E;
+    --color-accent-light:  #F5E9C4;
+    --color-surface:       #FAF6F0;
+    --color-raised:        #FFFFFF;
+    --color-text:          #1A1A1A;
+    --color-text-sec:      #5A5A5A;
+    --color-text-muted:    #9A9A9A;
+    --color-border:        #E4DDD5;
+    --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+    --shadow-md:  0 4px 12px rgba(44,74,46,0.10);
+    --shadow-lg:  0 8px 32px rgba(44,74,46,0.14);
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  12px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-surface);
+    color: var(--color-text);
+    width: 1024px;
+    height: 768px;
+    overflow: hidden;
+  }
+
+  /* ── TOP BAR ────────────────────────────────────── */
+  .top-bar {
+    height: 60px;
+    background: var(--color-raised);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .brand {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .divider-v {
+    width: 1px;
+    height: 26px;
+    background: var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .shift-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .shift-label {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+  }
+  .shift-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .stat-pills {
+    display: flex;
+    gap: 6px;
+    margin-left: 4px;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 26px;
+    padding: 0 10px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+  .pill__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .spacer { flex: 1; }
+
+  .clock {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    white-space: nowrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 150ms;
+  }
+  .btn--primary { background: var(--color-primary); color: #fff; }
+  .btn--primary:hover { background: var(--color-primary-light); }
+  .btn--ghost {
+    background: transparent;
+    color: var(--color-text-sec);
+    border: 1.5px solid var(--color-border);
+  }
+
+  /* ── NAV TABS ───────────────────────────────────── */
+  .nav-tabs {
+    height: 44px;
+    background: var(--color-raised);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: stretch;
+    padding: 0 20px;
+    gap: 0;
+    flex-shrink: 0;
+  }
+  .nav-tab {
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+    position: relative;
+    transition: color 150ms;
+    white-space: nowrap;
+  }
+  .nav-tab.active {
+    color: var(--color-primary);
+  }
+  .nav-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-primary);
+    border-radius: 2px 2px 0 0;
+  }
+  .nav-tab__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: 6px;
+  }
+
+  /* ── MAIN LAYOUT ────────────────────────────────── */
+  .layout {
+    display: flex;
+    height: calc(768px - 60px - 44px);
+  }
+
+  /* ── FLOOR PANEL ────────────────────────────────── */
+  .floor-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 20px;
+    overflow-y: auto;
+    min-width: 0;
+  }
+
+  .floor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .floor-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .zone-toggle {
+    display: flex;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    gap: 2px;
+  }
+  .zone-btn {
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    border-radius: 3px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+    transition: all 150ms;
+  }
+  .zone-btn.active {
+    background: var(--color-raised);
+    color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .legend {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── TABLE GRID ─────────────────────────────────── */
+  .table-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .table-card {
+    background: var(--color-raised);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    cursor: pointer;
+    transition: box-shadow 150ms, border-color 150ms;
+    min-height: 90px;
+    position: relative;
+  }
+  .table-card:hover { box-shadow: var(--shadow-md); }
+
+  .table-card--seated   { border-color: rgba(44,74,46,0.35);  background: #FAFDFB; }
+  .table-card--available{ border-color: rgba(74,122,76,0.2);  background: #FCFFFE; }
+  .table-card--reserved { border-color: rgba(184,150,46,0.35); background: #FFFDF7; }
+  .table-card--turning  { border-color: rgba(217,119,6,0.35);  background: #FFFEF5; }
+  .table-card--blocked  { border-color: rgba(107,114,128,0.25); background: #FAFAFA; opacity: 0.65; }
+
+  .table-card--active {
+    border-color: var(--color-primary) !important;
+    border-width: 2px !important;
+    box-shadow: var(--shadow-md) !important;
+    background: #F8FDF8 !important;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .table-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1;
+  }
+  .table-num-label {
+    font-size: 9px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-muted);
+    margin-bottom: 1px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: var(--radius-sm);
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 1px solid transparent;
+  }
+  .badge::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .badge--seated   { background: #EAF0EA; color: #2C4A2E; border-color: rgba(44,74,46,0.2); }
+  .badge--seated::before   { background: #2C4A2E; }
+  .badge--available{ background: #F0F7F0; color: #4A7A4C; border-color: rgba(74,122,76,0.15); }
+  .badge--available::before{ background: #4A7A4C; }
+  .badge--reserved { background: #FBF4E3; color: #B8962E; border-color: rgba(184,150,46,0.2); }
+  .badge--reserved::before { background: #B8962E; }
+  .badge--turning  { background: #FEF3C7; color: #D97706; border-color: rgba(217,119,6,0.2); }
+  .badge--turning::before  { background: #D97706; }
+  .badge--blocked  { background: #F3F4F6; color: #6B7280; border-color: rgba(107,114,128,0.2); }
+  .badge--blocked::before  { background: #9CA3AF; }
+
+  .card-guest {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+  }
+  .card-meta {
+    display: flex;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--color-text-sec);
+    flex-wrap: wrap;
+  }
+  .card-meta span { display: flex; align-items: center; gap: 3px; }
+
+  .card-timer {
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .timer-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .timer-lbl {
+    font-size: 9px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .timer-warn { color: #D97706; }
+  .timer-alert { color: #DC2626; }
+
+  .vip-star {
+    color: var(--color-accent);
+    font-size: 11px;
+    margin-left: 2px;
+  }
+
+  /* ── DETAIL SIDE PANEL ──────────────────────────── */
+  .detail-panel {
+    width: 296px;
+    background: var(--color-raised);
+    border-left: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+
+  .panel-header {
+    padding: 16px 18px 14px;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .panel-title {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .zone-tag {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    padding: 3px 7px;
+    border-radius: var(--radius-sm);
+  }
+  .panel-close {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    font-size: 16px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    flex-shrink: 0;
+  }
+
+  /* Guest card */
+  .guest-card {
+    margin: 14px 16px 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+  }
+  .guest-info { flex: 1; min-width: 0; }
+  .guest-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vip-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(184,150,46,0.25);
+  }
+  .guest-loyalty {
+    font-size: 11px;
+    color: var(--color-text-sec);
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    margin-top: 14px;
+    flex-shrink: 0;
+  }
+  .stat-cell {
+    padding: 12px 14px;
+    text-align: center;
+    border-right: 1px solid var(--color-border);
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-val {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: 3px;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-lbl {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-muted);
+  }
+
+  /* Notes & tags */
+  .section-block {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+  .block-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    margin-bottom: 7px;
+  }
+  .notes-text {
+    font-size: 13px;
+    color: var(--color-text);
+    line-height: 1.55;
+  }
+  .tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 9px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .tag--green { background: #F0F7F0; color: #2C4A2E; }
+  .tag--gold  { background: var(--color-accent-light); color: var(--color-accent); }
+
+  /* Action buttons */
+  .actions-block {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+  .action-btn {
+    width: 100%;
+    height: 38px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 150ms, border-color 150ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .action-btn--amber {
+    background: transparent;
+    border: 1.5px solid #D97706;
+    color: #D97706;
+  }
+  .action-btn--amber:hover { background: #FEF3C7; }
+  .action-btn--green {
+    background: transparent;
+    border: 1.5px solid var(--color-primary);
+    color: var(--color-primary);
+  }
+  .action-btn--green:hover { background: var(--color-primary-muted); }
+  .action-btn--ghost {
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    color: var(--color-text-sec);
+  }
+  .action-btn--ghost:hover { background: #F0EBE3; }
+
+  /* Today at a glance */
+  .glance-widget {
+    margin: 0;
+    padding: 14px 16px;
+    background: var(--color-surface);
+    flex-shrink: 0;
+  }
+  .glance-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+  }
+  .glance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .glance-cell {
+    background: var(--color-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+  .glance-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .glance-lbl {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-muted);
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="brand">La Mița Biciclista</div>
+  <div class="divider-v"></div>
+  <div class="shift-block">
+    <span class="shift-label">Seară / 18:00–23:00</span>
+    <span class="shift-value">Sâmbătă, 29 Mar 2026</span>
+  </div>
+  <div class="stat-pills">
+    <div class="pill"><span class="pill__dot" style="background:#2C4A2E"></span>12 Acoperiți</div>
+    <div class="pill"><span class="pill__dot" style="background:#B8962E"></span>4 Rezervate</div>
+    <div class="pill"><span class="pill__dot" style="background:#D97706"></span>2 Walk-in</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="clock">20:34</div>
+  <button class="btn btn--ghost" style="margin-left:8px">Note tură</button>
+  <button class="btn btn--primary" style="margin-left:6px">+ Check-in</button>
+</header>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs">
+  <button class="nav-tab active">
+    Plan Sală
+    <span class="nav-tab__count">12</span>
+  </button>
+  <button class="nav-tab">
+    Coadă Walk-in
+    <span class="nav-tab__count" style="background:#FBF4E3;color:#B8962E;">2</span>
+  </button>
+  <button class="nav-tab">Check-in</button>
+</nav>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- FLOOR PANEL -->
+  <main class="floor-panel">
+
+    <div class="floor-header">
+      <h1 class="floor-title">Brasserie — Parter</h1>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="zone-toggle">
+          <button class="zone-btn active">Brasserie</button>
+          <button class="zone-btn">Salon Istoric</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#4A7A4C"></div>Disponibil</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2C4A2E"></div>Ocupat</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#B8962E"></div>Rezervat</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#D97706"></div>Se eliberează</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#9CA3AF"></div>Blocat</div>
+    </div>
+
+    <div class="table-grid">
+
+      <!-- T1 SEATED -->
+      <div class="table-card table-card--seated">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">1</div></div>
+          <span class="badge badge--seated">Ocupat</span>
+        </div>
+        <div class="card-guest">Familia Popescu</div>
+        <div class="card-meta">
+          <span>👥 4/4</span>
+          <span>🍽 Ana</span>
+        </div>
+        <div class="card-timer">
+          <div><div class="timer-val">1h 12m</div><div class="timer-lbl">la masă</div></div>
+          <div style="text-align:right"><div class="timer-val">~340 RON</div><div class="timer-lbl">est.</div></div>
+        </div>
+      </div>
+
+      <!-- T2 AVAILABLE -->
+      <div class="table-card table-card--available">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">2</div></div>
+          <span class="badge badge--available">Liber</span>
+        </div>
+        <div class="card-guest" style="color:var(--color-text-muted)">—</div>
+        <div class="card-meta"><span>👥 2 locuri</span></div>
+      </div>
+
+      <!-- T3 RESERVED -->
+      <div class="table-card table-card--reserved">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">3</div></div>
+          <span class="badge badge--reserved">Rezervat</span>
+        </div>
+        <div class="card-guest">Popescu A.</div>
+        <div class="card-meta">
+          <span>👥 6 pax</span>
+          <span>🕐 19:30</span>
+        </div>
+        <div class="card-timer">
+          <div><div class="timer-val" style="color:#B8962E">+52m</div><div class="timer-lbl">întârziere</div></div>
+        </div>
+      </div>
+
+      <!-- T4 SEATED -->
+      <div class="table-card table-card--seated">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">4</div></div>
+          <span class="badge badge--seated">Ocupat</span>
+        </div>
+        <div class="card-guest">Marin & Popa</div>
+        <div class="card-meta"><span>👥 2/2</span></div>
+        <div class="card-timer">
+          <div><div class="timer-val">42m</div><div class="timer-lbl">la masă</div></div>
+          <div style="text-align:right"><div class="timer-val">~160 RON</div><div class="timer-lbl">est.</div></div>
+        </div>
+      </div>
+
+      <!-- T5 TURNING -->
+      <div class="table-card table-card--turning">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">5</div></div>
+          <span class="badge badge--turning">Eliberare</span>
+        </div>
+        <div class="card-guest">Se curăță</div>
+        <div class="card-meta"><span>👥 era 4 pax</span></div>
+      </div>
+
+      <!-- T6 AVAILABLE -->
+      <div class="table-card table-card--available">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">6</div></div>
+          <span class="badge badge--available">Liber</span>
+        </div>
+        <div class="card-guest" style="color:var(--color-text-muted)">—</div>
+        <div class="card-meta"><span>👥 2 locuri</span></div>
+      </div>
+
+      <!-- T7 SEATED + ACTIVE (selected) -->
+      <div class="table-card table-card--seated table-card--active">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">7</div></div>
+          <span class="badge badge--seated">Ocupat</span>
+        </div>
+        <div class="card-guest">
+          Ionescu D. <span class="vip-star">★</span>
+        </div>
+        <div class="card-meta">
+          <span>👥 8/8</span>
+          <span>🎂 Aniversare</span>
+        </div>
+        <div class="card-timer">
+          <div><div class="timer-val timer-warn">2h 05m</div><div class="timer-lbl">la masă</div></div>
+          <div style="text-align:right"><div class="timer-val">~680 RON</div><div class="timer-lbl">est.</div></div>
+        </div>
+      </div>
+
+      <!-- T8 AVAILABLE -->
+      <div class="table-card table-card--available">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">8</div></div>
+          <span class="badge badge--available">Liber</span>
+        </div>
+        <div class="card-guest" style="color:var(--color-text-muted)">—</div>
+        <div class="card-meta"><span>👥 4 locuri</span></div>
+      </div>
+
+      <!-- T9 BLOCKED -->
+      <div class="table-card table-card--blocked">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">9</div></div>
+          <span class="badge badge--blocked">Blocat</span>
+        </div>
+        <div class="card-guest" style="color:var(--color-text-muted)">Eveniment privat</div>
+        <div class="card-meta"><span>🔒 Rezervat</span></div>
+      </div>
+
+      <!-- T10 SEATED -->
+      <div class="table-card table-card--seated">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">10</div></div>
+          <span class="badge badge--seated">Ocupat</span>
+        </div>
+        <div class="card-guest">Dumitrescu</div>
+        <div class="card-meta"><span>👥 3/4</span></div>
+        <div class="card-timer">
+          <div><div class="timer-val">28m</div><div class="timer-lbl">la masă</div></div>
+          <div style="text-align:right"><div class="timer-val">~120 RON</div><div class="timer-lbl">est.</div></div>
+        </div>
+      </div>
+
+      <!-- T11 RESERVED -->
+      <div class="table-card table-card--reserved">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">11</div></div>
+          <span class="badge badge--reserved">Rezervat</span>
+        </div>
+        <div class="card-guest">Marinescu V.</div>
+        <div class="card-meta">
+          <span>👥 2 pax</span>
+          <span>🕐 21:00</span>
+        </div>
+        <div class="card-timer">
+          <div><div class="timer-val" style="color:#B8962E">26m</div><div class="timer-lbl">până la sosire</div></div>
+        </div>
+      </div>
+
+      <!-- T12 AVAILABLE -->
+      <div class="table-card table-card--available">
+        <div class="card-header">
+          <div><div class="table-num-label">Masa</div><div class="table-number">12</div></div>
+          <span class="badge badge--available">Liber</span>
+        </div>
+        <div class="card-guest" style="color:var(--color-text-muted)">—</div>
+        <div class="card-meta"><span>👥 2 locuri</span></div>
+      </div>
+
+    </div><!-- /table-grid -->
+  </main>
+
+  <!-- DETAIL SIDE PANEL — Masa 7 (active) -->
+  <aside class="detail-panel">
+
+    <div class="panel-header">
+      <div class="panel-title">
+        Masa 7
+        <span class="zone-tag">Salon VIP</span>
+      </div>
+      <button class="panel-close">×</button>
+    </div>
+
+    <!-- Guest card -->
+    <div class="guest-card">
+      <div class="avatar">DI</div>
+      <div class="guest-info">
+        <div class="guest-name">
+          Dl. Dan Ionescu
+          <span class="vip-badge">★ VIP</span>
+        </div>
+        <div class="guest-loyalty">★ Client fidel — 12 vizite</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-val" style="color:#D97706">2h 05m</div>
+        <div class="stat-lbl">Timp masă</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-val">8 pax</div>
+        <div class="stat-lbl">Persoane</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-val">~680</div>
+        <div class="stat-lbl">Est. RON</div>
+      </div>
+    </div>
+
+    <!-- Reservation notes -->
+    <div class="section-block">
+      <div class="block-label">Note rezervare</div>
+      <div class="notes-text">Aniversare 50 ani — tort comandat. Preferință vin roșu.</div>
+    </div>
+
+    <!-- Tags -->
+    <div class="section-block">
+      <div class="block-label">Etichete</div>
+      <div class="tags">
+        <span class="tag tag--green">🌱 Vegetarian (2)</span>
+        <span class="tag tag--gold">🎂 Zi de naștere</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-block">
+      <button class="action-btn action-btn--amber">↩ Marchează &ldquo;Se eliberează&rdquo;</button>
+      <button class="action-btn action-btn--green">⇄ Mută la altă masă</button>
+      <button class="action-btn action-btn--ghost">✎ Adaugă notă</button>
+    </div>
+
+    <!-- Today at a glance -->
+    <div class="glance-widget">
+      <div class="glance-title">Astăzi</div>
+      <div class="glance-grid">
+        <div class="glance-cell">
+          <div class="glance-val">24</div>
+          <div class="glance-lbl">Rezervări</div>
+        </div>
+        <div class="glance-cell">
+          <div class="glance-val" style="color:var(--color-accent)">3</div>
+          <div class="glance-lbl">VIP așteptați</div>
+        </div>
+        <div class="glance-cell">
+          <div class="glance-val">2</div>
+          <div class="glance-lbl">Ocazii spec.</div>
+        </div>
+        <div class="glance-cell">
+          <div class="glance-val" style="font-size:13px;color:#D97706">Lactate×2</div>
+          <div class="glance-lbl">Alergii active</div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+</div><!-- /layout -->
+</body>
+</html>
