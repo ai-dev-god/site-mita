@@ -12,6 +12,7 @@ const ADMIN_NAV = [
   { href: "/admin/analytics",  icon: "📊", label: "Analytics" },
   { href: "/admin/campaigns",  icon: "📣", label: "Marketing" },
   { href: "/admin/events",     icon: "🎫", label: "Evenimente" },
+  { href: "/admin/shifts",     icon: "⏰", label: "Ture" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
