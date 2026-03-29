@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
-from app.routers import reservations
+from app.routers import guests, reservations
 
 logger = structlog.get_logger(__name__)
 settings = get_settings()
@@ -50,3 +50,4 @@ async def health() -> dict:
 
 
 app.include_router(reservations.router, prefix="/api/v1")
+app.include_router(guests.router, prefix="/api/v1")
