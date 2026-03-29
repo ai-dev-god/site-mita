@@ -1,15 +1,20 @@
 """LMBSC Hospitality Platform — FastAPI application entry point."""
 
+import uuid
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
+import sentry_sdk
 import structlog
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from sentry_sdk.integrations.fastapi import FastApiIntegration
+from sentry_sdk.integrations.starlette import StarletteIntegration
+from sqlalchemy import text
 
 from app.core.config import get_settings
-from app.core.database import AsyncSessionLocal
+from app.core.database import AsyncSessionLocal, engine
 from app.routers import analytics, campaigns, events, guests, menu, occupancy, reservations, seating, shifts, shop, tables, venues, waitlist
 from app.services.unifi_protect import UniFiOccupancyPoller
 
@@ -19,9 +24,27 @@ settings = get_settings()
 _unifi_poller: UniFiOccupancyPoller | None = None
 
 
+def _init_sentry() -> None:
+    if not settings.sentry_dsn:
+        return
+    sentry_sdk.init(
+        dsn=settings.sentry_dsn,
+        environment=settings.environment,
+        release=settings.app_version,
+        integrations=[
+            StarletteIntegration(transaction_style="endpoint"),
+            FastApiIntegration(transaction_style="endpoint"),
+        ],
+        traces_sample_rate=0.2,
+        send_default_pii=False,
+    )
+    logger.info("sentry_initialized", environment=settings.environment)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     global _unifi_poller
+    _init_sentry()
     logger.info("startup", version=settings.app_version, env=settings.environment)
     _unifi_poller = UniFiOccupancyPoller(settings, AsyncSessionLocal)
     await _unifi_poller.start()
@@ -48,6 +71,16 @@ app.add_middleware(
 )
 
 
+@app.middleware("http")
+async def request_id_middleware(request: Request, call_next):  # type: ignore[no-untyped-def]
+    request_id = request.headers.get("X-Request-Id") or str(uuid.uuid4())
+    structlog.contextvars.clear_contextvars()
+    structlog.contextvars.bind_contextvars(request_id=request_id, path=request.url.path, method=request.method)
+    response = await call_next(request)
+    response.headers["X-Request-Id"] = request_id
+    return response
+
+
 @app.exception_handler(ValueError)
 async def value_error_handler(request: Request, exc: ValueError) -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={"detail": str(exc)})
@@ -55,7 +88,31 @@ async def value_error_handler(request: Request, exc: ValueError) -> JSONResponse
 
 @app.get("/health", tags=["ops"])
 async def health() -> dict:
-    return {"status": "ok", "version": settings.app_version}
+    checks: dict[str, str] = {}
+
+    # Database check
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+        checks["db"] = "ok"
+    except Exception as exc:
+        logger.warning("health_db_fail", error=str(exc))
+        checks["db"] = "error"
+
+    # Redis check
+    try:
+        import redis.asyncio as aioredis
+
+        r = aioredis.from_url(str(settings.redis_url), socket_connect_timeout=2)
+        await r.ping()
+        await r.aclose()
+        checks["redis"] = "ok"
+    except Exception as exc:
+        logger.warning("health_redis_fail", error=str(exc))
+        checks["redis"] = "error"
+
+    overall = "ok" if all(v == "ok" for v in checks.values()) else "degraded"
+    return {"status": overall, "version": settings.app_version, "checks": checks}
 
 
 app.include_router(reservations.router, prefix="/api/v1")
