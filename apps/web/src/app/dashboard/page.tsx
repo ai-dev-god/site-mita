@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth, UserButton } from "@clerk/nextjs";
 import Badge from "@/components/Badge";
+import FloorCanvas from "@/components/FloorCanvas";
+import { loadFloorPlan, FloorPlan } from "@/lib/floor-plan-store";
 
 // ── Config ──────────────────────────────────────────────────────────────────
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
@@ -97,9 +99,11 @@ const SEATED_VARIANTS = new Set<TableStatus>([
   "bill_requested",
 ]);
 
-function badgeVariant(s: TableStatus): string {
+type BadgeVariant = "seated" | "available" | "reserved" | "turning" | "blocked" | "success" | "accent";
+
+function badgeVariant(s: TableStatus): BadgeVariant {
   if (SEATED_VARIANTS.has(s)) return "seated";
-  return s;
+  return s as BadgeVariant;
 }
 
 const ZONE_FILTERS = ["Toate", "Brasserie", "Salon Istoric"];
@@ -114,6 +118,12 @@ export default function DashboardPage() {
   const [sel, setSel] = useState<TableData | null>(null);
   const [tables, setTables] = useState<TableData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [floorPlan, setFloorPlan] = useState<FloorPlan | null>(null);
+
+  // ── Load floor plan layout ──────────────────────────────────────────────
+  useEffect(() => {
+    setFloorPlan(loadFloorPlan());
+  }, []);
 
   // ── Initial table load ───────────────────────────────────────────────────
   useEffect(() => {
@@ -308,7 +318,7 @@ export default function DashboardPage() {
           Check-in
         </button>
         <div className="ml-3 flex items-center">
-          <UserButton afterSignOutUrl="/login" />
+          <UserButton />
         </div>
       </div>
 
@@ -403,13 +413,13 @@ export default function DashboardPage() {
                 <span
                   className="w-2.5 h-2.5 rounded-full"
                   style={{
-                    background: {
+                    background: ({
                       available: "var(--color-available)",
                       seated: "var(--color-seated)",
                       reserved: "var(--color-reserved)",
                       turning: "var(--color-turning)",
                       blocked: "var(--color-blocked)",
-                    }[s],
+                    } as Record<string, string>)[s],
                   }}
                 />
                 {statusLabel[s]}
@@ -424,6 +434,23 @@ export default function DashboardPage() {
               style={{ color: "var(--color-text-secondary)" }}
             >
               Se încarcă mesele…
+            </div>
+          )}
+
+          {/* Floor canvas (when layout data exists and we're on floor tab) */}
+          {!loading && tab === "floor" && floorPlan && floorPlan.tables.some((t) => t.x > 0 || t.y > 0) && (
+            <div className="mb-5">
+              <FloorCanvas
+                plan={floorPlan}
+                tableStatuses={Object.fromEntries(
+                  tables.map((t) => [t.id, t.status])
+                )}
+                mode="view"
+                onTableClick={(tableId) => {
+                  const t = tables.find((tb) => tb.id === tableId);
+                  setSel(t ? (sel?.id === t.id ? null : t) : null);
+                }}
+              />
             </div>
           )}
 
