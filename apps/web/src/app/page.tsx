@@ -19,18 +19,18 @@ export default function HomePage() {
           <span>Rezervare masă</span>
           <span>→</span>
         </Link>
+        <Link href="/hospitality"
+          className="flex items-center justify-between px-5 h-12 rounded-[8px] font-semibold border transition-all hover:shadow-sm"
+          style={{ borderColor: "var(--color-accent)", color: "var(--color-accent)" }}>
+          <span>Ospitalitate & Evenimente</span>
+          <span>→</span>
+        </Link>
         <Link href="/dashboard"
           className="flex items-center justify-between px-5 h-12 rounded-[8px] font-semibold border transition-all hover:shadow-sm"
           style={{ borderColor: "var(--color-primary)", color: "var(--color-primary)" }}>
           <span>Vedere sală — Host</span>
           <span>→</span>
         </Link>
-        <a href="/docs"
-          className="flex items-center justify-between px-5 h-12 rounded-[8px] font-semibold border transition-all hover:shadow-sm"
-          style={{ borderColor: "var(--color-border)", color: "var(--color-text-secondary)" }}>
-          <span>API Docs</span>
-          <span>↗</span>
-        </a>
       </div>
     </div>
   );

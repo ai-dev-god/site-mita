@@ -8,11 +8,12 @@ const NAV = [
 ];
 
 const ADMIN_NAV = [
-  { href: "/admin/guests",     icon: "👤", label: "Oaspeți" },
-  { href: "/admin/analytics",  icon: "📊", label: "Analytics" },
-  { href: "/admin/campaigns",  icon: "📣", label: "Marketing" },
-  { href: "/admin/events",     icon: "🎫", label: "Evenimente" },
-  { href: "/admin/shifts",     icon: "⏰", label: "Ture" },
+  { href: "/admin/hospitality", icon: "🏨", label: "Ospitalitate" },
+  { href: "/admin/guests",      icon: "👤", label: "Oaspeți" },
+  { href: "/admin/analytics",   icon: "📊", label: "Analytics" },
+  { href: "/admin/campaigns",   icon: "📣", label: "Marketing" },
+  { href: "/admin/events",      icon: "🎫", label: "Evenimente" },
+  { href: "/admin/shifts",      icon: "⏰", label: "Ture" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
