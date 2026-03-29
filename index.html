@@ -159,7 +159,7 @@
                 Un spațiu vibrant unde tradiția întâlnește modernitatea. Zilnic între 08:00 și 00:00, transformăm momentele obișnuite în experiențe memorabile.
             </p>
 <div class="flex flex-wrap gap-4">
-<a class="bg-white text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow transition-colors" href="#" style="">
+<a class="bg-white text-brand-navy px-10 py-5 font-manrope font-extrabold uppercase tracking-tight hover:bg-brand-yellow transition-colors" href="#meniuri" onclick="switchMenu('brasserie')">
                     MENIU BRASSERIE
                 </a>
 </div>
@@ -240,22 +240,663 @@
             </button>
 </div>
 <div class="space-y-4">
-<span class="font-fira-code text-[10px] uppercase tracking-[0.3em] opacity-40 block mb-6" style="">DOWNLOAD MENUS</span>
-<a class="group flex justify-between items-center py-6 border-b border-brand-navy/10 hover:px-4 transition-all" href="#" style="">
+<span class="font-fira-code text-[10px] uppercase tracking-[0.3em] opacity-40 block mb-6" style="">MENIURILE NOASTRE</span>
+<a class="group flex justify-between items-center py-6 border-b border-brand-navy/10 hover:px-4 transition-all" href="#meniuri" onclick="switchMenu('mic-dejun')" style="">
 <span class="font-manrope font-extrabold text-xl uppercase" style="">MENIU MIC DEJUN</span>
 <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform" style="">arrow_forward</span>
 </a>
-<a class="group flex justify-between items-center py-6 border-b border-brand-navy/10 hover:px-4 transition-all" href="#" style="">
+<a class="group flex justify-between items-center py-6 border-b border-brand-navy/10 hover:px-4 transition-all" href="#meniuri" onclick="switchMenu('principal')" style="">
 <span class="font-manrope font-extrabold text-xl uppercase" style="">MENIU PRINCIPAL</span>
 <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform" style="">arrow_forward</span>
 </a>
-<a class="group flex justify-between items-center py-6 border-b border-brand-navy/10 hover:px-4 transition-all" href="#" style="">
+<a class="group flex justify-between items-center py-6 border-b border-brand-navy/10 hover:px-4 transition-all" href="#meniuri" onclick="switchMenu('bauturi')" style="">
 <span class="font-manrope font-extrabold text-xl uppercase" style="">MENIU BĂUTURI</span>
+<span class="material-symbols-outlined group-hover:translate-x-2 transition-transform" style="">arrow_forward</span>
+</a>
+<a class="group flex justify-between items-center py-6 border-b border-brand-navy/10 hover:px-4 transition-all" href="#meniuri" onclick="switchMenu('brasserie')" style="">
+<span class="font-manrope font-extrabold text-xl uppercase" style="">MENIU BRASSERIE</span>
 <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform" style="">arrow_forward</span>
 </a>
 </div>
 </div>
 </section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MENIURI — Integrated 4-Menu Section                -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="meniuri" class="bg-brand-navy text-white py-24">
+
+  <!-- Section header -->
+  <div class="px-8 md:px-24 mb-12">
+    <span class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow/60 block mb-4">MENIURILE NOASTRE</span>
+    <h2 class="font-manrope font-extrabold text-5xl md:text-6xl tracking-tighter uppercase">MENIURI</h2>
+  </div>
+
+  <!-- Tab Bar — horizontal scroll on mobile -->
+  <div class="border-b border-white/10 mb-12 overflow-x-auto">
+    <div class="flex min-w-max px-8 md:px-24 gap-0">
+      <button id="tab-brasserie"
+        onclick="switchMenu('brasserie')"
+        class="menu-tab active-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-brand-yellow text-brand-yellow whitespace-nowrap transition-all">
+        BRASSERIE
+      </button>
+      <button id="tab-mic-dejun"
+        onclick="switchMenu('mic-dejun')"
+        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all">
+        MIC DEJUN
+      </button>
+      <button id="tab-principal"
+        onclick="switchMenu('principal')"
+        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all">
+        PRINCIPAL
+      </button>
+      <button id="tab-bauturi"
+        onclick="switchMenu('bauturi')"
+        class="menu-tab font-fira-code text-[10px] uppercase tracking-widest px-6 py-5 border-b-2 border-transparent text-white/40 hover:text-white/80 whitespace-nowrap transition-all">
+        BĂUTURI
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── BRASSERIE ─── -->
+  <div id="panel-brasserie" class="menu-panel px-8 md:px-24">
+    <div class="mb-6">
+      <span class="font-fira-code text-[10px] uppercase tracking-widest text-white/30">08:00 – 00:00 · ZILNIC</span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-16">
+
+      <!-- Mici Gustări -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">MICI GUSTĂRI</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Tartă cu Brânzeturi Maturate</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Brie, Roquefort, Comté, chutney de smochine</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">38 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Bruschette cu Roșii Heirloom</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Pâine de casă, roșii, busuioc, ulei de trufe</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">32 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Crudités cu Dipping Trio</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Legume sezoniere, hummus, tapenadă, tzatziki</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">30 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Charcuterie Board</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Mezeluri artizanale, cornișoni, muștar Dijon</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">55 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Supe -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">SUPE &amp; CIORBE</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Supă Franțuzească de Ceapă</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Gruyère gratinată, crutoane de brioche</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">38 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Supă Cremă de Dovleac</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Semințe de dovleac, ulei de ardei afumat</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">32 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Bisque de Fructe de Mare</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Creveți, crab, smântână, cognac</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">48 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Salate -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">SALATE</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Salade Niçoise</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Ton albacore, ouă, olive Kalamata, vinegretă</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">58 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Caesar cu Pui Crocant</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Romaine, Parmezan, crutoane, sos Caesar clasic</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">52 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Caprese Trufată</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Burrata, roșii heirloom, ulei de trufe, bazilicum</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">55 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deserturi -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">DESERTURI</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Crème Brûlée à la Vanille</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Vanilie Bourbon, zahăr caramelizat</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">38 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Tarte Tatin</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Mere caramelizate, foietaj, crème fraîche</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">40 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Mousse au Chocolat Noir</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Valrhona 70%, fleur de sel, tuille crocantă</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">35 RON</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── MIC DEJUN ─── -->
+  <div id="panel-mic-dejun" class="menu-panel hidden px-8 md:px-24">
+    <div class="mb-6">
+      <span class="font-fira-code text-[10px] uppercase tracking-widest text-white/30">08:00 – 12:00 · ZILNIC</span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-16">
+
+      <!-- Cafea & Ceai -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">CAFEA &amp; CEAI</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Espresso</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Single origin, prăjit local</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">15 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Cappuccino</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Lapte de ovăz sau vaci, latte art</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">20 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Flat White</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Ristretto dublu, microfoam de lapte</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">22 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Matcha Latte</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Matcha ceremonial, lapte de cocos</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">24 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Ceai de Colecție</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Selecție de ceaiuri rare, servite în ceainic</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">22 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Viennoiserie -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">VIENNOISERIE</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Croissant cu Unt</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Aluat foietaj, unt 84%, gem de casă</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">18 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Pain au Chocolat</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Valrhona 64%, aluat foietaj viennois</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">20 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Brioche cu Gem</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Brioche clasică, unt de fermă, gem artizanal</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">16 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Kouign-Amann</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Specialitate bretonă, caramel sărat</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">22 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ouă & Savuros -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">OUĂ &amp; SAVUROS</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Ouă Benedict cu Somon</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Somon afumat, sos Hollandaise, English muffin</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">55 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Avocado Toast Trufat</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Pâine de secară, avocado, ou poché, trufe</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">48 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Omletă cu Trufe Negre</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Ouă de fermă, trufe negre, brânză de capră</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">62 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Shakshuka Marocană</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Ouă fierte în sos de roșii picant, feta, za'atar</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">45 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clasice -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">CLASICE</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Pancakes cu Fructe de Pădure</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Sirop de arțar, unt de fermă, fructe proaspete</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">42 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Terci cu Fructe de Pădure</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Ovăz, lapte de cocos, miere, granola crocantă</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">38 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">French Toast cu Caramel</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Brioche prăjită, caramel sărat, înghețată</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">45 RON</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── PRINCIPAL ─── -->
+  <div id="panel-principal" class="menu-panel hidden px-8 md:px-24">
+    <div class="mb-6">
+      <span class="font-fira-code text-[10px] uppercase tracking-widest text-white/30">12:00 – 22:00 · LUNI–DUMINICĂ</span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-16">
+
+      <!-- Entrées -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">ENTRÉES</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Foie Gras cu Brioche</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Terrine de foie gras, chutney de gutui, brioche tostată</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">85 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Tartare de Vită</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Vită Angus, gălbenuș curat, trufe, castraveți murați</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">72 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Burrata con Pomodori</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Burrata proaspătă, roșii heirloom, pesto di basilico</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">62 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Carpaccio de Vită</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Vită Wagyu, Parmigiano Reggiano, rucola, lemon</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">78 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Principale -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">PLATS PRINCIPAUX</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Entrecôte cu Sos Béarnaise</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Angus 300g, béarnaise, cartofi dauphinois</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">135 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Confit de Rață</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Pulpă de rață confit, polentă cremoasă, jus</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">95 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Salmone Poché</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Somon norvegian, sos de lămâie, spanac, capere</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">88 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Risotto ai Tartufi Neri</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Arborio, trufe negre, Parmigiano, unt</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">92 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vegetarian -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">VEGETARIAN</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Gnocchi cu Pesto Trufat</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Gnocchi de cartofi, pesto de busuioc, trufe albe</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">72 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Curry de Legume</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Legume sezoniere, lapte de cocos, orez basmati</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">58 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Tarta cu Legume &amp; Feta</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Legume coapte, feta, oregano, salată verde</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">62 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Garnituri -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">GARNITURI</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <p class="font-manrope font-bold text-base uppercase tracking-tight">Cartofi Dauphinois</p>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">28 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <p class="font-manrope font-bold text-base uppercase tracking-tight">Polentă Cremoasă cu Parmezan</p>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">25 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <p class="font-manrope font-bold text-base uppercase tracking-tight">Legume Rôties</p>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">22 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <p class="font-manrope font-bold text-base uppercase tracking-tight">Salată Verde cu Vinegretă</p>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">20 RON</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── BĂUTURI ─── -->
+  <div id="panel-bauturi" class="menu-panel hidden px-8 md:px-24">
+    <div class="mb-6">
+      <span class="font-fira-code text-[10px] uppercase tracking-widest text-white/30">08:00 – 00:00 · ZILNIC</span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-16">
+
+      <!-- Cocktailuri Semnătură -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">COCKTAILURI SEMNĂTURĂ</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Mița Sour</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Whisky de malț, lămâie, miere, bitter de angustură</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">48 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Biciclista Spritz</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Aperol, Prosecco, apă minerală, portocală</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">45 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Amzei Negroni</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Gin botanic, Campari, Vermouth rosso</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">52 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Salon Royale</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Champagne, crème de cassis, zmeură</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">58 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Creativ Collins</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Gin, soc, lămâie verde, apă tonică artizan</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">48 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vinuri -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">VINURI — PAHAR</h3>
+        <div class="space-y-6">
+          <div>
+            <p class="font-fira-code text-[8px] uppercase tracking-[0.3em] text-white/25 mb-4">ALBE</p>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Fetească Regală</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Cramele Recaș, Banat · sec, mineral</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">42 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Sauvignon Blanc</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Loire Valley, Franța · viu, citric</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">58 RON</span>
+          </div>
+          <div class="mt-4">
+            <p class="font-fira-code text-[8px] uppercase tracking-[0.3em] text-white/25 mb-4">ROȘII</p>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Fetească Neagră</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Davino, Dealu Mare · catifelat, fructe negre</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">48 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Pinot Noir Burgundy</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Bourgogne, Franța · elegant, vișine, pământ</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">72 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bere Artizanală -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">BERE ARTIZANALĂ</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">IPA București</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Hop, citric, local · 330ml</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">30 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Lager Craft</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Blondă ușoară, răcoritoare · 500ml</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">25 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Stout Neagră</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Cafea, ciocolată, corpulenată · 330ml</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">32 RON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Non-Alcoolice -->
+      <div>
+        <h3 class="font-fira-code text-[10px] uppercase tracking-[0.4em] text-brand-yellow mb-8 pb-4 border-b border-white/10">NON-ALCOOLICE</h3>
+        <div class="space-y-6">
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Limonadă Artizanală</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Lămâie, mentă, ghimbir, zahăr de trestie</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">28 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Kombucha de Casă</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Hibiscus sau ghimbir-lămâie verde</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">30 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Sucuri Naturale Presate</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Portocale, morcov-ghimbir sau mere-țelină</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">32 RON</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <div>
+              <p class="font-manrope font-bold text-base uppercase tracking-tight">Apă Minerală / Plată</p>
+              <p class="font-manrope font-light text-sm text-white/50 mt-1">Borsec 330ml · 750ml</p>
+            </div>
+            <span class="font-fira-code text-brand-yellow font-bold text-sm whitespace-nowrap">12 / 18 RON</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Allergen note -->
+  <div class="px-8 md:px-24 mt-20 pt-8 border-t border-white/10">
+    <p class="font-fira-code text-[9px] uppercase tracking-widest text-white/20 max-w-xl">
+      Prețurile sunt exprimate în RON și includ TVA. Informații despre alergeni disponibile la cerere.
+      Meniurile pot varia sezonier. · Toate preparatele pot conține urme de gluten, lactate, ouă.
+    </p>
+  </div>
+
+</section>
+
+<script>
+  function switchMenu(id) {
+    // Update tab styles
+    document.querySelectorAll('.menu-tab').forEach(function(tab) {
+      tab.classList.remove('active-tab', 'border-brand-yellow', 'text-brand-yellow');
+      tab.classList.add('border-transparent', 'text-white/40');
+    });
+    var activeTab = document.getElementById('tab-' + id);
+    if (activeTab) {
+      activeTab.classList.add('active-tab', 'border-brand-yellow', 'text-brand-yellow');
+      activeTab.classList.remove('border-transparent', 'text-white/40');
+    }
+
+    // Update panel visibility
+    document.querySelectorAll('.menu-panel').forEach(function(panel) {
+      panel.classList.add('hidden');
+    });
+    var activePanel = document.getElementById('panel-' + id);
+    if (activePanel) {
+      activePanel.classList.remove('hidden');
+    }
+  }
+</script>
 <!-- Footer -->
 <footer class="bg-brand-navy text-white py-24 px-8 md:px-24">
 <div class="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
