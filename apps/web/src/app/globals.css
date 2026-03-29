@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* ── LMBSC Hospitality Platform — Design Tokens ── */
+:root {
+  /* Brand */
+  --color-primary:        #2C4A2E;
+  --color-primary-light:  #4A7A4C;
+  --color-primary-muted:  #EAF0EA;
+  --color-accent:         #B8962E;
+  --color-accent-light:   #F5E9C4;
+
+  /* Surface */
+  --color-surface:        #FAF6F0;
+  --color-surface-raised: #FFFFFF;
+
+  /* Text */
+  --color-text:           #1A1A1A;
+  --color-text-secondary: #5A5A5A;
+  --color-text-muted:     #9A9A9A;
+
+  /* Border */
+  --color-border:         #E4DDD5;
+  --color-border-focus:   #2C4A2E;
+
+  /* Semantic */
+  --color-seated:         #2C4A2E;
+  --color-seated-bg:      #EAF0EA;
+  --color-available:      #4A7A4C;
+  --color-available-bg:   #F0F7F0;
+  --color-reserved:       #B8962E;
+  --color-reserved-bg:    #FBF4E3;
+  --color-turning:        #D97706;
+  --color-turning-bg:     #FEF3C7;
+  --color-blocked:        #6B7280;
+  --color-blocked-bg:     #F3F4F6;
+  --color-error:          #DC2626;
+  --color-error-bg:       #FEE2E2;
+  --color-success:        #2C4A2E;
+  --color-success-bg:     #EAF0EA;
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Inter', -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Radius */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(44,74,46,0.06);
+  --shadow-md: 0 4px 12px rgba(44,74,46,0.10);
+  --shadow-lg: 0 8px 32px rgba(44,74,46,0.14);
+}
+
+@theme inline {
+  --color-background: var(--color-surface);
+  --color-foreground: var(--color-text);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
