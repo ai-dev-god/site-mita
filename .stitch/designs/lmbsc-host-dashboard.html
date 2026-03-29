@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1024">
+<title>LMBSC — Host Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-primary:       #2C4A2E;
+    --color-primary-light: #4A7A4C;
+    --color-primary-muted: #EAF0EA;
+    --color-accent:        #B8962E;
+    --color-accent-light:  #F5E9C4;
+    --color-surface:       #FAF6F0;
+    --color-raised:        #FFFFFF;
+    --color-text:          #1A1A1A;
+    --color-text-sec:      #5A5A5A;
+    --color-text-muted:    #9A9A9A;
+    --color-border:        #E4DDD5;
+    --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+    --shadow-md:  0 4px 12px rgba(44,74,46,0.10);
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  12px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-surface);
+    color: var(--color-text);
+    width: 1024px;
+    min-height: 768px;
+    overflow-x: hidden;
+  }
+
+  /* ── TOP BAR ─────────────────────────────────── */
+  .top-bar {
+    height: 64px;
+    background: var(--color-raised);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .top-bar__brand {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--color-primary);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    margin-right: 8px;
+  }
+
+  .top-bar__divider {
+    width: 1px;
+    height: 28px;
+    background: var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .shift-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .shift-info__label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+  .shift-info__value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 8px;
+    margin-left: 8px;
+  }
+  .stat-chip {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .stat-chip__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .stat-chip--green .stat-chip__dot  { background: var(--color-primary); }
+  .stat-chip--gold .stat-chip__dot   { background: var(--color-accent); }
+  .stat-chip--amber .stat-chip__dot  { background: #D97706; }
+
+  .top-bar__spacer { flex: 1; }
+
+  .clock {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    white-space: nowrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 150ms;
+  }
+  .btn--primary { background: var(--color-primary); color: #fff; }
+  .btn--primary:hover { background: var(--color-primary-light); }
+  .btn--secondary {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1.5px solid var(--color-primary);
+  }
+
+  /* ── MAIN LAYOUT ─────────────────────────────── */
+  .main {
+    display: flex;
+    height: calc(100vh - 64px);
+    min-height: 704px;
+  }
+
+  /* ── FLOOR VIEW ──────────────────────────────── */
+  .floor-view {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+  .section-title span {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-left: 8px;
+  }
+
+  .zone-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+  }
+  .zone-tab {
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    border-radius: 3px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+  }
+  .zone-tab.active {
+    background: var(--color-raised);
+    color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-sec);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+
+  /* ── TABLE GRID ──────────────────────────────── */
+  .table-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .table-card {
+    background: var(--color-raised);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    cursor: pointer;
+    transition: box-shadow 150ms, border-color 150ms;
+    position: relative;
+  }
+  .table-card:hover { box-shadow: var(--shadow-md); }
+
+  .table-card--seated   { border-color: rgba(44,74,46,0.4);  background: #FAFDFB; }
+  .table-card--available { border-color: rgba(74,122,76,0.25); background: #FCFFFE; }
+  .table-card--reserved { border-color: rgba(184,150,46,0.4); background: #FFFDF7; }
+  .table-card--turning  { border-color: rgba(217,119,6,0.4);  background: #FFFEF5; }
+  .table-card--blocked  { border-color: rgba(107,114,128,0.3); background: #FAFAFA; opacity: 0.7; }
+
+  .table-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .table-number {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1;
+  }
+  .table-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    border: 1px solid transparent;
+  }
+  .status-badge::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .badge--seated   { background: #EAF0EA; color: #2C4A2E; border-color: rgba(44,74,46,0.2); }
+  .badge--seated::before   { background: #2C4A2E; }
+  .badge--available { background: #F0F7F0; color: #4A7A4C; border-color: rgba(74,122,76,0.15); }
+  .badge--available::before { background: #4A7A4C; }
+  .badge--reserved { background: #FBF4E3; color: #B8962E; border-color: rgba(184,150,46,0.25); }
+  .badge--reserved::before { background: #B8962E; }
+  .badge--turning  { background: #FEF3C7; color: #D97706; border-color: rgba(217,119,6,0.25); }
+  .badge--turning::before  { background: #D97706; }
+  .badge--blocked  { background: #F3F4F6; color: #6B7280; border-color: rgba(107,114,128,0.2); }
+  .badge--blocked::before  { background: #9CA3AF; }
+
+  .table-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .table-card__guest {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .table-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--color-text-sec);
+  }
+  .meta-icon { font-size: 10px; }
+
+  .table-card__timer {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .timer-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .timer-label {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .timer-warning { color: #D97706; }
+  .timer-alert   { color: #DC2626; }
+
+  .table-card__actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 6px;
+  }
+  .action-btn {
+    flex: 1;
+    height: 28px;
+    border: none;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: background 150ms;
+  }
+  .action-btn--primary { background: var(--color-primary); color: #fff; }
+  .action-btn--ghost   { background: var(--color-surface); color: var(--color-text-sec); border: 1px solid var(--color-border); }
+
+  /* ── QUEUE SIDEBAR ───────────────────────────── */
+  .queue-sidebar {
+    width: 288px;
+    background: var(--color-raised);
+    border-left: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .sidebar-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .sidebar-title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+  }
+
+  .check-in-btn {
+    width: 100%;
+    height: 40px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    letter-spacing: 0.02em;
+  }
+  .check-in-btn:hover { background: var(--color-primary-light); }
+  .check-in-icon { font-size: 16px; }
+
+  .queue-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .queue-stat {
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+  .queue-stat__value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+  .queue-stat__label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 3px;
+  }
+
+  .queue-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 0;
+  }
+
+  .queue-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 120ms;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .queue-item:last-child { border-bottom: none; }
+  .queue-item:hover { background: var(--color-surface); }
+
+  .queue-position {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .queue-position--vip {
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+  }
+
+  .queue-item__body { flex: 1; min-width: 0; }
+  .queue-item__name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vip-tag {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+  .queue-item__meta {
+    display: flex;
+    gap: 10px;
+    margin-top: 3px;
+  }
+  .queue-meta {
+    font-size: 11px;
+    color: var(--color-text-sec);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .queue-item__wait {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-text-sec);
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .wait--long { color: #D97706; }
+
+  .seat-btn {
+    margin: 0 20px 16px;
+    width: calc(100% - 40px);
+    height: 36px;
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="top-bar__brand">La Mița Biciclista</div>
+  <div class="top-bar__divider"></div>
+
+  <div class="shift-info">
+    <span class="shift-info__label">Tură curentă</span>
+    <span class="shift-info__value">Seară — 18:00–00:00</span>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-chip stat-chip--green">
+      <span class="stat-chip__dot"></span>14 acoperiți
+    </div>
+    <div class="stat-chip stat-chip--gold">
+      <span class="stat-chip__dot"></span>3 rezervări în așteptare
+    </div>
+    <div class="stat-chip stat-chip--amber">
+      <span class="stat-chip__dot"></span>5 în coadă
+    </div>
+  </div>
+
+  <div class="top-bar__spacer"></div>
+
+  <div class="clock">Sâmbătă, 29 Mar 2026 · 20:14</div>
+  <button class="btn btn--secondary" style="margin-left:8px">Shift Notes</button>
+  <button class="btn btn--primary">+ Check-in Rapid</button>
+</header>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- FLOOR VIEW -->
+  <main class="floor-view">
+    <div class="section-header">
+      <div style="display:flex;align-items:center;gap:16px">
+        <h1 class="section-title">Plan Sală <span>Salon Istoric — Etaj 1</span></h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="zone-tabs">
+          <button class="zone-tab">Brasserie / Parter</button>
+          <button class="zone-tab active">Salon Istoric / Etaj 1</button>
+        </div>
+        <button class="btn btn--secondary" style="height:32px;font-size:12px;padding:0 12px">✎ Editează</button>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#2C4A2E"></div> Ocupat
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#4A7A4C"></div> Disponibil
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#B8962E"></div> Rezervat
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#D97706"></div> Se eliberează
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#9CA3AF"></div> Blocat
+      </div>
+    </div>
+
+    <!-- Table Grid -->
+    <div class="table-grid">
+
+      <!-- T1 — Seated -->
+      <div class="table-card table-card--seated">
+        <div class="table-card__header">
+          <div><div class="table-label">Masa</div><div class="table-number">01</div></div>
+          <span class="status-badge badge--seated">Ocupat</span>
+        </div>
+        <div class="table-card__info">
+          <div class="table-card__guest">Familia Ionescu</div>
+          <div class="table-card__meta">
+            <div class="meta-item"><span class="meta-icon">👥</span> 4 pers.</div>
+            <div class="meta-item"><span class="meta-icon">🎂</span> Aniversare</div>
+          </div>
+        </div>
+        <div class="table-card__timer">
+          <div><div class="timer-value">1h 24m</div><div class="timer-label">la masă</div></div>
+          <div><div class="timer-value" style="text-align:right">~376 RON</div><div class="timer-label" style="text-align:right">estimat</div></div>
+        </div>
+        <div class="table-card__actions">
+          <button class="action-btn action-btn--primary">Notă</button>
+          <button class="action-btn action-btn--ghost">Status ▾</button>
+        </div>
+      </div>
+
+      <!-- T2 — Reserved -->
+      <div class="table-card table-card--reserved">
+        <div class="table-card__header">
+          <div><div class="table-label">Masa</div><div class="table-number">02</div></div>
+          <span class="status-badge badge--reserved">Rezervat</span>
+        </div>
+        <div class="table-card__info">
+          <div class="table-card__guest">Popescu A.</div>
+          <div class="table-card__meta">
+            <div class="meta-item"><span class="meta-icon">👥</span> 2 pers.</div>
+            <div class="meta-item"><span class="meta-icon">🕐</span> 20:30</div>
+          </div>
+        </div>
+        <div class="table-card__timer">
+          <div><div class="timer-value" style="color:#B8962E">16 min</div><div class="timer-label">până la sosire</div></div>
+          <div><div class="timer-value" style="text-align:right;font-size:11px;color:#9A9A9A">Salon / 2 pax</div></div>
+        </div>
+        <div class="table-card__actions">
+          <button class="action-btn action-btn--primary">Check-in</button>
+          <button class="action-btn action-btn--ghost">Detalii</button>
+        </div>
+      </div>
+
+      <!-- T3 — Seated warning -->
+      <div class="table-card table-card--seated">
+        <div class="table-card__header">
+          <div><div class="table-label">Masa</div><div class="table-number">03</div></div>
+          <span class="status-badge badge--seated">Ocupat</span>
+        </div>
+        <div class="table-card__info">
+          <div class="table-card__guest">Marin & Popa</div>
+          <div class="table-card__meta">
+            <div class="meta-item"><span class="meta-icon">👥</span> 6 pers.</div>
+            <div class="meta-item"><span class="meta-icon">💼</span> Business</div>
+          </div>
+        </div>
+        <div class="table-card__timer">
+          <div><div class="timer-value timer-warning">2h 41m</div><div class="timer-label">la masă</div></div>
+          <div><div class="timer-value" style="text-align:right">~890 RON</div><div class="timer-label" style="text-align:right">estimat</div></div>
+        </div>
+        <div class="table-card__actions">
+          <button class="action-btn action-btn--primary">Notă</button>
+          <button class="action-btn action-btn--ghost">Status ▾</button>
+        </div>
+      </div>
+
+      <!-- T4 — Available -->
+      <div class="table-card table-card--available">
+        <div class="table-card__header">
+          <div><div class="table-label">Masa</div><div class="table-number">04</div></div>
+          <span class="status-badge badge--available">Disponibil</span>
+        </div>
+        <div class="table-card__info">
+          <div class="table-card__guest" style="color:#9A9A9A;font-weight:400">Neocupat</div>
+          <div class="table-card__meta">
+            <div class="meta-item"><span class="meta-icon">👥</span> Max 4 pers.</div>
+            <div class="meta-item"><span class="meta-icon">🪟</span> Geam</div>
+          </div>
+        </div>
+        <div class="table-card__timer">
+          <div><div class="timer-value" style="color:#4A7A4C">Liber</div><div class="timer-label">pregătit</div></div>
+        </div>
+        <div class="table-card__actions">
+          <button class="action-btn action-btn--primary">Alocă</button>
+          <button class="action-btn action-btn--ghost">Blochează</button>
+        </div>
+      </div>
+
+      <!-- T5 — Turning -->
+      <div class="table-card table-card--turning">
+        <div class="table-card__header">
+          <div><div class="table-label">Masa</div><div class="table-number">05</div></div>
+          <span class="status-badge badge--turning">Se eliberează</span>
+        </div>
+        <div class="table-card__info">
+          <div class="table-card__guest">Radu D.</div>
+          <div class="table-card__meta">
+            <div class="meta-item"><span class="meta-icon">👥</span> 3 pers.</div>
+            <div class="meta-item"><span class="meta-icon">🧾</span> Notă cerută</div>
+          </div>
+        </div>
+        <div class="table-card__timer">
+          <div><div class="timer-value timer-warning">~8 min</div><div class="timer-label">pregătire masă</div></div>
+          <div><div class="timer-value" style="text-align:right">248 RON</div><div class="timer-label" style="text-align:right">total</div></div>
+        </div>
+        <div class="table-card__actions">
+          <button class="action-btn action-btn--primary">Marchează liber</button>
+        </div>
+      </div>
+
+      <!-- T6 — Seated -->
+      <div class="table-card table-card--seated">
+        <div class="table-card__header">
+          <div><div class="table-label">Masa</div><div class="table-number">06</div></div>
+          <span class="status-badge badge--seated">Ocupat</span>
+        </div>
+        <div class="table-card__info">
+          <div class="table-card__guest">Georgescu L.</div>
+          <div class="table-card__meta">
+            <div class="meta-item"><span class="meta-icon">👥</span> 2 pers.</div>
+            <div class="meta-item" style="color:#B8962E;font-weight:600;font-size:10px">★ VIP</div>
+          </div>
+        </div>
+        <div class="table-card__timer">
+          <div><div class="timer-value">47m</div><div class="timer-label">la masă</div></div>
+          <div><div class="timer-value" style="text-align:right">~210 RON</div><div class="timer-label" style="text-align:right">estimat</div></div>
+        </div>
+        <div class="table-card__actions">
+          <button class="action-btn action-btn--primary">Notă</button>
+          <button class="action-btn action-btn--ghost">Status ▾</button>
+        </div>
+      </div>
+
+      <!-- T7 — Available -->
+      <div class="table-card table-card--available">
+        <div class="table-card__header">
+          <div><div class="table-label">Masa</div><div class="table-number">07</div></div>
+          <span class="status-badge badge--available">Disponibil</span>
+        </div>
+        <div class="table-card__info">
+          <div class="table-card__guest" style="color:#9A9A9A;font-weight:400">Neocupat</div>
+          <div class="table-card__meta">
+            <div class="meta-item"><span class="meta-icon">👥</span> Max 6 pers.</div>
+          </div>
+        </div>
+        <div class="table-card__timer">
+          <div><div class="timer-value" style="color:#4A7A4C">Liber</div><div class="timer-label">pregătit</div></div>
+        </div>
+        <div class="table-card__actions">
+          <button class="action-btn action-btn--primary">Alocă</button>
+          <button class="action-btn action-btn--ghost">Blochează</button>
+        </div>
+      </div>
+
+      <!-- T8 — Blocked -->
+      <div class="table-card table-card--blocked">
+        <div class="table-card__header">
+          <div><div class="table-label">Masa</div><div class="table-number">08</div></div>
+          <span class="status-badge badge--blocked">Blocat</span>
+        </div>
+        <div class="table-card__info">
+          <div class="table-card__guest" style="color:#9A9A9A;font-weight:400">Rezervare privată 21:00</div>
+          <div class="table-card__meta">
+            <div class="meta-item"><span class="meta-icon">👥</span> Max 8 pers.</div>
+          </div>
+        </div>
+        <div class="table-card__timer">
+          <div><div class="timer-value" style="color:#9A9A9A">Rezervat 21:00</div></div>
+        </div>
+        <div class="table-card__actions">
+          <button class="action-btn action-btn--ghost" style="background:#F3F4F6">Deblochează</button>
+        </div>
+      </div>
+
+    </div><!-- /table-grid -->
+  </main>
+
+  <!-- QUEUE SIDEBAR -->
+  <aside class="queue-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Coadă Walk-in</div>
+      <button class="check-in-btn">
+        <span class="check-in-icon">✓</span> Check-in Nou
+      </button>
+    </div>
+
+    <div class="queue-stats">
+      <div class="queue-stat">
+        <div class="queue-stat__value">5</div>
+        <div class="queue-stat__label">În coadă</div>
+      </div>
+      <div class="queue-stat">
+        <div class="queue-stat__value">~18m</div>
+        <div class="queue-stat__label">Așteptare medie</div>
+      </div>
+    </div>
+
+    <div class="queue-list">
+
+      <div class="queue-item">
+        <div class="queue-position">1</div>
+        <div class="queue-item__body">
+          <div class="queue-item__name">
+            Familia Dumitrescu
+            <span class="vip-tag">VIP</span>
+          </div>
+          <div class="queue-item__meta">
+            <span class="queue-meta">👥 4 pers.</span>
+            <span class="queue-meta">⏱ 8 min așteptare</span>
+          </div>
+        </div>
+        <div class="queue-item__wait">8m</div>
+      </div>
+
+      <div class="queue-item">
+        <div class="queue-position">2</div>
+        <div class="queue-item__body">
+          <div class="queue-item__name">Stanciu E.</div>
+          <div class="queue-item__meta">
+            <span class="queue-meta">👥 2 pers.</span>
+            <span class="queue-meta">⏱ 14 min</span>
+          </div>
+        </div>
+        <div class="queue-item__wait">14m</div>
+      </div>
+
+      <div class="queue-item">
+        <div class="queue-position">3</div>
+        <div class="queue-item__body">
+          <div class="queue-item__name">Preda M.</div>
+          <div class="queue-item__meta">
+            <span class="queue-meta">👥 3 pers.</span>
+            <span class="queue-meta">⏱ 19 min</span>
+          </div>
+        </div>
+        <div class="queue-item__wait wait--long">19m</div>
+      </div>
+
+      <div class="queue-item">
+        <div class="queue-position">4</div>
+        <div class="queue-item__body">
+          <div class="queue-item__name">Tudoran C.</div>
+          <div class="queue-item__meta">
+            <span class="queue-meta">👥 2 pers.</span>
+            <span class="queue-meta">⏱ 23 min</span>
+          </div>
+        </div>
+        <div class="queue-item__wait wait--long">23m</div>
+      </div>
+
+      <div class="queue-item">
+        <div class="queue-position">5</div>
+        <div class="queue-item__body">
+          <div class="queue-item__name">Luca & Luca</div>
+          <div class="queue-item__meta">
+            <span class="queue-meta">👥 5 pers.</span>
+            <span class="queue-meta">⏱ 26 min</span>
+          </div>
+        </div>
+        <div class="queue-item__wait wait--long">26m</div>
+      </div>
+
+    </div><!-- /queue-list -->
+
+    <button class="seat-btn">Alocă masă →</button>
+  </aside>
+
+</div><!-- /main -->
+
+</body>
+</html>
