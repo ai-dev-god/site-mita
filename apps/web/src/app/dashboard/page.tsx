@@ -82,6 +82,18 @@ function apiTableToData(t: ApiTable): TableData {
   };
 }
 
+// ── Menu types ────────────────────────────────────────────────────────────────
+
+interface MenuItem {
+  id: string;
+  name: string;
+  category: string;
+  price_ron: number;
+  unit: string;
+  is_available: boolean;
+  current_qty: number | null;
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function elapsed(d: Date): string {
@@ -143,6 +155,12 @@ export default function DashboardPage() {
   // ── Waitlist state ─────────────────────────────────────────────────────────
   const [queue, setQueue] = useState<WaitlistEntry[]>([]);
   const [queueLoading, setQueueLoading] = useState(false);
+
+  // ── Add-item modal state ──────────────────────────────────────────────────
+  const [showAddItem, setShowAddItem] = useState(false);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [menuSearch, setMenuSearch] = useState("");
+  const [addingItemId, setAddingItemId] = useState<string | null>(null);
 
   // ── Load floor plan layout ──────────────────────────────────────────────
   useEffect(() => {
@@ -351,6 +369,47 @@ export default function DashboardPage() {
       // WebSocket broadcast will reconcile all connected tabs
     } catch {
       // Network error — optimistic state stands until next WS sync
+    }
+  }
+
+  // ── Menu item loading ─────────────────────────────────────────────────────
+  async function openAddItemModal() {
+    setMenuSearch("");
+    setShowAddItem(true);
+    if (menuItems.length === 0) {
+      try {
+        const token = await getToken();
+        const resp = await fetch(
+          `${API_URL}/api/v1/menu/items?venue_id=${VENUE_ID}&available_only=true`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (resp.ok) {
+          const data: MenuItem[] = await resp.json();
+          setMenuItems(data);
+        }
+      } catch {
+        // silent
+      }
+    }
+  }
+
+  async function addItemToCheck(tableId: string, menuItemId: string) {
+    setAddingItemId(menuItemId);
+    try {
+      const token = await getToken();
+      await fetch(`${API_URL}/api/v1/tables/${tableId}/check`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ menu_item_id: menuItemId, quantity: 1 }),
+      });
+      setShowAddItem(false);
+    } catch {
+      // silent
+    } finally {
+      setAddingItemId(null);
     }
   }
 
@@ -671,6 +730,7 @@ export default function DashboardPage() {
                 onTableClick={(tableId) => {
                   const t = tables.find((tb) => tb.id === tableId);
                   setSel(t ? (sel?.id === t.id ? null : t) : null);
+                  setShowAddItem(false);
                 }}
               />
             </div>
@@ -682,7 +742,7 @@ export default function DashboardPage() {
               {visible.map((t) => (
                 <button
                   key={t.id}
-                  onClick={() => setSel(sel?.id === t.id ? null : t)}
+                  onClick={() => { setSel(sel?.id === t.id ? null : t); setShowAddItem(false); }}
                   className="text-left p-3 rounded-[8px] border transition-all"
                   style={{
                     borderColor:
@@ -767,7 +827,7 @@ export default function DashboardPage() {
         {/* Detail panel */}
         {sel && (
           <div
-            className="w-72 border-l flex flex-col shrink-0"
+            className="w-72 border-l flex flex-col shrink-0 relative"
             style={{ background: "white", borderColor: "var(--color-border)" }}
           >
             <div
@@ -899,7 +959,114 @@ export default function DashboardPage() {
                 >
                   {sel.status === "blocked" ? "Deblocare" : "Blocare masă"}
                 </button>
+                {SEATED_VARIANTS.has(sel.status) && (
+                  <button
+                    onClick={openAddItemModal}
+                    className="w-full h-10 rounded-[4px] border font-semibold text-sm"
+                    style={{
+                      borderColor: "var(--color-primary)",
+                      color: "var(--color-primary)",
+                    }}
+                  >
+                    + Adaugă produs
+                  </button>
+                )}
               </div>
+
+              {/* Add-item modal inline */}
+              {showAddItem && (
+                <div
+                  className="absolute inset-0 z-10 flex flex-col"
+                  style={{ background: "white" }}
+                >
+                  <div
+                    className="flex items-center justify-between px-4 py-3 border-b shrink-0"
+                    style={{ borderColor: "var(--color-border)" }}
+                  >
+                    <span
+                      className="font-semibold text-sm"
+                      style={{ color: "var(--color-text)", fontFamily: "var(--font-display)" }}
+                    >
+                      Adaugă produs — Masa {sel.label}
+                    </span>
+                    <button
+                      onClick={() => setShowAddItem(false)}
+                      className="text-lg w-8 h-8 flex items-center justify-center rounded"
+                      style={{ color: "var(--color-text-muted)" }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div className="px-4 py-3 border-b shrink-0" style={{ borderColor: "var(--color-border)" }}>
+                    <input
+                      autoFocus
+                      type="text"
+                      placeholder="Caută produs…"
+                      value={menuSearch}
+                      onChange={(e) => setMenuSearch(e.target.value)}
+                      className="w-full h-9 px-3 rounded-[4px] border text-sm outline-none"
+                      style={{
+                        borderColor: "var(--color-border)",
+                        color: "var(--color-text)",
+                      }}
+                    />
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-3 space-y-1">
+                    {menuItems
+                      .filter((m) =>
+                        m.name.toLowerCase().includes(menuSearch.toLowerCase())
+                      )
+                      .map((m) => (
+                        <button
+                          key={m.id}
+                          onClick={() => addItemToCheck(sel.id, m.id)}
+                          disabled={addingItemId === m.id}
+                          className="w-full text-left px-3 py-2 rounded-[6px] border transition-all"
+                          style={{
+                            borderColor: "var(--color-border)",
+                            background: addingItemId === m.id ? "var(--color-surface)" : "white",
+                            opacity: addingItemId === m.id ? 0.7 : 1,
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium" style={{ color: "var(--color-text)" }}>
+                              {m.name}
+                            </span>
+                            <span className="text-sm font-semibold" style={{ color: "var(--color-primary)" }}>
+                              {m.price_ron.toFixed(2)} RON
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-[11px]" style={{ color: "var(--color-text-muted)" }}>
+                              {m.category}
+                            </span>
+                            {m.current_qty !== null && (
+                              <span
+                                className="text-[11px] px-1.5 py-px rounded"
+                                style={{
+                                  background: m.current_qty <= 5 ? "#FEF3C7" : "var(--color-surface)",
+                                  color: m.current_qty <= 5 ? "#92400E" : "var(--color-text-secondary)",
+                                }}
+                              >
+                                {m.current_qty} {m.unit}
+                              </span>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    {menuItems.filter((m) =>
+                      m.name.toLowerCase().includes(menuSearch.toLowerCase())
+                    ).length === 0 && (
+                      <div
+                        className="py-8 text-center text-sm"
+                        style={{ color: "var(--color-text-secondary)" }}
+                      >
+                        Niciun produs găsit.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

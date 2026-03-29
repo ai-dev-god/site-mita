@@ -22,11 +22,15 @@ celery_app.conf.update(
     enable_utc=True,
     task_acks_late=True,
     worker_prefetch_multiplier=1,
-    # Celery Beat: run the daily reminder sweep every minute (checks DB for due reminders)
+    # Celery Beat schedules
     beat_schedule={
         "sweep-24h-reminders": {
             "task": "app.worker.tasks.sweep_upcoming_reminders",
             "schedule": crontab(minute="*/5"),  # every 5 min
+        },
+        "sweep-low-stock-items": {
+            "task": "app.worker.tasks.sweep_low_stock_items",
+            "schedule": crontab(minute="*/15"),  # every 15 min
         },
     },
 )

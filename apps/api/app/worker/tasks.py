@@ -66,6 +66,64 @@ def notify_waitlist_ready(self, entry_id: str) -> None:  # type: ignore[no-untyp
         raise self.retry(exc=exc)
 
 
+# ── inventory sweep ────────────────────────────────────────────────────────────
+
+@celery_app.task(name="app.worker.tasks.sweep_low_stock_items")
+def sweep_low_stock_items() -> None:  # type: ignore[no-untyped-def]
+    """Celery Beat task: find menu items at or below threshold and broadcast kitchen alerts.
+
+    Runs every 15 minutes. Covers items whose stock was decremented outside the API.
+    """
+    _run(_sweep_inventory())
+
+
+async def _sweep_inventory() -> None:
+    import json
+    import redis.asyncio as aioredis
+    from sqlalchemy import and_, select
+    from app.core.config import get_settings
+    from app.core.database import AsyncSessionLocal
+    from app.models.menu import MenuItem
+
+    settings = get_settings()
+
+    async with AsyncSessionLocal() as db:
+        result = await db.execute(
+            select(MenuItem).where(
+                and_(
+                    MenuItem.deleted_at.is_(None),
+                    MenuItem.is_available.is_(True),
+                    MenuItem.current_qty.isnot(None),
+                    MenuItem.current_qty <= MenuItem.threshold_qty,
+                )
+            )
+        )
+        low_items = result.scalars().all()
+
+    if not low_items:
+        return
+
+    r = aioredis.from_url(str(settings.redis_url), decode_responses=True)
+    try:
+        for item in low_items:
+            payload = json.dumps({
+                "event": "low_stock",
+                "item_id": str(item.id),
+                "item_name": item.name,
+                "current_qty": item.current_qty,
+                "threshold_qty": item.threshold_qty,
+            })
+            await r.publish(f"kitchen:{item.venue_id}", payload)
+            logger.info(
+                "inventory.low_stock_broadcast",
+                item_id=str(item.id),
+                name=item.name,
+                qty=item.current_qty,
+            )
+    finally:
+        await r.aclose()
+
+
 # ── beat sweep ─────────────────────────────────────────────────────────────────
 
 @celery_app.task(name="app.worker.tasks.sweep_upcoming_reminders")
