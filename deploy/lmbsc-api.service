@@ -1,0 +1,28 @@
+[Unit]
+Description=LMBSC Hospitality Platform — FastAPI backend
+After=network.target postgresql.service redis.service
+Wants=postgresql.service redis.service
+
+[Service]
+Type=exec
+User=mita
+Group=mita
+WorkingDirectory=/home/mita/lmbsc/apps/api
+ExecStart=/home/mita/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001 --workers 4
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=lmbsc-api
+
+# Environment file — copy from deploy/.env.production.example and fill in secrets
+EnvironmentFile=/home/mita/lmbsc/.env.production
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/home/mita/lmbsc
+
+[Install]
+WantedBy=multi-user.target
