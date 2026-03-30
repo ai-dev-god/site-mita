@@ -253,6 +253,22 @@ Breakpoints:
 
 ---
 
+### 2.9 PWA Mobile Guest Experience Screens (LAM-55)
+
+Mobile-first PWA screens (390px). Design system: Editorial Monolith adapted for touch — 0px radius, no shadows, Manrope + Fira Code, yellow #FFEE58 primary, Fira Code for all prices and monospace metadata.
+
+| File | Screen | Viewport | Status |
+|---|---|---|---|
+| `designs/lmbsc-pwa-menu-home.html` | PWA Menu Home (`/menu`) — hero identity, category tabs, featured items, install banner | 390px (mobile) | ✅ Generated |
+| `designs/lmbsc-pwa-menu-category.html` | PWA Menu Category — Brasserie Mains, filter chips, item rows with photos, qty controls, view-order bar | 390px (mobile) | ✅ Generated |
+| `designs/lmbsc-pwa-order-flow.html` | PWA Order Flow — table ID, item list, totals, special requests, Send to Kitchen CTA | 390px (mobile) | ✅ Generated |
+| `designs/lmbsc-pwa-guest-portal.html` | PWA Guest Portal — loyalty points, tier progress, visit history, push notification opt-in | 390px (mobile) | ✅ Generated |
+
+**Stitch Project:** `projects/144345776982843276` — La Mița Biciclista — Mobile PWA Guest Experience
+**Design System Asset:** `assets/11702364306548560858` — Editorial Monolith (Mobile PWA)
+
+---
+
 ### 2.8 Screens Generated
 
 | File | Screen | Viewport | Status |

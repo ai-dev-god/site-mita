@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>La Mița Biciclista — PWA Menu Category</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     EDITORIAL MONOLITH — Mobile PWA Design System
+     La Mița Biciclista · Screen 2/4: Menu Category (Brasserie — Mains)
+     390px · Light Mode · 0px radius · No shadows
+  ============================================================ */
+  :root {
+    --bg:        #FBFAF3;
+    --white:     #FFFFFF;
+    --black:     #111111;
+    --gray:      #686868;
+    --border:    #EEEEEE;
+    --yellow:    #FFEE58;
+    --pink:      #F6CFF4;
+    --purple:    #503AA8;
+    --font-body: 'Manrope', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 390px;
+    min-height: 844px;
+    background: var(--bg);
+    font-family: var(--font-body);
+    color: var(--black);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── STATUS BAR ── */
+  .status-bar {
+    width: 100%;
+    height: 44px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+  .status-bar .time { font-size: 15px; font-weight: 600; }
+  .status-bar .icons { display: flex; align-items: center; gap: 6px; }
+
+  /* ── TOP NAV ── */
+  .top-nav {
+    width: 100%;
+    height: 56px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .top-nav .nav-left { display: flex; align-items: center; gap: 10px; }
+  .top-nav .back-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .top-nav .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .top-nav .crumb-parent {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .top-nav .crumb-sep {
+    color: var(--gray);
+    font-size: 14px;
+  }
+  .top-nav .crumb-current {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--black);
+  }
+  .top-nav .cart-btn {
+    position: relative;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .top-nav .cart-badge {
+    position: absolute; top: 6px; right: 4px;
+    background: var(--yellow);
+    color: var(--black);
+    font-size: 10px; font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 0; line-height: 1.4;
+  }
+
+  /* ── CATEGORY HEADER ── */
+  .category-header {
+    background: var(--black);
+    padding: 32px 16px 24px;
+  }
+  .category-header .cat-num {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .category-header .cat-title {
+    font-family: var(--font-body);
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .category-header .cat-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+  }
+  .category-header .cat-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .category-header .meta-item {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .category-header .meta-item strong {
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+  }
+
+  /* ── FILTER CHIPS ── */
+  .filter-row {
+    width: 100%;
+    background: var(--bg);
+    padding: 12px 16px;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-chip {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 0;
+    cursor: pointer;
+    background: var(--white);
+  }
+  .filter-chip.active {
+    background: var(--black);
+    border-color: var(--black);
+  }
+  .filter-chip span {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .filter-chip.active span { color: var(--yellow); }
+
+  /* ── ITEMS COUNT ── */
+  .items-count {
+    padding: 12px 16px 8px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  /* ── MENU ITEM ROWS ── */
+  .items-list {
+    background: var(--white);
+  }
+  .item-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  /* Photo placeholder */
+  .item-photo {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .item-photo .photo-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-align: center;
+  }
+  /* Photo tonal backgrounds */
+  .photo-warm { background: #F5EDD8; }
+  .photo-cool { background: #E8EDF5; }
+  .photo-green { background: #E2EDE2; }
+  .photo-rose { background: #F5E2E2; }
+  .photo-yellow { background: #FFF8D6; }
+
+  .item-content { flex: 1; min-width: 0; }
+  .item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .item-name {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1.3;
+  }
+  .item-price {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--black);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .item-name-fr {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--gray);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+  .item-desc {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--gray);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .item-tags-row { display: flex; gap: 4px; flex-wrap: wrap; }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 0;
+    line-height: 1.4;
+  }
+  .tag.highlight {
+    border-color: var(--yellow);
+    background: var(--yellow);
+    color: var(--black);
+    font-weight: 600;
+  }
+  .add-btn {
+    width: 32px; height: 32px;
+    background: var(--yellow);
+    border: none; border-radius: 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 20px; font-weight: 800;
+    color: var(--black); line-height: 1;
+    flex-shrink: 0;
+  }
+  /* In-cart state */
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .qty-btn {
+    width: 32px; height: 32px;
+    background: var(--black);
+    border: none; border-radius: 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 16px; font-weight: 700;
+    color: var(--white); line-height: 1;
+  }
+  .qty-count {
+    width: 32px; height: 32px;
+    background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 14px; font-weight: 700;
+    color: var(--black);
+  }
+
+  /* ── DIVIDER SECTION ── */
+  .section-divider {
+    background: var(--bg);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-divider span {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  /* ── VIEW CART STICKY ── */
+  .view-cart-bar {
+    position: fixed;
+    bottom: 72px;
+    left: 0;
+    width: 390px;
+    background: var(--black);
+    padding: 0 16px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 99;
+    cursor: pointer;
+  }
+  .view-cart-bar .cart-summary {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+  .view-cart-bar .cart-summary strong {
+    color: var(--yellow);
+    font-weight: 700;
+  }
+  .view-cart-bar .cart-cta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .view-cart-bar .cta-text {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--yellow);
+  }
+  .view-cart-bar .cta-total {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 390px; height: 72px;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    padding-top: 8px;
+    z-index: 100;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer; padding-top: 2px;
+    border-top: 2px solid transparent;
+  }
+  .nav-item.active { border-top: 2px solid var(--yellow); }
+  .nav-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--gray);
+  }
+  .nav-item.active .nav-label { color: var(--black); font-weight: 700; }
+
+  .page-end { height: 144px; }
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <span class="time">9:43</span>
+  <div class="icons">
+    <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0" y="8" width="3" height="4" fill="#111"/><rect x="4.5" y="5" width="3" height="7" fill="#111"/><rect x="9" y="2" width="3" height="10" fill="#111"/><rect x="13.5" y="0" width="3" height="12" fill="#111"/></svg>
+    <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 10.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" fill="#111"/><path d="M4.5 7.5C5.6 6.4 6.7 5.8 8 5.8s2.4.6 3.5 1.7" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="square"/><path d="M2 5C3.8 3.2 5.8 2.2 8 2.2s4.2 1 6 2.8" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="square"/></svg>
+    <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="0" stroke="#111" stroke-width="1"/><rect x="22" y="3.5" width="2.5" height="5" rx="0" fill="#111"/><rect x="2" y="2" width="17" height="8" fill="#111"/></svg>
+  </div>
+</div>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="nav-left">
+    <div class="back-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#111" stroke-width="2" stroke-linecap="square"/></svg>
+    </div>
+    <div class="breadcrumb">
+      <span class="crumb-parent">Menu</span>
+      <span class="crumb-sep">/</span>
+      <span class="crumb-current">Brasserie</span>
+    </div>
+  </div>
+  <div class="cart-btn">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="#111" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"/><line x1="3" y1="6" x2="21" y2="6" stroke="#111" stroke-width="1.8"/><path d="M16 10a4 4 0 01-8 0" stroke="#111" stroke-width="1.8" stroke-linecap="square"/></svg>
+    <span class="cart-badge">2</span>
+  </div>
+</div>
+
+<!-- CATEGORY HEADER -->
+<div class="category-header">
+  <span class="cat-num">01 / Brasserie · Plats Principaux</span>
+  <div class="cat-title">Mains</div>
+  <div class="cat-subtitle">— Plats Principaux</div>
+  <div class="cat-meta">
+    <span class="meta-item"><strong>12</strong> items</span>
+    <span class="meta-item">·</span>
+    <span class="meta-item">Tue–Sun <strong>12:00–22:30</strong></span>
+  </div>
+</div>
+
+<!-- FILTER CHIPS -->
+<div class="filter-row">
+  <div class="filter-chip active"><span>All</span></div>
+  <div class="filter-chip"><span>Vegetarian</span></div>
+  <div class="filter-chip"><span>Wine Pairing</span></div>
+  <div class="filter-chip"><span>Chef's Pick</span></div>
+  <div class="filter-chip"><span>Allergen Info</span></div>
+</div>
+
+<!-- ITEMS COUNT -->
+<div class="items-count">Showing 12 items</div>
+
+<!-- MENU ITEMS LIST -->
+<div class="items-list">
+
+  <!-- Item 1: In cart (quantity control) -->
+  <div class="item-row">
+    <div class="item-photo photo-warm">
+      <span class="photo-label">Duck<br>Confit</span>
+    </div>
+    <div class="item-content">
+      <div class="item-header">
+        <div class="item-name">Confit de Canard</div>
+        <div class="item-price">98 RON</div>
+      </div>
+      <div class="item-name-fr">Duck leg confit</div>
+      <div class="item-desc">72h slow-confit duck leg, sarmalele de ceapă, mustard jus, pommes sarladaises</div>
+      <div class="item-footer">
+        <div class="item-tags-row">
+          <span class="tag highlight">Chef's Pick</span>
+          <span class="tag">Wine Pairing</span>
+        </div>
+        <div class="qty-control">
+          <button class="qty-btn">−</button>
+          <div class="qty-count">1</div>
+          <button class="qty-btn">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item 2 -->
+  <div class="item-row">
+    <div class="item-photo photo-green">
+      <span class="photo-label">Risotto<br>Truffle</span>
+    </div>
+    <div class="item-content">
+      <div class="item-header">
+        <div class="item-name">Risotto Tartufo</div>
+        <div class="item-price">85 RON</div>
+      </div>
+      <div class="item-name-fr">Black truffle risotto</div>
+      <div class="item-desc">Carnaroli, black truffle shavings, aged Parmesan, white wine reduction</div>
+      <div class="item-footer">
+        <div class="item-tags-row">
+          <span class="tag">Vegetarian</span>
+          <span class="tag">Wine Pairing</span>
+        </div>
+        <button class="add-btn">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item 3 -->
+  <div class="item-row">
+    <div class="item-photo photo-rose">
+      <span class="photo-label">Steak<br>Tartare</span>
+    </div>
+    <div class="item-content">
+      <div class="item-header">
+        <div class="item-name">Tartare de Bœuf</div>
+        <div class="item-price">76 RON</div>
+      </div>
+      <div class="item-name-fr">Hand-cut beef tartare</div>
+      <div class="item-desc">Romanian dry-aged beef, cornichon, Dijon, caper berries, grilled sourdough</div>
+      <div class="item-footer">
+        <div class="item-tags-row">
+          <span class="tag">Raw</span>
+        </div>
+        <button class="add-btn">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="section-divider"><span>— Végétarien / Plant-Forward</span></div>
+
+  <!-- Item 4 -->
+  <div class="item-row">
+    <div class="item-photo photo-yellow">
+      <span class="photo-label">Gnocchi<br>Sage</span>
+    </div>
+    <div class="item-content">
+      <div class="item-header">
+        <div class="item-name">Gnocchi Beurre Noisette</div>
+        <div class="item-price">62 RON</div>
+      </div>
+      <div class="item-name-fr">Brown butter gnocchi</div>
+      <div class="item-desc">Handmade potato gnocchi, brown butter, crispy sage, aged pecorino, seasonal mushrooms</div>
+      <div class="item-footer">
+        <div class="item-tags-row">
+          <span class="tag">Vegetarian</span>
+        </div>
+        <button class="add-btn">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item 5 -->
+  <div class="item-row">
+    <div class="item-photo photo-cool">
+      <span class="photo-label">Sea<br>Bass</span>
+    </div>
+    <div class="item-content">
+      <div class="item-header">
+        <div class="item-name">Bar en Papillote</div>
+        <div class="item-price">112 RON</div>
+      </div>
+      <div class="item-name-fr">Sea bass en papillote</div>
+      <div class="item-desc">Black Sea sea bass, fennel, lemon confit, caperberries, saffron velouté</div>
+      <div class="item-footer">
+        <div class="item-tags-row">
+          <span class="tag">Seafood</span>
+          <span class="tag">Wine Pairing</span>
+        </div>
+        <button class="add-btn">+</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-end"></div>
+
+<!-- VIEW CART STICKY BAR -->
+<div class="view-cart-bar">
+  <div class="cart-summary"><strong>1 item</strong> in order</div>
+  <div class="cart-cta">
+    <span class="cta-text">View Order</span>
+    <span class="cta-total">98 RON</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#FFEE58" stroke-width="1.5" stroke-linecap="square"/></svg>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2 9.5L11 2l9 7.5V20H14v-5H8v5H2V9.5z" stroke="#686868" stroke-width="1.6" fill="none" stroke-linecap="square"/></svg>
+    <span class="nav-label">Home</span>
+  </div>
+  <div class="nav-item active">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2" y="2" width="8" height="8" stroke="#111" stroke-width="1.6"/><rect x="12" y="2" width="8" height="8" stroke="#111" stroke-width="1.6"/><rect x="2" y="12" width="8" height="8" stroke="#111" stroke-width="1.6"/><rect x="12" y="12" width="8" height="8" stroke="#111" stroke-width="1.6"/></svg>
+    <span class="nav-label">Menu</span>
+  </div>
+  <div class="nav-item">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="4" y="2" width="14" height="18" rx="0" stroke="#686868" stroke-width="1.6"/><line x1="8" y1="7" x2="14" y2="7" stroke="#686868" stroke-width="1.4"/><line x1="8" y1="11" x2="14" y2="11" stroke="#686868" stroke-width="1.4"/><line x1="8" y1="15" x2="11" y2="15" stroke="#686868" stroke-width="1.4"/></svg>
+    <span class="nav-label">Orders</span>
+  </div>
+  <div class="nav-item">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="7" r="4" stroke="#686868" stroke-width="1.6"/><path d="M3 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#686868" stroke-width="1.6" stroke-linecap="square"/></svg>
+    <span class="nav-label">Profile</span>
+  </div>
+</div>
+
+</body>
+</html>
