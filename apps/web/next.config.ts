@@ -3,6 +3,8 @@ import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Hospitality platform lives at /hospitality — app.lamitabiciclista.ro root is the static marketing site
+  basePath: "/hospitality",
   async rewrites() {
     return [
       {
