@@ -9,9 +9,10 @@
 # Service management
 aurel ALL=(root) NOPASSWD: /usr/bin/systemctl restart lmbsc-api
 aurel ALL=(root) NOPASSWD: /usr/bin/systemctl restart lmbsc-web
+aurel ALL=(root) NOPASSWD: /usr/bin/systemctl restart lmbsc-deploy
 aurel ALL=(root) NOPASSWD: /usr/bin/systemctl reload apache2
 aurel ALL=(root) NOPASSWD: /usr/bin/systemctl daemon-reload
-aurel ALL=(root) NOPASSWD: /usr/bin/systemctl enable lmbsc-api lmbsc-web
+aurel ALL=(root) NOPASSWD: /usr/bin/systemctl enable lmbsc-api lmbsc-web lmbsc-deploy
 
 # Watchdog — cPanel httpd reload
 aurel ALL=(root) NOPASSWD: /usr/sbin/apachectl

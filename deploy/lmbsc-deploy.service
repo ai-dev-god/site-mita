@@ -1,0 +1,20 @@
+[Unit]
+Description=LMBSC GitHub webhook deploy receiver
+After=network.target
+
+[Service]
+Type=exec
+User=aurel
+Group=aurel
+WorkingDirectory=/home/aurel/mita
+ExecStart=/usr/bin/python3 /home/aurel/mita/deploy/webhook.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=lmbsc-deploy
+
+EnvironmentFile=-/home/aurel/mita/.env.production
+
+[Install]
+WantedBy=multi-user.target

@@ -74,8 +74,10 @@ jobs:
             echo "==> Installing systemd services"
             sudo cp /home/aurel/mita/deploy/lmbsc-api.service /etc/systemd/system/lmbsc-api.service
             sudo cp /home/aurel/mita/deploy/lmbsc-web.service /etc/systemd/system/lmbsc-web.service
+            sudo cp /home/aurel/mita/deploy/lmbsc-deploy.service /etc/systemd/system/lmbsc-deploy.service
             sudo systemctl daemon-reload
-            sudo systemctl enable lmbsc-api lmbsc-web
+            sudo systemctl enable lmbsc-api lmbsc-web lmbsc-deploy
+            sudo systemctl restart lmbsc-deploy || true
 
             echo "==> Updating Apache config"
             sudo cp /home/aurel/mita/deploy/apache/lamitabiciclista.conf \
