@@ -11,13 +11,15 @@ WorkingDirectory=/home/aurel/mita/apps/web/.next/standalone
 ExecStart=/usr/bin/node server.js
 Environment=PORT=3001
 Environment=HOSTNAME=127.0.0.1
-Restart=on-failure
+Restart=always
 RestartSec=5
+StartLimitIntervalSec=120
+StartLimitBurst=5
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=lmbsc-web
 
-EnvironmentFile=/home/aurel/mita/.env.production
+EnvironmentFile=-/home/aurel/mita/.env.production
 
 NoNewPrivileges=true
 PrivateTmp=true

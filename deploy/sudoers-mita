@@ -13,6 +13,9 @@ aurel ALL=(root) NOPASSWD: /usr/bin/systemctl reload apache2
 aurel ALL=(root) NOPASSWD: /usr/bin/systemctl daemon-reload
 aurel ALL=(root) NOPASSWD: /usr/bin/systemctl enable lmbsc-api lmbsc-web
 
+# Watchdog — cPanel httpd reload
+aurel ALL=(root) NOPASSWD: /usr/sbin/apachectl
+
 # Service file installation
 aurel ALL=(root) NOPASSWD: /usr/bin/cp /home/aurel/mita/deploy/lmbsc-api.service /etc/systemd/system/lmbsc-api.service
 aurel ALL=(root) NOPASSWD: /usr/bin/cp /home/aurel/mita/deploy/lmbsc-web.service /etc/systemd/system/lmbsc-web.service

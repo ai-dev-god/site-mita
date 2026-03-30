@@ -9,14 +9,16 @@ User=aurel
 Group=aurel
 WorkingDirectory=/home/aurel/mita/apps/api
 ExecStart=/home/aurel/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001 --workers 4
-Restart=on-failure
+Restart=always
 RestartSec=5
+StartLimitIntervalSec=120
+StartLimitBurst=5
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=lmbsc-api
 
 # Environment file — copy from deploy/.env.production.example and fill in secrets
-EnvironmentFile=/home/aurel/mita/.env.production
+EnvironmentFile=-/home/aurel/mita/.env.production
 
 # Hardening
 NoNewPrivileges=true

@@ -155,25 +155,15 @@ sudo cp "$REPO_DIR/deploy/lmbsc-web.service" /etc/systemd/system/lmbsc-web.servi
 sudo systemctl daemon-reload
 sudo systemctl enable lmbsc-api lmbsc-web
 
-log "Installing Apache VirtualHost..."
-sudo cp "$REPO_DIR/deploy/apache/lamitabiciclista.conf" \
-  "/etc/apache2/sites-available/lamitabiciclista.conf"
+log "Installing cPanel Apache proxy config (SSL)..."
+CPANEL_SSL_DIR="/etc/apache2/conf.d/userdata/ssl/2_4/mita/app.lamitabiciclista.ro"
+CPANEL_STD_DIR="/etc/apache2/conf.d/userdata/std/2_4/mita/app.lamitabiciclista.ro"
+sudo mkdir -p "$CPANEL_SSL_DIR" "$CPANEL_STD_DIR"
+sudo cp "$REPO_DIR/deploy/apache/cpanel-ssl-proxy.conf" "$CPANEL_SSL_DIR/proxy.conf"
+sudo cp "$REPO_DIR/deploy/apache/cpanel-std-proxy.conf" "$CPANEL_STD_DIR/proxy.conf"
+sudo /usr/sbin/apachectl configtest && sudo /usr/sbin/apachectl graceful
 
-# Enable required Apache modules
-sudo a2enmod proxy proxy_http headers rewrite ssl 2>/dev/null || true
-sudo a2ensite lamitabiciclista 2>/dev/null || true
-
-# ── 8. TLS via Let's Encrypt (first-time only) ───────────────
-if [[ ! -d "/etc/letsencrypt/live/lamitabiciclista.ro" ]]; then
-  log "Obtaining Let's Encrypt certificate..."
-  sudo certbot --apache \
-    -d lamitabiciclista.ro \
-    -d www.lamitabiciclista.ro \
-    -d app.lamitabiciclista.ro \
-    --non-interactive --agree-tos \
-    --email admin@lamitabiciclista.ro \
-    --redirect
-fi
+# ── 8. (cPanel manages TLS via AutoSSL — no certbot needed) ─────
 
 # ── 9. Restart services ──────────────────────────────────────
 log "Restarting FastAPI service..."
@@ -183,7 +173,7 @@ log "Restarting Next.js frontend..."
 sudo systemctl restart lmbsc-web
 
 log "Reloading Apache..."
-sudo apache2ctl configtest && sudo systemctl reload apache2
+sudo /usr/sbin/apachectl configtest && sudo /usr/sbin/apachectl graceful
 
 # ── 10. Smoke test ───────────────────────────────────────────
 log "Smoke testing health endpoint..."
