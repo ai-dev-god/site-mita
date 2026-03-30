@@ -3,116 +3,28 @@ name: Deploy
 on:
   push:
     branches: [main]
-  workflow_dispatch:   # allow manual re-trigger from GitHub UI
+  workflow_dispatch:
+
+# Deploy runs on the production machine itself — no remote SSH needed.
+# GitHub Actions is used only to notify that a push landed on main.
+# The production machine runs local-deploy.sh after each push.
 
 concurrency:
   group: deploy-production
-  cancel-in-progress: false   # never cancel a running deploy mid-flight
+  cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Deploy to production
+  notify:
+    name: Push landed on main
     runs-on: ubuntu-24.04
-
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.0
-        env:
-          GH_TOKEN: ${{ github.token }}
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          envs: GH_TOKEN
-          script_stop: true   # abort on first failing command
-          script: |
-            set -euo pipefail
-
-            echo "==> Pulling latest code"
-            if [ -d /home/aurel/mita/.git ]; then
-              cd /home/aurel/mita
-              git pull --ff-only
-            else
-              # Directory exists but isn't a git repo (or doesn't exist) — fresh clone
-              rm -rf /home/aurel/mita
-              git clone "https://x-access-token:${GH_TOKEN}@github.com/ai-dev-god/site-mita.git" /home/aurel/mita
-              cd /home/aurel/mita
-            fi
-
-            echo "==> Installing Python dependencies"
-            if [ ! -d /home/aurel/.venv ]; then
-              python3 -m venv /home/aurel/.venv
-            fi
-            /home/aurel/.venv/bin/pip install --quiet --upgrade pip
-            /home/aurel/.venv/bin/pip install --quiet -e apps/api
-
-            echo "==> Running Alembic migrations"
-            cd /home/aurel/mita/apps/api
-            /home/aurel/.venv/bin/alembic upgrade head
-            cd /home/aurel/mita
-
-            echo "==> Building Next.js frontend"
-            cd /home/aurel/mita/apps/web
-            npm ci --omit=dev
-            npm run build
-            # Copy static assets into the standalone output
-            cp -r public .next/standalone/public
-            cp -r .next/static .next/standalone/.next/static
-            cd /home/aurel/mita
-
-            echo "==> Syncing static marketing site to public_html"
-            rsync -a --delete \
-              --exclude='.git' \
-              --exclude='apps/' \
-              --exclude='deploy/' \
-              --exclude='.github/' \
-              --exclude='.stitch/' \
-              /home/aurel/mita/ /home/aurel/public_html/
-
-            echo "==> Installing systemd services"
-            sudo cp /home/aurel/mita/deploy/lmbsc-api.service /etc/systemd/system/lmbsc-api.service
-            sudo cp /home/aurel/mita/deploy/lmbsc-web.service /etc/systemd/system/lmbsc-web.service
-            sudo cp /home/aurel/mita/deploy/lmbsc-deploy.service /etc/systemd/system/lmbsc-deploy.service
-            sudo systemctl daemon-reload
-            sudo systemctl enable lmbsc-api lmbsc-web lmbsc-deploy
-            sudo systemctl restart lmbsc-deploy || true
-
-            echo "==> Updating Apache config"
-            sudo cp /home/aurel/mita/deploy/apache/lamitabiciclista.conf \
-              /etc/apache2/sites-available/lamitabiciclista.conf
-            sudo a2enmod proxy proxy_http headers rewrite ssl 2>/dev/null || true
-            sudo a2ensite lamitabiciclista 2>/dev/null || true
-
-            echo "==> Restarting services"
-            sudo systemctl restart lmbsc-api
-            sudo systemctl restart lmbsc-web
-            sudo apache2ctl configtest && sudo systemctl reload apache2
-
-            echo "==> Smoke test"
-            sleep 3
-            curl -sf http://127.0.0.1:8001/health | grep -q '"status":"ok"'
-            echo "Health check passed"
-
-      - name: Notify Slack — success
-        if: success() && vars.SLACK_WEBHOOK_URL != ''
+      - name: Notify Slack — push to main
+        if: vars.SLACK_WEBHOOK_URL != ''
         uses: slackapi/slack-github-action@v2.1.0
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": ":white_check_mark: *Deploy succeeded* — <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha_short }}`> by ${{ github.actor }}"
-            }
-
-      - name: Notify Slack — failure
-        if: failure() && vars.SLACK_WEBHOOK_URL != ''
-        uses: slackapi/slack-github-action@v2.1.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": ":x: *Deploy FAILED* — <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs> — triggered by ${{ github.actor }}"
+              "text": ":rocket: *Push to main* — <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> by ${{ github.actor }} — run local-deploy.sh on server"
             }
