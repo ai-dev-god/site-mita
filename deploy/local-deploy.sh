@@ -14,7 +14,7 @@ set -euo pipefail
 
 REPO_DIR="/home/aurel/mita"
 VENV_DIR="/home/aurel/.venv"
-PUBLIC_HTML="/home/mita/public_html"
+PUBLIC_HTML="/home/aurel/public_html"
 
 log() { echo "[deploy] $*"; }
 die() { echo "[deploy] ERROR: $*" >&2; exit 1; }
@@ -83,6 +83,7 @@ rsync -a --delete \
   --exclude='deploy/' \
   --exclude='.github/' \
   --exclude='.stitch/' \
+  --exclude='.env*' \
   "$REPO_DIR/" "$PUBLIC_HTML/"
 
 # ── Restart services ─────────────────────────────────────────
@@ -94,6 +95,6 @@ sudo systemctl restart lmbsc-web
 log "Smoke test..."
 sleep 3
 curl -sf http://127.0.0.1:8001/health | grep -q '"status":"ok"' && log "API health: OK"
-curl -sf http://127.0.0.1:3001/hospitality -o /dev/null && log "Web health: OK"
+curl -sf http://127.0.0.1:3001/ -o /dev/null && log "Web health: OK"
 
 log "Deploy complete."
