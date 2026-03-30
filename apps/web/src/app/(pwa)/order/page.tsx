@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "../use-cart";
 import { BottomNav } from "../menu/page";
@@ -16,7 +16,7 @@ const C = {
   mono: "var(--font-fira-code, 'Fira Code', monospace)",
 } as const;
 
-export default function OrderPage() {
+function OrderPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { items, removeItem, clearCart, total, count } = useCart();
@@ -298,5 +298,13 @@ export default function OrderPage() {
 
       <BottomNav active="order" />
     </div>
+  );
+}
+
+export default function OrderPage() {
+  return (
+    <Suspense>
+      <OrderPageInner />
+    </Suspense>
   );
 }
