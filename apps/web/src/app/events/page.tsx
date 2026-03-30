@@ -39,7 +39,7 @@ export default function EventsPage() {
       {/* Nav */}
       <header style={{
         borderBottom: "1px solid var(--color-border)",
-        background: "var(--color-raised)",
+        background: "var(--color-surface-raised)",
         padding: "0 40px",
         display: "flex", alignItems: "center", height: 64,
       }}>
@@ -47,7 +47,7 @@ export default function EventsPage() {
           La Mița Biciclista
         </Link>
         <nav style={{ marginLeft: "auto", display: "flex", gap: 24 }}>
-          <Link href="/reserve" style={{ fontSize: 14, color: "var(--color-text-sec)", textDecoration: "none" }}>Rezervări</Link>
+          <Link href="/reserve" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Rezervări</Link>
           <Link href="/events" style={{ fontSize: 14, color: "var(--color-primary)", fontWeight: 600, textDecoration: "none" }}>Evenimente</Link>
         </nav>
       </header>
@@ -71,7 +71,7 @@ export default function EventsPage() {
           <div style={{ textAlign: "center", color: "var(--color-text-muted)", fontSize: 15 }}>Se încarcă evenimentele...</div>
         ) : events.length === 0 ? (
           <div style={{
-            background: "var(--color-raised)", borderRadius: 16,
+            background: "var(--color-surface-raised)", borderRadius: 16,
             border: "1px solid var(--color-border)", padding: "64px 40px",
             textAlign: "center",
           }}>
@@ -79,7 +79,7 @@ export default function EventsPage() {
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700, color: "var(--color-text)", margin: "0 0 8px" }}>
               Niciun eveniment programat
             </h2>
-            <p style={{ fontSize: 14, color: "var(--color-text-sec)" }}>
+            <p style={{ fontSize: 14, color: "var(--color-text-secondary)" }}>
               Revino în curând pentru a descoperi evenimentele noastre viitoare.
             </p>
           </div>
@@ -97,7 +97,7 @@ export default function EventsPage() {
                   style={{ textDecoration: "none" }}
                 >
                   <div style={{
-                    background: "var(--color-raised)",
+                    background: "var(--color-surface-raised)",
                     border: "1px solid var(--color-border)",
                     borderRadius: 16,
                     overflow: "hidden",
@@ -125,7 +125,7 @@ export default function EventsPage() {
                       </h3>
 
                       {evt.description && (
-                        <p style={{ fontSize: 13, color: "var(--color-text-sec)", margin: "0 0 16px", lineHeight: 1.5, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
+                        <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: "0 0 16px", lineHeight: 1.5, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
                           {evt.description}
                         </p>
                       )}

@@ -123,7 +123,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
       {/* Nav */}
       <header style={{
         borderBottom: "1px solid var(--color-border)",
-        background: "var(--color-raised)",
+        background: "var(--color-surface-raised)",
         padding: "0 40px",
         display: "flex", alignItems: "center", height: 64,
       }}>
@@ -131,7 +131,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
           La Mița Biciclista
         </Link>
         <nav style={{ marginLeft: "auto", display: "flex", gap: 24 }}>
-          <Link href="/reserve" style={{ fontSize: 14, color: "var(--color-text-sec)", textDecoration: "none" }}>Rezervări</Link>
+          <Link href="/reserve" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Rezervări</Link>
           <Link href="/events" style={{ fontSize: 14, color: "var(--color-primary)", fontWeight: 600, textDecoration: "none" }}>Evenimente</Link>
         </nav>
       </header>
@@ -147,20 +147,20 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
         {step === "success" && booked ? (
           /* ── Success screen ───────────────────────────────── */
           <div style={{
-            background: "var(--color-raised)", borderRadius: 20,
+            background: "var(--color-surface-raised)", borderRadius: 20,
             border: "1px solid var(--color-border)",
             padding: "48px 40px", textAlign: "center",
           }}>
             <div style={{
               width: 64, height: 64, borderRadius: "50%",
-              background: "#D1FAE5", display: "flex", alignItems: "center", justifyContent: "center",
+              background: "var(--color-primary-muted)", display: "flex", alignItems: "center", justifyContent: "center",
               margin: "0 auto 24px", fontSize: 28,
             }}>✓</div>
 
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700, color: "var(--color-text)", margin: "0 0 8px" }}>
               Bilet rezervat!
             </h2>
-            <p style={{ fontSize: 15, color: "var(--color-text-sec)", margin: "0 0 32px" }}>
+            <p style={{ fontSize: 15, color: "var(--color-text-secondary)", margin: "0 0 32px" }}>
               Biletul tău pentru <strong>{event.name}</strong> a fost confirmat.
             </p>
 
@@ -174,7 +174,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
               <div style={{ fontSize: 11, fontWeight: 600, color: "var(--color-text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>
                 Nr. bilet
               </div>
-              <div style={{ fontFamily: "monospace", fontSize: 22, fontWeight: 700, color: "var(--color-text)", letterSpacing: 2, marginBottom: 20 }}>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 22, fontWeight: 700, color: "var(--color-text)", letterSpacing: 2, marginBottom: 20 }}>
                 {booked.ticket_number}
               </div>
 
@@ -182,14 +182,14 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
                 Cod QR (prezintă la intrare)
               </div>
               <div style={{
-                fontFamily: "monospace", fontSize: 9, wordBreak: "break-all",
+                fontFamily: "var(--font-mono)", fontSize: 9, wordBreak: "break-all",
                 background: "var(--color-primary)", color: "#fff",
                 borderRadius: 8, padding: "10px 12px", lineHeight: 1.6,
               }}>
                 {booked.qr_code}
               </div>
 
-              <div style={{ marginTop: 16, fontSize: 13, color: "var(--color-text-sec)" }}>
+              <div style={{ marginTop: 16, fontSize: 13, color: "var(--color-text-secondary)" }}>
                 <div>📅 {new Date(event.starts_at).toLocaleString("ro-RO", { dateStyle: "long", timeStyle: "short" })}</div>
                 {event.doors_open_at && (
                   <div style={{ marginTop: 4 }}>🚪 Uși deschise: {new Date(event.doors_open_at).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}</div>
@@ -206,7 +206,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
 
             <Link href="/events" style={{
               display: "inline-block", background: "var(--color-primary)", color: "#fff",
-              borderRadius: 10, padding: "12px 28px", fontSize: 14, fontWeight: 600, textDecoration: "none",
+              borderRadius: "var(--radius-md)", padding: "12px 28px", fontSize: 14, fontWeight: 600, textDecoration: "none",
             }}>
               ← Înapoi la evenimente
             </Link>
@@ -220,8 +220,8 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
               {(soldOut || cancelled) && (
                 <div style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
-                  background: soldOut ? "#FEF3C7" : "#FEE2E2",
-                  color: soldOut ? "#92400E" : "#991B1B",
+                  background: soldOut ? "var(--color-turning-bg)" : "var(--color-error-bg)",
+                  color: soldOut ? "var(--color-turning)" : "var(--color-error)",
                   borderRadius: 8, padding: "4px 12px",
                   fontSize: 12, fontWeight: 600, marginBottom: 16,
                 }}>
@@ -234,7 +234,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
               </h1>
 
               {/* Meta info */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28, fontSize: 15, color: "var(--color-text-sec)" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28, fontSize: 15, color: "var(--color-text-secondary)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <span>📅</span>
                   <span>
@@ -268,18 +268,18 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
                   <span>{soldOut ? "Sold out" : `${spotsLeft} locuri disponibile`}</span>
                 </div>
                 <div style={{ height: 8, background: "var(--color-border)", borderRadius: 4, overflow: "hidden" }}>
-                  <div style={{ height: "100%", width: `${pct * 100}%`, background: pct > 0.85 ? "#DC2626" : "var(--color-primary)", borderRadius: 4 }} />
+                  <div style={{ height: "100%", width: `${pct * 100}%`, background: pct > 0.85 ? "var(--color-error)" : "var(--color-primary)", borderRadius: 4 }} />
                 </div>
               </div>
 
               {/* Description */}
               {event.description && (
                 <div style={{
-                  background: "var(--color-raised)", borderRadius: 12,
+                  background: "var(--color-surface-raised)", borderRadius: 12,
                   border: "1px solid var(--color-border)",
                   padding: "20px 24px",
                 }}>
-                  <h3 style={{ fontSize: 14, fontWeight: 700, color: "var(--color-text-sec)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>
                     Despre eveniment
                   </h3>
                   <p style={{ fontSize: 15, color: "var(--color-text)", lineHeight: 1.7, margin: 0, whiteSpace: "pre-wrap" }}>
@@ -291,7 +291,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
 
             {/* Right: booking card */}
             <div style={{
-              background: "var(--color-raised)", borderRadius: 16,
+              background: "var(--color-surface-raised)", borderRadius: 16,
               border: "1px solid var(--color-border)",
               padding: "24px",
               position: "sticky", top: 24,
@@ -304,7 +304,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
               </div>
 
               {bookError && (
-                <div style={{ background: "#FEE2E2", color: "#991B1B", borderRadius: 8, padding: "10px 14px", fontSize: 13, marginBottom: 16 }}>
+                <div style={{ background: "var(--color-error-bg)", color: "var(--color-error)", borderRadius: "var(--radius-md)", padding: "10px 14px", fontSize: 13, marginBottom: 16 }}>
                   {bookError}
                 </div>
               )}
@@ -312,7 +312,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
               {canBook ? (
                 <>
                   {pct > 0.85 && !soldOut && (
-                    <div style={{ background: "#FEF3C7", color: "#92400E", borderRadius: 8, padding: "8px 12px", fontSize: 12, fontWeight: 600, marginBottom: 16 }}>
+                    <div style={{ background: "var(--color-turning-bg)", color: "var(--color-turning)", borderRadius: "var(--radius-md)", padding: "8px 12px", fontSize: 12, fontWeight: 600, marginBottom: 16 }}>
                       ⚡ Doar {spotsLeft} locuri rămase!
                     </div>
                   )}
@@ -322,7 +322,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
                     style={{
                       width: "100%", padding: "14px", fontSize: 15, fontWeight: 700,
                       background: "var(--color-primary)", color: "#fff",
-                      border: "none", borderRadius: 10, cursor: booking ? "not-allowed" : "pointer",
+                      border: "none", borderRadius: "var(--radius-md)", cursor: booking ? "not-allowed" : "pointer",
                       opacity: booking ? 0.7 : 1, marginBottom: 12,
                     }}
                   >

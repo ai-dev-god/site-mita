@@ -106,31 +106,31 @@ function WalkInInner() {
     return (
       <div
         className="min-h-screen flex items-center justify-center p-6"
-        style={{ background: "var(--color-surface, #FAF6F0)" }}
+        style={{ background: "var(--color-surface)" }}
       >
         <div
           className="w-full max-w-sm text-center p-8 rounded-[12px]"
-          style={{ background: "white", boxShadow: "0 4px 24px rgba(0,0,0,.08)" }}
+          style={{ background: "var(--color-surface-raised)", boxShadow: "var(--shadow-lg)" }}
         >
           <div className="text-5xl mb-4">🪑</div>
           <h1
             className="text-2xl font-bold mb-2"
             style={{
-              color: "var(--color-primary, #2C4A2E)",
-              fontFamily: "var(--font-display, Georgia, serif)",
+              color: "var(--color-primary)",
+              fontFamily: "var(--font-display)",
             }}
           >
             Ești în coadă!
           </h1>
-          <p className="text-lg font-semibold mb-1" style={{ color: "var(--color-primary, #2C4A2E)" }}>
+          <p className="text-lg font-semibold mb-1" style={{ color: "var(--color-primary)" }}>
             Poziția ta: #{position}
           </p>
-          <p className="text-sm mt-3" style={{ color: "#666" }}>
+          <p className="text-sm mt-3" style={{ color: "var(--color-text-secondary)" }}>
             Vei fi anunțat prin SMS când masa ta este gata.
             <br />
             Te rugăm să rămâi în apropierea restaurantului.
           </p>
-          <p className="text-xs mt-4" style={{ color: "#999" }}>
+          <p className="text-xs mt-4" style={{ color: "var(--color-text-muted)" }}>
             La Mița Biciclista · Str. Biserica Amzei 9, București
           </p>
         </div>
@@ -142,21 +142,21 @@ function WalkInInner() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-6"
-      style={{ background: "var(--color-surface, #FAF6F0)" }}
+      style={{ background: "var(--color-surface)" }}
     >
       <div
         className="w-full max-w-sm rounded-[12px] overflow-hidden"
-        style={{ background: "white", boxShadow: "0 4px 24px rgba(0,0,0,.08)" }}
+        style={{ background: "var(--color-surface-raised)", boxShadow: "var(--shadow-lg)" }}
       >
         {/* Header */}
-        <div className="px-6 py-5" style={{ background: "#2C4A2E" }}>
+        <div className="px-6 py-5" style={{ background: "var(--color-primary)" }}>
           <h1
             className="text-xl font-bold"
-            style={{ color: "#FAF6F0", fontFamily: "var(--font-display, Georgia, serif)" }}
+            style={{ color: "var(--color-surface)", fontFamily: "var(--font-display)" }}
           >
             La Mița Biciclista
           </h1>
-          <p className="text-sm mt-0.5" style={{ color: "#B8962E" }}>
+          <p className="text-sm mt-0.5" style={{ color: "var(--color-accent)" }}>
             Intră în coada walk-in
           </p>
         </div>
@@ -165,7 +165,7 @@ function WalkInInner() {
           {/* Zone */}
           {!loadingZones && zones.length > 1 && (
             <div>
-              <label className="block text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: "#555" }}>
+              <label className="block text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: "var(--color-text-secondary)" }}>
                 Zona
               </label>
               <select
@@ -173,7 +173,7 @@ function WalkInInner() {
                 onChange={(e) => setZoneId(e.target.value)}
                 required
                 className="w-full h-10 px-3 rounded-[6px] border text-sm"
-                style={{ borderColor: "#ddd", color: "#1a1a1a" }}
+                style={{ borderColor: "var(--color-border)", color: "var(--color-text)" }}
               >
                 {zones.map((z) => (
                   <option key={z.id} value={z.id}>
@@ -186,8 +186,8 @@ function WalkInInner() {
 
           {/* Guest name */}
           <div>
-            <label className="block text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: "#555" }}>
-              Nume <span style={{ color: "#aaa", fontWeight: 400 }}>(opțional)</span>
+            <label className="block text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: "var(--color-text-secondary)" }}>
+              Nume <span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}>(opțional)</span>
             </label>
             <input
               type="text"
@@ -195,14 +195,14 @@ function WalkInInner() {
               onChange={(e) => setGuestName(e.target.value)}
               placeholder="Ex: Ion Popescu"
               className="w-full h-10 px-3 rounded-[6px] border text-sm"
-              style={{ borderColor: "#ddd", color: "#1a1a1a" }}
+              style={{ borderColor: "var(--color-border)", color: "var(--color-text)" }}
             />
           </div>
 
           {/* Phone */}
           <div>
-            <label className="block text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: "#555" }}>
-              Telefon <span style={{ color: "#aaa", fontWeight: 400 }}>(pentru SMS)</span>
+            <label className="block text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: "var(--color-text-secondary)" }}>
+              Telefon <span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}>(pentru SMS)</span>
             </label>
             <input
               type="tel"
@@ -210,13 +210,13 @@ function WalkInInner() {
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+40 7xx xxx xxx"
               className="w-full h-10 px-3 rounded-[6px] border text-sm"
-              style={{ borderColor: "#ddd", color: "#1a1a1a" }}
+              style={{ borderColor: "var(--color-border)", color: "var(--color-text)" }}
             />
           </div>
 
           {/* Party size */}
           <div>
-            <label className="block text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: "#555" }}>
+            <label className="block text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: "var(--color-text-secondary)" }}>
               Nr. persoane
             </label>
             <div className="flex items-center gap-3">
@@ -224,18 +224,18 @@ function WalkInInner() {
                 type="button"
                 onClick={() => setPartySize((n) => Math.max(1, n - 1))}
                 className="w-9 h-9 rounded-full border font-bold text-lg flex items-center justify-center"
-                style={{ borderColor: "#2C4A2E", color: "#2C4A2E" }}
+                style={{ borderColor: "var(--color-primary)", color: "var(--color-primary)" }}
               >
                 −
               </button>
-              <span className="text-xl font-bold w-8 text-center" style={{ color: "#1a1a1a" }}>
+              <span className="text-xl font-bold w-8 text-center" style={{ color: "var(--color-text)" }}>
                 {partySize}
               </span>
               <button
                 type="button"
                 onClick={() => setPartySize((n) => Math.min(20, n + 1))}
                 className="w-9 h-9 rounded-full border font-bold text-lg flex items-center justify-center"
-                style={{ borderColor: "#2C4A2E", color: "#2C4A2E" }}
+                style={{ borderColor: "var(--color-primary)", color: "var(--color-primary)" }}
               >
                 +
               </button>
@@ -244,8 +244,8 @@ function WalkInInner() {
 
           {/* Notes */}
           <div>
-            <label className="block text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: "#555" }}>
-              Observații <span style={{ color: "#aaa", fontWeight: 400 }}>(opțional)</span>
+            <label className="block text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: "var(--color-text-secondary)" }}>
+              Observații <span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}>(opțional)</span>
             </label>
             <input
               type="text"
@@ -253,19 +253,19 @@ function WalkInInner() {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Ex: alergie gluten, loc outdoor…"
               className="w-full h-10 px-3 rounded-[6px] border text-sm"
-              style={{ borderColor: "#ddd", color: "#1a1a1a" }}
+              style={{ borderColor: "var(--color-border)", color: "var(--color-text)" }}
             />
           </div>
 
           {error && (
-            <p className="text-xs text-red-600 bg-red-50 px-3 py-2 rounded-[4px]">{error}</p>
+            <p className="text-xs px-3 py-2 rounded-[4px]" style={{ background: "var(--color-error-bg)", color: "var(--color-error)" }}>{error}</p>
           )}
 
           <button
             type="submit"
             disabled={loading || !zoneId}
             className="w-full h-11 rounded-[6px] text-white font-semibold text-sm mt-2 disabled:opacity-60"
-            style={{ background: "#2C4A2E" }}
+            style={{ background: "var(--color-primary)" }}
           >
             {loading ? "Se adaugă…" : "Intră în coadă"}
           </button>
