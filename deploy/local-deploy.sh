@@ -42,8 +42,22 @@ fi
 if [[ "$SKIP_MIGRATE" == false ]]; then
   log "Running Alembic migrations..."
   cd "$REPO_DIR/apps/api"
-  if [ -f "$REPO_DIR/.env.production" ]; then
-    set -a; source "$REPO_DIR/.env.production"; set +a
+  # Use python-dotenv safe parsing — avoids bash mangling JSON values
+  DATABASE_URL=$(python3 -c "
+import re, sys
+env_file = '$REPO_DIR/.env.production'
+try:
+    with open(env_file) as f:
+        for line in f:
+            line = line.strip()
+            if line.startswith('DATABASE_URL='):
+                print(line.split('=', 1)[1].strip('\"').strip(\"'\"))
+                sys.exit(0)
+except FileNotFoundError:
+    pass
+" 2>/dev/null)
+  if [ -n "$DATABASE_URL" ]; then
+    export DATABASE_URL
   fi
   "$VENV_DIR/bin/alembic" upgrade head
   cd "$REPO_DIR"
