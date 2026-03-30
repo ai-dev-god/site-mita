@@ -53,7 +53,7 @@ fi
 if [[ "$SKIP_FRONTEND" == false ]]; then
   log "Building Next.js frontend..."
   cd "$REPO_DIR/apps/web"
-  npm ci --omit=dev
+  npm install --include=dev
   npm run build
   cp -r public .next/standalone/public
   cp -r .next/static .next/standalone/.next/static
