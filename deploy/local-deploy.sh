@@ -95,6 +95,6 @@ sudo systemctl restart lmbsc-web
 log "Smoke test..."
 sleep 3
 curl -sf http://127.0.0.1:8001/health | grep -q '"status":"ok"' && log "API health: OK"
-curl -sf http://127.0.0.1:3001/ -o /dev/null && log "Web health: OK"
+curl -sf http://127.0.0.1:3001/hospitality -o /dev/null && log "Web health: OK"
 
 log "Deploy complete."
