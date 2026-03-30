@@ -13,11 +13,22 @@ export default function FloorPlanEditorPage() {
   const [saved, setSaved] = useState(false);
   const [roleOk, setRoleOk] = useState<boolean | null>(null);
 
-  // Role check
+  // Role check — also handles Clerk never initializing (isLoaded stuck false)
   useEffect(() => {
-    if (!isLoaded) return;
+    // Fallback: if Clerk doesn't initialize within 5s, deny access gracefully
+    const clerkTimeout = setTimeout(() => {
+      setRoleOk((prev) => (prev === null ? false : prev));
+    }, 5000);
+
+    if (!isLoaded) return () => clearTimeout(clerkTimeout);
+    clearTimeout(clerkTimeout);
+
     if (!isSignedIn) { router.replace("/login"); return; }
-    getToken({ template: "default" }).then(async (token) => {
+    // 4-second timeout guards against getToken() hanging when Clerk is unconfigured
+    Promise.race([
+      getToken({ template: "default" }),
+      new Promise<string | null>((resolve) => setTimeout(() => resolve(null), 4000)),
+    ]).then(async (token) => {
       if (!token) { setRoleOk(false); return; }
       try {
         // Decode the JWT payload to check role claim
@@ -28,6 +39,7 @@ export default function FloorPlanEditorPage() {
         setRoleOk(false);
       }
     });
+    return () => clearTimeout(clerkTimeout);
   }, [isLoaded, isSignedIn, getToken, router]);
 
   // Load plan on mount

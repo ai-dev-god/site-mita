@@ -207,14 +207,21 @@ export default function DashboardPage() {
     let cancelled = false;
     async function load() {
       try {
-        const token = await getToken();
+        // 4-second timeout guards against getToken() hanging when Clerk is unconfigured
+        const token = await Promise.race([
+          getToken(),
+          new Promise<string | null>((resolve) => setTimeout(() => resolve(null), 4000)),
+        ]);
+        if (cancelled) return;
         const resp = await fetch(
           `${API_URL}/api/v1/tables?venue_id=${VENUE_ID}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: token ? { Authorization: `Bearer ${token}` } : {} }
         );
         if (!resp.ok || cancelled) return;
         const data: ApiTable[] = await resp.json();
         setTables(data.map(apiTableToData));
+      } catch {
+        // API unreachable — show empty state
       } finally {
         if (!cancelled) setLoading(false);
       }
