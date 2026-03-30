@@ -6,7 +6,7 @@ export default function PwaLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register("/hospitality/sw.js", { scope: "/hospitality/" })
+        .register("/sw.js", { scope: "/" })
         .catch(() => {});
     }
   }, []);

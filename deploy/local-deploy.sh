@@ -14,7 +14,7 @@ set -euo pipefail
 
 REPO_DIR="/home/aurel/mita"
 VENV_DIR="/home/aurel/.venv"
-PUBLIC_HTML="/home/aurel/public_html"
+PUBLIC_HTML="/home/mita/public_html"
 
 log() { echo "[deploy] $*"; }
 die() { echo "[deploy] ERROR: $*" >&2; exit 1; }
