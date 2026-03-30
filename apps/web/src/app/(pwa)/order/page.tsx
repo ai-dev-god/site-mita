@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "../use-cart";
 import { BottomNav } from "../menu/page";
 
@@ -18,10 +18,24 @@ const C = {
 
 export default function OrderPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { items, removeItem, clearCart, total, count } = useCart();
   const [specialRequests, setSpecialRequests] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [tableLabel, setTableLabel] = useState<string | null>(null);
+
+  useEffect(() => {
+    // QR code links arrive as /order?table=A12 — persist and display
+    const tableParam = searchParams.get("table");
+    if (tableParam) {
+      localStorage.setItem("lmbsc_table_id", tableParam);
+      setTableLabel(tableParam);
+    } else {
+      const stored = localStorage.getItem("lmbsc_table_id");
+      if (stored) setTableLabel(stored);
+    }
+  }, [searchParams]);
 
   const subtotal = total;
   const service = Math.round(subtotal * 0.1);
@@ -110,20 +124,26 @@ export default function OrderPage() {
         </span>
       </div>
 
-      {/* TABLE BLOCK (placeholder — table set via localStorage or URL) */}
+      {/* TABLE BLOCK — populated via ?table= URL param (QR code) or localStorage */}
       <div style={{ padding: "20px 16px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "flex-start", gap: 20 }}>
         <div>
           <span style={{ fontFamily: C.mono, fontSize: "0.6875rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.gray, display: "block", marginBottom: 4 }}>
             Table
           </span>
-          <div style={{ fontFamily: C.body, fontSize: "3rem", fontWeight: 800, color: C.yellow, lineHeight: 1 }}>
-            —
+          <div style={{ fontFamily: tableLabel ? C.mono : C.body, fontSize: tableLabel ? "2rem" : "3rem", fontWeight: 800, color: C.yellow, lineHeight: 1, letterSpacing: tableLabel ? "0.05em" : undefined }}>
+            {tableLabel ?? "—"}
           </div>
         </div>
         <div style={{ paddingTop: 4 }}>
-          <span style={{ fontFamily: C.body, fontSize: 13, color: "rgba(255,255,255,0.6)", display: "block", lineHeight: 1.8 }}>
-            Scan the QR code on your table<br />to link your order
-          </span>
+          {tableLabel ? (
+            <span style={{ fontFamily: C.body, fontSize: 13, color: "rgba(255,255,255,0.6)", display: "block", lineHeight: 1.8 }}>
+              Masa ta este legată.<br />Comanda merge direct la bucătărie.
+            </span>
+          ) : (
+            <span style={{ fontFamily: C.body, fontSize: 13, color: "rgba(255,255,255,0.6)", display: "block", lineHeight: 1.8 }}>
+              Scanează codul QR de pe masă<br />pentru a lega comanda de masă.
+            </span>
+          )}
         </div>
       </div>
 

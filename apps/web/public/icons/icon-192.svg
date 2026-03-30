@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" fill="#FBFAF3"/>
+  <rect x="0" y="0" width="192" height="192" fill="#111111"/>
+  <!-- Yellow accent bar -->
+  <rect x="0" y="152" width="192" height="8" fill="#FFEE58"/>
+  <!-- "M" lettermark -->
+  <text x="96" y="118" font-family="Manrope, Arial, sans-serif" font-size="88" font-weight="800" fill="#FBFAF3" text-anchor="middle" letter-spacing="-4">M</text>
+  <!-- Dot under M -->
+  <rect x="84" y="132" width="8" height="8" fill="#FFEE58"/>
+</svg>
