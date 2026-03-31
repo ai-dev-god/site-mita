@@ -162,9 +162,9 @@ export default function FloorCanvas({
     <div style={{ position: "relative" }}>
       {/* Canvas container */}
       <div style={{ position: "relative", aspectRatio: "1.45", userSelect: "none" }}>
-        {/* Floor plan image */}
+        {/* Floor plan image — prefix with basePath so the path works under /hospitality */}
         <img
-          src="/floor-plan-etaj.png"
+          src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/floor-plan-etaj.png`}
           alt="Floor plan"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "fill", display: "block" }}
           draggable={false}

@@ -828,12 +828,18 @@ export default function DashboardPage() {
               <FloorCanvas
                 plan={floorPlan}
                 tableStatuses={Object.fromEntries(
-                  tables.map((t) => [t.id, t.status])
+                  // Match floor-plan tables to API tables by label (floor plan uses "t1","t2"
+                  // as IDs but "1","2" as labels — API tables have UUID ids and matching labels)
+                  floorPlan.tables.map((ft) => {
+                    const apiTable = tables.find((at) => at.label === ft.label);
+                    return [ft.id, (apiTable?.status ?? "available") as TableStatus];
+                  })
                 )}
                 mode="view"
                 onTableClick={(tableId) => {
-                  const t = tables.find((tb) => tb.id === tableId);
-                  setSel(t ? (sel?.id === t.id ? null : t) : null);
+                  const ft = floorPlan.tables.find((t) => t.id === tableId);
+                  const apiTable = ft ? tables.find((at) => at.label === ft.label) : null;
+                  setSel(apiTable ? (sel?.id === apiTable.id ? null : apiTable) : null);
                   setShowAddItem(false);
                 }}
               />
