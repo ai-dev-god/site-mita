@@ -15,7 +15,7 @@ from sqlalchemy import text
 
 from app.core.config import get_settings
 from app.core.database import AsyncSessionLocal, engine
-from app.routers import analytics, campaigns, events, guests, menu, occupancy, reservations, seating, shifts, shop, tables, venues, waitlist
+from app.routers import analytics, campaigns, community, events, guests, membership, menu, occupancy, reservations, seating, shifts, shop, tables, venues, waitlist
 from app.services.unifi_protect import UniFiOccupancyPoller
 
 logger = structlog.get_logger(__name__)
@@ -131,3 +131,5 @@ app.include_router(shop.router, prefix="/api/v1")
 app.include_router(menu.router, prefix="/api/v1")
 app.include_router(menu.ws_router, prefix="/ws")
 app.include_router(occupancy.router, prefix="/api/v1")
+app.include_router(membership.router, prefix="/api/v1")
+app.include_router(community.router, prefix="/api/v1")

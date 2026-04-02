@@ -2,8 +2,10 @@
 
 from app.models.base import AuditMixin, Base
 from app.models.campaign import CampaignChannel, CampaignLog, CampaignStatus, CampaignType
+from app.models.community import CulturalEvent, CulturalEventType, EditorialPost
 from app.models.event import Event, EventStatus, Ticket, TicketStatus
 from app.models.guest import GuestProfile
+from app.models.membership import Member, MembershipTier, MemberStatus, MemberTier, Subscription, SubscriptionStatus
 from app.models.metrics import TableTurnMetric
 from app.models.reservation import Reservation, ReservationStatus, SpecialOccasion
 from app.models.shift import Shift, ShiftType
@@ -52,4 +54,15 @@ __all__ = [
     "CampaignStatus",
     # Metrics
     "TableTurnMetric",
+    # Membership
+    "MembershipTier",
+    "MemberTier",
+    "Member",
+    "MemberStatus",
+    "Subscription",
+    "SubscriptionStatus",
+    # Community content
+    "CulturalEvent",
+    "CulturalEventType",
+    "EditorialPost",
 ]
