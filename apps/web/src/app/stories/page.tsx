@@ -46,6 +46,7 @@ export default function StoriesPage() {
         <nav style={{ marginLeft: "auto", display: "flex", gap: 24 }}>
           <Link href="/events" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Evenimente</Link>
           <Link href="/stories" style={{ fontSize: 14, color: "var(--color-primary)", fontWeight: 600, textDecoration: "none" }}>Povești</Link>
+          <Link href="/collaborators" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Colaboratori</Link>
           <Link href="/membership" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Membership</Link>
         </nav>
       </header>

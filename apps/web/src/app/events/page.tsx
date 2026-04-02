@@ -63,6 +63,7 @@ export default function EventsPage() {
           <Link href="/reserve" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Rezervări</Link>
           <Link href="/events" style={{ fontSize: 14, color: "var(--color-primary)", fontWeight: 600, textDecoration: "none" }}>Evenimente</Link>
           <Link href="/stories" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Povești</Link>
+          <Link href="/collaborators" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Colaboratori</Link>
           <Link href="/membership" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Membership</Link>
         </nav>
       </header>

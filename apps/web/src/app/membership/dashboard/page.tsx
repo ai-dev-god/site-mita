@@ -236,6 +236,7 @@ export default function MembershipDashboardPage() {
               {[
                 { href: "/events", label: "📅 Calendar evenimente" },
                 { href: "/stories", label: "📖 Povești & editoriale" },
+                { href: "/collaborators", label: "🎨 Colaboratori creativi" },
                 { href: "/reserve", label: "🍽 Rezervare masă" },
               ].map(item => (
                 <Link key={item.href} href={item.href} style={{

@@ -64,6 +64,7 @@ function PublicNav() {
       <nav style={{ marginLeft: "auto", display: "flex", gap: 24, alignItems: "center" }}>
         <Link href="/events" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Evenimente</Link>
         <Link href="/stories" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Povești</Link>
+        <Link href="/collaborators" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Colaboratori</Link>
         <Link href="/membership" style={{ fontSize: 14, color: "var(--color-primary)", fontWeight: 600, textDecoration: "none" }}>Membership</Link>
         <Link href="/reserve" style={{
           fontSize: 13, fontWeight: 600, color: "#fff",
