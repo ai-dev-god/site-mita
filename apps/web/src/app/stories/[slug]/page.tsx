@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
+const VENUE_ID = process.env.NEXT_PUBLIC_VENUE_ID ?? "146fd211-ae20-5ebe-a7af-3c195ab89ae8";
 
 interface EditorialPost {
   id: string;
@@ -26,7 +27,7 @@ export default function StoryPage({ params }: { params: Promise<{ slug: string }
 
   useEffect(() => {
     if (!slug) return;
-    fetch(`${API_URL}/api/v1/editorial/${slug}`)
+    fetch(`${API_URL}/api/v1/editorial/${slug}?venue_id=${VENUE_ID}`)
       .then(r => r.ok ? r.json() : null)
       .then(data => { setPost(data); setLoading(false); })
       .catch(() => setLoading(false));

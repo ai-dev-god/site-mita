@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 const TIERS = [
   {
@@ -201,6 +202,11 @@ export default function MembershipPage() {
               </Link>
             </div>
           ))}
+        </div>
+
+        {/* Newsletter subscription */}
+        <div style={{ marginTop: 64 }}>
+          <NewsletterSignup />
         </div>
 
         {/* FAQ strip */}
