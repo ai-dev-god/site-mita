@@ -18,32 +18,57 @@ down_revision: str | None = "0003"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
+# postgresql.ENUM with create_type=False references existing DB types without
+# emitting CREATE TYPE — safe for both fresh installs (DO block below creates
+# them first) and re-runs (DO block is a no-op when type already exists).
+_member_tier = postgresql.ENUM(
+    "free", "friend", "patron", name="member_tier_enum", create_type=False
+)
+_member_status = postgresql.ENUM(
+    "active", "suspended", "cancelled", name="member_status_enum", create_type=False
+)
+_sub_status = postgresql.ENUM(
+    "active", "past_due", "cancelled", "unpaid", "incomplete", "trialing",
+    name="subscription_status_enum",
+    create_type=False,
+)
+_cultural_type = postgresql.ENUM(
+    "exhibition", "cinema", "brasserie", name="cultural_event_type_enum", create_type=False
+)
+
 
 def upgrade() -> None:
-    # ── Enums ─────────────────────────────────────────────────────────────────
-    member_tier_enum = sa.Enum("free", "friend", "patron", name="member_tier_enum")
-    member_status_enum = sa.Enum("active", "suspended", "cancelled", name="member_status_enum")
-    subscription_status_enum = sa.Enum(
-        "active", "past_due", "cancelled", "unpaid", "incomplete", "trialing",
-        name="subscription_status_enum",
-    )
-    cultural_event_type_enum = sa.Enum(
-        "exhibition", "cinema", "brasserie", name="cultural_event_type_enum"
-    )
-
-    member_tier_enum.create(op.get_bind(), checkfirst=True)
-    member_status_enum.create(op.get_bind(), checkfirst=True)
-    subscription_status_enum.create(op.get_bind(), checkfirst=True)
-    cultural_event_type_enum.create(op.get_bind(), checkfirst=True)
+    # Create enum types — DO block is idempotent (no-op if type already exists)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE member_tier_enum AS ENUM ('free', 'friend', 'patron');
+        EXCEPTION WHEN duplicate_object THEN null; END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE member_status_enum AS ENUM ('active', 'suspended', 'cancelled');
+        EXCEPTION WHEN duplicate_object THEN null; END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE subscription_status_enum
+                AS ENUM ('active', 'past_due', 'cancelled', 'unpaid', 'incomplete', 'trialing');
+        EXCEPTION WHEN duplicate_object THEN null; END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE cultural_event_type_enum AS ENUM ('exhibition', 'cinema', 'brasserie');
+        EXCEPTION WHEN duplicate_object THEN null; END $$;
+    """)
 
     # ── membership_tiers ──────────────────────────────────────────────────────
     op.create_table(
         "membership_tiers",
         sa.Column("id", postgresql.UUID(as_uuid=True), primary_key=True),
         sa.Column("name", sa.String(100), nullable=False),
-        sa.Column("tier", member_tier_enum, nullable=False),
+        sa.Column("tier", _member_tier, nullable=False),
         sa.Column("price_ron", sa.Numeric(10, 2), nullable=True),
-        sa.Column("benefits", postgresql.JSON(astext_type=sa.Text()), nullable=False),
+        sa.Column("benefits", postgresql.JSON(astext_type=sa.Text()), nullable=False, server_default="{}"),
         sa.Column("stripe_price_id", sa.String(128), nullable=True),
         sa.Column("is_active", sa.Boolean(), nullable=False, server_default="true"),
         # AuditMixin
@@ -61,13 +86,11 @@ def upgrade() -> None:
         "members",
         sa.Column("id", postgresql.UUID(as_uuid=True), primary_key=True),
         sa.Column("user_id", sa.String(128), nullable=False),
+        sa.Column("tier_id", postgresql.UUID(as_uuid=True), sa.ForeignKey("membership_tiers.id"), nullable=False),
         sa.Column(
-            "tier_id",
-            postgresql.UUID(as_uuid=True),
-            sa.ForeignKey("membership_tiers.id"),
-            nullable=False,
+            "status", _member_status, nullable=False,
+            server_default=sa.text("'active'::member_status_enum"),
         ),
-        sa.Column("status", member_status_enum, nullable=False),
         sa.Column("joined_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("display_name", sa.String(255), nullable=True),
         sa.Column("bio", sa.Text(), nullable=True),
@@ -95,7 +118,10 @@ def upgrade() -> None:
         sa.Column("stripe_subscription_id", sa.String(128), nullable=True),
         sa.Column("stripe_customer_id", sa.String(128), nullable=True),
         sa.Column("current_period_end", sa.DateTime(timezone=True), nullable=True),
-        sa.Column("status", subscription_status_enum, nullable=False),
+        sa.Column(
+            "status", _sub_status, nullable=False,
+            server_default=sa.text("'incomplete'::subscription_status_enum"),
+        ),
         # AuditMixin
         sa.Column("venue_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
@@ -118,7 +144,7 @@ def upgrade() -> None:
         "cultural_events",
         sa.Column("id", postgresql.UUID(as_uuid=True), primary_key=True),
         sa.Column("title", sa.String(255), nullable=False),
-        sa.Column("event_type", cultural_event_type_enum, nullable=False),
+        sa.Column("event_type", _cultural_type, nullable=False),
         sa.Column("date", sa.DateTime(timezone=True), nullable=False),
         sa.Column("description", sa.Text(), nullable=True),
         sa.Column("image_url", sa.String(512), nullable=True),
