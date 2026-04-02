@@ -93,3 +93,20 @@ async def trigger_newsletter_update(
         post_title=post_title,
         venue_id=str(venue_id),
     )
+
+
+async def add_newsletter_contact(
+    *,
+    email: str,
+    display_name: str | None,
+    venue_id: UUID,
+) -> None:
+    """Add an email to the Resend audience for cultural updates.
+
+    TODO v0.2: resend.Contacts.create(audience_id=..., email=email, first_name=display_name)
+    """
+    logger.info(
+        "membership.newsletter.contact.add",
+        email=email,
+        venue_id=str(venue_id),
+    )

@@ -3,16 +3,20 @@
 from __future__ import annotations
 
 import time
+import uuid
 from functools import lru_cache
 from typing import Any
 
 import httpx
 import structlog
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Query, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwk, jwt
+from sqlalchemy import and_, select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
+from app.core.database import get_db
 
 logger = structlog.get_logger(__name__)
 
@@ -136,3 +140,69 @@ def require_role(*roles: str):
 require_staff = require_role("admin", "manager", "host", "server")
 require_manager = require_role("admin", "manager")
 require_admin = require_role("admin")
+
+
+# ── Member-only content gating ────────────────────────────────────────────────
+
+# Tier rank for comparison (higher = more privileges)
+_TIER_RANK: dict[str, int] = {"free": 0, "friend": 1, "patron": 2}
+
+
+async def require_active_member(
+    claims: dict[str, Any] = Depends(verify_clerk_token),
+    venue_id: uuid.UUID = Query(..., description="Venue the membership belongs to"),
+    db: AsyncSession = Depends(get_db),
+) -> Any:
+    """Dependency: require an active member record for the given venue.
+
+    Returns the ``Member`` ORM object so downstream handlers can access
+    tier/benefits without an additional query.
+    """
+    from app.models.membership import Member, MemberStatus
+    from sqlalchemy.orm import selectinload
+
+    user_id: str = claims.get("sub", "")
+    result = await db.execute(
+        select(Member)
+        .options(selectinload(Member.membership_tier))
+        .where(
+            and_(
+                Member.user_id == user_id,
+                Member.venue_id == venue_id,
+                Member.status == MemberStatus.ACTIVE,
+                Member.deleted_at.is_(None),
+            )
+        )
+    )
+    member = result.scalar_one_or_none()
+    if member is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Active membership required to access this resource.",
+        )
+    return member
+
+
+def require_member_tier(min_tier: str):
+    """Dependency factory: require the authenticated user to hold at least ``min_tier``.
+
+    Usage::
+
+        @router.get("/members-only")
+        async def endpoint(member = Depends(require_member_tier("friend"))):
+            ...
+    """
+    min_rank = _TIER_RANK.get(min_tier, 0)
+
+    async def _checker(member: Any = Depends(require_active_member)) -> Any:
+        tier_value: str = (
+            member.membership_tier.tier.value if member.membership_tier else "free"
+        )
+        if _TIER_RANK.get(tier_value, 0) < min_rank:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Membership tier '{min_tier}' or above required.",
+            )
+        return member
+
+    return _checker

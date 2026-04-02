@@ -14,9 +14,12 @@ from app.core.database import get_db
 from app.core.security import require_staff, verify_clerk_token
 from app.models.membership import Member, MembershipTier, MemberStatus, MemberTier, Subscription, SubscriptionStatus
 from app.schemas.membership import (
+    MemberAdminUpdate,
     MemberRead,
     MembershipTierRead,
     MemberUpdate,
+    NewsletterSubscribeRequest,
+    NewsletterSubscribeResponse,
     SubscribeRequest,
     SubscribeResponse,
     SubscriptionRead,
@@ -264,3 +267,56 @@ async def list_members(
         .offset(offset)
     )
     return list(result.scalars().all())
+
+
+@router.patch(
+    "/membership/members/{member_id}",
+    response_model=MemberRead,
+    summary="Update member status / tier (staff)",
+)
+async def admin_update_member(
+    member_id: uuid.UUID,
+    body: MemberAdminUpdate,
+    db: DbDep,
+    _auth: StaffDep,
+) -> Member:
+    result = await db.execute(
+        select(Member)
+        .options(selectinload(Member.membership_tier))
+        .where(and_(Member.id == member_id, Member.deleted_at.is_(None)))
+    )
+    member = result.scalar_one_or_none()
+    if member is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Member not found.")
+
+    for field, value in body.model_dump(exclude_none=True).items():
+        setattr(member, field, value)
+
+    await db.flush()
+    await db.refresh(member, ["membership_tier"])
+    logger.info("membership.admin.member.updated", member_id=str(member_id))
+    return member
+
+
+# ── Newsletter subscription (public) ─────────────────────────────────────────
+
+
+@router.post(
+    "/newsletter/subscribe",
+    response_model=NewsletterSubscribeResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Subscribe to cultural updates newsletter (public)",
+)
+async def subscribe_newsletter(body: NewsletterSubscribeRequest) -> NewsletterSubscribeResponse:
+    """Add an email to the Resend cultural updates audience.
+
+    Stub for v0.1 — logs intent; v0.2 will call resend.Contacts.create().
+    """
+    await membership_service.add_newsletter_contact(
+        email=body.email,
+        display_name=body.display_name,
+        venue_id=body.venue_id,
+    )
+    return NewsletterSubscribeResponse(
+        message="You've been subscribed to cultural updates from La Mita Biciclista."
+    )

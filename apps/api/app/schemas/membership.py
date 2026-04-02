@@ -35,6 +35,13 @@ class MemberUpdate(OrmBase):
     bio: str | None = None
 
 
+class MemberAdminUpdate(OrmBase):
+    """Staff-only fields: status and tier changes."""
+
+    status: MemberStatus | None = None
+    tier_id: uuid.UUID | None = None
+
+
 # ── Subscription ──────────────────────────────────────────────────────────────
 
 
@@ -59,4 +66,17 @@ class SubscribeRequest(OrmBase):
 class SubscribeResponse(OrmBase):
     checkout_url: str | None
     subscription: SubscriptionRead | None
+    message: str
+
+
+# ── Newsletter ─────────────────────────────────────────────────────────────────
+
+
+class NewsletterSubscribeRequest(OrmBase):
+    venue_id: uuid.UUID
+    email: str
+    display_name: str | None = None
+
+
+class NewsletterSubscribeResponse(OrmBase):
     message: str
