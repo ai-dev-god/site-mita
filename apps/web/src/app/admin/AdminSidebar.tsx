@@ -17,6 +17,8 @@ const ADMIN_NAV = [
   { href: "/admin/analytics",   icon: "📊", label: "Analytics" },
   { href: "/admin/campaigns",   icon: "📣", label: "Marketing" },
   { href: "/admin/events",      icon: "🎫", label: "Evenimente" },
+  { href: "/admin/membership",  icon: "🚲", label: "Membership" },
+  { href: "/admin/editorial",   icon: "📖", label: "Editorial" },
   { href: "/admin/shifts",      icon: "⏰", label: "Ture" },
 ];
 

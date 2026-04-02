@@ -6,10 +6,13 @@ import Link from "next/link";
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
 const VENUE_ID = process.env.NEXT_PUBLIC_VENUE_ID ?? "146fd211-ae20-5ebe-a7af-3c195ab89ae8";
 
+type EventType = "all" | "exhibition" | "cinema" | "brasserie";
+
 interface EventItem {
   id: string;
   name: string;
   slug: string;
+  type?: "exhibition" | "cinema" | "brasserie";
   description: string | null;
   status: "draft" | "published" | "sold_out" | "cancelled" | "completed";
   starts_at: string;
@@ -22,17 +25,27 @@ interface EventItem {
   external_ticket_url: string | null;
 }
 
+const TYPE_FILTERS: { id: EventType; label: string; icon: string }[] = [
+  { id: "all",        label: "Toate",      icon: "📅" },
+  { id: "exhibition", label: "Expoziții",  icon: "🖼" },
+  { id: "cinema",     label: "Cinema",     icon: "🎬" },
+  { id: "brasserie",  label: "Brasserie",  icon: "🍽" },
+];
+
 export default function EventsPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [typeFilter, setTypeFilter] = useState<EventType>("all");
 
   useEffect(() => {
+    setLoading(true);
     const params = new URLSearchParams({ venue_id: VENUE_ID, upcoming_only: "true" });
+    if (typeFilter !== "all") params.set("type", typeFilter);
     fetch(`${API_URL}/api/v1/events?${params}`)
       .then(r => r.ok ? r.json() : [])
       .then(data => { setEvents(data); setLoading(false); })
       .catch(() => setLoading(false));
-  }, []);
+  }, [typeFilter]);
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--color-surface)", fontFamily: "var(--font-body)" }}>
@@ -49,6 +62,8 @@ export default function EventsPage() {
         <nav style={{ marginLeft: "auto", display: "flex", gap: 24 }}>
           <Link href="/reserve" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Rezervări</Link>
           <Link href="/events" style={{ fontSize: 14, color: "var(--color-primary)", fontWeight: 600, textDecoration: "none" }}>Evenimente</Link>
+          <Link href="/stories" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Povești</Link>
+          <Link href="/membership" style={{ fontSize: 14, color: "var(--color-text-secondary)", textDecoration: "none" }}>Membership</Link>
         </nav>
       </header>
 
@@ -65,8 +80,29 @@ export default function EventsPage() {
         </p>
       </div>
 
+      {/* Type filter */}
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "28px 40px 0" }}>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {TYPE_FILTERS.map(f => (
+            <button
+              key={f.id}
+              onClick={() => setTypeFilter(f.id)}
+              style={{
+                padding: "7px 16px", borderRadius: 20, fontSize: 13, fontWeight: 500,
+                border: "1px solid var(--color-border)", cursor: "pointer",
+                background: typeFilter === f.id ? "var(--color-primary)" : "var(--color-surface-raised)",
+                color: typeFilter === f.id ? "#fff" : "var(--color-text-secondary)",
+                display: "flex", alignItems: "center", gap: 6,
+              }}
+            >
+              <span>{f.icon}</span> {f.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Events grid */}
-      <div style={{ maxWidth: 960, margin: "0 auto", padding: "48px 40px" }}>
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "28px 40px 48px" }}>
         {loading ? (
           <div style={{ textAlign: "center", color: "var(--color-text-muted)", fontSize: 15 }}>Se încarcă evenimentele...</div>
         ) : events.length === 0 ? (
