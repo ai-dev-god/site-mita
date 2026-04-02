@@ -5,6 +5,37 @@ from app.models.community import CulturalEventType
 from app.schemas.common import OrmBase, TimestampedBase
 
 
+# ── CreativeCollaborator ──────────────────────────────────────────────────────
+
+
+class CreativeCollaboratorCreate(OrmBase):
+    venue_id: uuid.UUID
+    name: str
+    discipline: str
+    bio: str | None = None
+    image_url: str | None = None
+    website_url: str | None = None
+    is_public: bool = False
+
+
+class CreativeCollaboratorUpdate(OrmBase):
+    name: str | None = None
+    discipline: str | None = None
+    bio: str | None = None
+    image_url: str | None = None
+    website_url: str | None = None
+    is_public: bool | None = None
+
+
+class CreativeCollaboratorRead(TimestampedBase):
+    name: str
+    discipline: str
+    bio: str | None
+    image_url: str | None
+    website_url: str | None
+    is_public: bool
+
+
 # ── CulturalEvent ─────────────────────────────────────────────────────────────
 
 

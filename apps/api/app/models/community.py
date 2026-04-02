@@ -1,4 +1,4 @@
-"""Community content models — CulturalEvent, EditorialPost."""
+"""Community content models — CulturalEvent, EditorialPost, CreativeCollaborator."""
 
 import enum
 import uuid
@@ -56,3 +56,20 @@ class EditorialPost(AuditMixin, Base):
 
     def __repr__(self) -> str:
         return f"<EditorialPost {self.slug!r}>"
+
+
+class CreativeCollaborator(AuditMixin, Base):
+    """Opt-in creative collaborator directory entry."""
+
+    __tablename__ = "creative_collaborators"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    discipline: Mapped[str] = mapped_column(String(120), nullable=False, index=True)
+    bio: Mapped[str | None] = mapped_column(Text, nullable=True)
+    image_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    website_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    is_public: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, index=True)
+
+    def __repr__(self) -> str:
+        return f"<CreativeCollaborator {self.name!r} {self.discipline!r}>"

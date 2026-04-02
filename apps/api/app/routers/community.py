@@ -1,4 +1,4 @@
-"""Community router — /api/v1/cultural-events + /api/v1/editorial."""
+"""Community router — /api/v1/cultural-events + /api/v1/editorial + /api/v1/collaborators."""
 
 import uuid
 from datetime import datetime, timezone
@@ -11,8 +11,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
 from app.core.security import require_admin, require_manager
-from app.models.community import CulturalEvent, CulturalEventType, EditorialPost
+from app.models.community import CreativeCollaborator, CulturalEvent, CulturalEventType, EditorialPost
 from app.schemas.community import (
+    CreativeCollaboratorCreate,
+    CreativeCollaboratorRead,
+    CreativeCollaboratorUpdate,
     CulturalEventCreate,
     CulturalEventRead,
     CulturalEventUpdate,
@@ -314,3 +317,133 @@ async def delete_editorial_post(post_id: uuid.UUID, db: DbDep, _auth: AdminDep) 
     post.deleted_at = datetime.now(tz=timezone.utc)
     await db.flush()
     logger.info("community.editorial_post.deleted", post_id=str(post_id))
+
+
+# ── Creative Collaborators (public read, manager write) ───────────────────────
+
+
+@router.get(
+    "/collaborators",
+    response_model=list[CreativeCollaboratorRead],
+    summary="List public creative collaborators",
+)
+async def list_collaborators(
+    db: DbDep,
+    venue_id: Annotated[uuid.UUID, Query(description="Venue to list collaborators for")],
+    discipline: Annotated[str | None, Query(description="Filter by discipline")] = None,
+    limit: Annotated[int, Query(ge=1, le=100)] = 50,
+    offset: Annotated[int, Query(ge=0)] = 0,
+) -> list[CreativeCollaborator]:
+    filters = [
+        CreativeCollaborator.venue_id == venue_id,
+        CreativeCollaborator.is_public.is_(True),
+        CreativeCollaborator.deleted_at.is_(None),
+    ]
+    if discipline:
+        filters.append(CreativeCollaborator.discipline == discipline)
+
+    result = await db.execute(
+        select(CreativeCollaborator)
+        .where(and_(*filters))
+        .order_by(CreativeCollaborator.name)
+        .limit(limit)
+        .offset(offset)
+    )
+    return list(result.scalars().all())
+
+
+@router.get(
+    "/collaborators/{collaborator_id}",
+    response_model=CreativeCollaboratorRead,
+    summary="Get creative collaborator by ID (public)",
+)
+async def get_collaborator(collaborator_id: uuid.UUID, db: DbDep) -> CreativeCollaborator:
+    result = await db.execute(
+        select(CreativeCollaborator).where(
+            and_(
+                CreativeCollaborator.id == collaborator_id,
+                CreativeCollaborator.deleted_at.is_(None),
+            )
+        )
+    )
+    collaborator = result.scalar_one_or_none()
+    if collaborator is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Collaborator not found.")
+    return collaborator
+
+
+@router.post(
+    "/collaborators",
+    status_code=status.HTTP_201_CREATED,
+    response_model=CreativeCollaboratorRead,
+    summary="Create creative collaborator (manager)",
+)
+async def create_collaborator(
+    body: CreativeCollaboratorCreate, db: DbDep, _auth: ManagerDep
+) -> CreativeCollaborator:
+    collaborator = CreativeCollaborator(
+        venue_id=body.venue_id,
+        name=body.name,
+        discipline=body.discipline,
+        bio=body.bio,
+        image_url=body.image_url,
+        website_url=body.website_url,
+        is_public=body.is_public,
+    )
+    db.add(collaborator)
+    await db.flush()
+    await db.refresh(collaborator)
+    logger.info("community.collaborator.created", collaborator_id=str(collaborator.id), name=collaborator.name)
+    return collaborator
+
+
+@router.patch(
+    "/collaborators/{collaborator_id}",
+    response_model=CreativeCollaboratorRead,
+    summary="Update creative collaborator (manager)",
+)
+async def update_collaborator(
+    collaborator_id: uuid.UUID, body: CreativeCollaboratorUpdate, db: DbDep, _auth: ManagerDep
+) -> CreativeCollaborator:
+    result = await db.execute(
+        select(CreativeCollaborator).where(
+            and_(
+                CreativeCollaborator.id == collaborator_id,
+                CreativeCollaborator.deleted_at.is_(None),
+            )
+        )
+    )
+    collaborator = result.scalar_one_or_none()
+    if collaborator is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Collaborator not found.")
+
+    for field, value in body.model_dump(exclude_none=True).items():
+        setattr(collaborator, field, value)
+
+    await db.flush()
+    await db.refresh(collaborator)
+    logger.info("community.collaborator.updated", collaborator_id=str(collaborator_id))
+    return collaborator
+
+
+@router.delete(
+    "/collaborators/{collaborator_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete creative collaborator (admin)",
+)
+async def delete_collaborator(collaborator_id: uuid.UUID, db: DbDep, _auth: AdminDep) -> None:
+    result = await db.execute(
+        select(CreativeCollaborator).where(
+            and_(
+                CreativeCollaborator.id == collaborator_id,
+                CreativeCollaborator.deleted_at.is_(None),
+            )
+        )
+    )
+    collaborator = result.scalar_one_or_none()
+    if collaborator is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Collaborator not found.")
+
+    collaborator.deleted_at = datetime.now(tz=timezone.utc)
+    await db.flush()
+    logger.info("community.collaborator.deleted", collaborator_id=str(collaborator_id))
