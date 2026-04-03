@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Povești din Micul Paris — La Mița Biciclista</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Fira+Code:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "brand-yellow": "#FFEE58",
+        "brand-dark": "#111111",
+        "brand-dark-2": "#1A1A1A",
+        "forest": "#2C4A2E",
+        "forest-muted": "#EAF0EA",
+        "brass": "#B8962E",
+        "parchment": "#FBFAF3",
+        "surface-low": "#F5F4ED",
+        "surface-mid": "#E9E8E2",
+        "warm-border": "#E4DDD5",
+        "warm-gray": "#686868",
+      },
+      fontFamily: {
+        "manrope": ["Manrope", "sans-serif"],
+        "fira": ["Fira Code", "monospace"],
+        "playfair": ["Playfair Display", "Georgia", "serif"],
+      },
+      borderRadius: {
+        "none": "0px", "DEFAULT": "0px", "sm": "0px",
+        "md": "0px", "lg": "0px", "xl": "0px", "full": "0px",
+      },
+    },
+  },
+}
+</script>
+<style>
+  body { font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased; background: #FBFAF3; }
+  .font-fira { font-family: 'Fira Code', monospace; }
+  .font-playfair { font-family: 'Playfair Display', serif; }
+  .img-placeholder { filter: sepia(18%) contrast(0.9) brightness(0.97); }
+  /* Drop cap */
+  .article-body > p:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 4.5rem;
+    font-weight: 700;
+    line-height: 0.8;
+    float: left;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: #111111;
+  }
+  .article-body { font-family: 'Manrope', sans-serif; font-size: 18px; line-height: 1.85; color: #1A1A1A; max-width: 680px; }
+  /* Pull quote */
+  .pull-quote { border-left: 4px solid #FFEE58; padding-left: 24px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; line-height: 1.4; color: #111111; margin: 32px 0; }
+  /* Blur overlay for member-only content */
+  .blur-overlay { position: relative; }
+  .blur-overlay::after { content: ''; position: absolute; inset: 0; backdrop-filter: blur(6px); background: rgba(251,250,243,0.6); }
+  .blur-overlay .unlock-cta { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+</style>
+</head>
+<body class="bg-parchment text-brand-dark">
+
+<!-- NAV -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-parchment border-b border-warm-border">
+  <div class="max-w-[1440px] mx-auto px-16 h-16 flex items-center justify-between">
+    <a href="#" class="font-manrope font-800 text-sm tracking-widest uppercase">La Mița<br><span class="font-fira text-xs tracking-widest text-warm-gray">BICICLISTA</span></a>
+    <div class="flex items-center gap-8">
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray hover:text-brand-dark">Brasserie</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray hover:text-brand-dark">Meniuri</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray hover:text-brand-dark">Hub Cultural</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-brand-dark font-700 border-b-2 border-brand-dark">Povești</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray">Membri</a>
+      <a href="#" class="bg-brand-yellow text-brand-dark font-manrope font-700 text-xs tracking-widest uppercase px-6 py-3">REZERVĂ MASĂ</a>
+    </div>
+  </div>
+</nav>
+
+<!-- SECTION MASTHEAD -->
+<section class="pt-16 bg-parchment">
+  <div class="max-w-[1440px] mx-auto px-16 py-16 border-b border-warm-border">
+    <div class="flex items-end justify-between">
+      <div>
+        <p class="font-fira text-xs tracking-widest uppercase text-warm-gray mb-4">01 / EDITORIAL</p>
+        <h1 class="font-manrope font-800 text-brand-dark mb-4" style="font-size: 5rem; line-height: 0.9; letter-spacing: -0.02em;">
+          POVEȘTI DIN<br/>MICUL PARIS
+        </h1>
+        <p class="font-manrope font-400 text-lg text-warm-gray italic mt-4 max-w-xl">
+          Istoria, cultura și viața cotidiană a celui mai special loc din București.
+        </p>
+      </div>
+      <div class="text-right pb-2">
+        <p class="font-fira text-[10px] uppercase tracking-widest text-warm-gray mb-1">EDIȚIE</p>
+        <p class="font-fira text-2xl text-brand-dark">003</p>
+        <p class="font-fira text-[10px] text-warm-gray uppercase tracking-widest">Aprilie 2026</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED STORY (HERO) -->
+<section class="bg-white">
+  <div class="max-w-[1440px] mx-auto">
+    <div class="grid grid-cols-12">
+      <!-- Image - 7 cols -->
+      <div class="col-span-7 h-[480px] img-placeholder flex items-end p-8" style="background: #e0dcd4;">
+        <p class="font-fira text-[10px] text-white/60 uppercase tracking-widest">BUCUREȘTI · ARHIVĂ · 1928</p>
+      </div>
+      <!-- Content - 5 cols -->
+      <div class="col-span-5 px-12 py-12 flex flex-col justify-center bg-white">
+        <p class="font-fira text-[10px] uppercase tracking-widest mb-2" style="color: #B8962E;">POVESTEA LUNII · ARHITECTURĂ</p>
+        <div class="w-8 h-0.5 bg-brand-yellow mb-5"></div>
+        <h2 class="font-playfair text-4xl font-600 text-brand-dark mb-5 italic leading-tight">
+          Cum Str. Biserica Amzei a Supraviețuit Demolărilor
+        </h2>
+        <p class="font-manrope text-base text-warm-gray leading-relaxed mb-6">
+          În anii '80, sistematizarea comunistă a amenințat întreg cartierul Amzei. Cum au rezistat arhitecții, locuitorii și negustorii împotriva bulldozerelor?
+        </p>
+        <div class="flex items-center gap-3 mb-6">
+          <p class="font-fira text-xs text-warm-gray uppercase tracking-widest">Elena Constantin</p>
+          <span class="text-warm-border">·</span>
+          <p class="font-fira text-xs text-warm-gray">8 min lectură</p>
+          <span class="bg-forest-muted px-2 py-0.5 font-fira text-[9px] uppercase text-forest">PRIETEN</span>
+        </div>
+        <a href="#article" class="font-fira text-xs uppercase tracking-widest text-brand-dark border-b-2 border-brand-dark pb-1 inline-flex items-center gap-2 hover:text-warm-gray transition-colors w-fit">
+          CITEȘTE →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY GRID -->
+<section class="bg-parchment py-16">
+  <div class="max-w-[1440px] mx-auto px-16">
+    <p class="font-fira text-xs tracking-widest uppercase text-warm-gray mb-8">02 / ARHIVĂ EDITORIALĂ</p>
+    <div class="grid grid-cols-3 gap-8">
+
+      <!-- Story card 1 -->
+      <div class="group">
+        <div class="aspect-[3/4] img-placeholder mb-4" style="background: #ddd9d0;"></div>
+        <p class="font-fira text-[10px] uppercase tracking-widest mb-2" style="color: #B8962E;">GASTRONOMIE · MAR 2026</p>
+        <h3 class="font-playfair text-xl font-600 text-brand-dark mb-2 leading-tight group-hover:italic transition-all">Rețeta Originală a Cozonacului Amzei</h3>
+        <p class="font-manrope text-sm text-warm-gray mb-3 leading-relaxed">Din arhiva familiei Petrescu, fondatorii patiseriei din 1923.</p>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-white border border-warm-border px-2 py-0.5 font-fira text-[9px] uppercase text-warm-gray">PUBLIC</span>
+        </div>
+        <a href="#" class="font-fira text-[10px] uppercase tracking-widest text-brand-dark border-b border-brand-dark pb-0.5 hover:text-warm-gray">CITEȘTE →</a>
+      </div>
+
+      <!-- Story card 2 -->
+      <div class="group">
+        <div class="aspect-[3/4] img-placeholder mb-4" style="background: #e2ddd8;"></div>
+        <p class="font-fira text-[10px] uppercase tracking-widest mb-2" style="color: #503AA8;">CULTURĂ URBANĂ · FEB 2026</p>
+        <h3 class="font-playfair text-xl font-600 text-brand-dark mb-2 leading-tight group-hover:italic transition-all">Piața Amzei: O Sută de Ani de Voce</h3>
+        <p class="font-manrope text-sm text-warm-gray mb-3 leading-relaxed">Negustorii, scriitorii și bohemii care au dat suflet pieței legendare.</p>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-forest text-white px-2 py-0.5 font-fira text-[9px] uppercase">PRIETEN</span>
+        </div>
+        <a href="#" class="font-fira text-[10px] uppercase tracking-widest text-brand-dark border-b border-brand-dark pb-0.5 hover:text-warm-gray">CITEȘTE →</a>
+      </div>
+
+      <!-- Story card 3 -->
+      <div class="group">
+        <div class="aspect-[3/4] img-placeholder mb-4" style="background: #d8d4ce;"></div>
+        <p class="font-fira text-[10px] uppercase tracking-widest mb-2 text-warm-gray">MUZICĂ · IAN 2026</p>
+        <h3 class="font-playfair text-xl font-600 text-brand-dark mb-2 leading-tight group-hover:italic transition-all">Taraful din Subsol: Jazz Românesc Interbelic</h3>
+        <p class="font-manrope text-sm text-warm-gray mb-3 leading-relaxed">Descoperind înregistrările pierdute ale orchestrelor de cafenea din București.</p>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-white border border-warm-border px-2 py-0.5 font-fira text-[9px] uppercase text-warm-gray">PUBLIC</span>
+        </div>
+        <a href="#" class="font-fira text-[10px] uppercase tracking-widest text-brand-dark border-b border-brand-dark pb-0.5 hover:text-warm-gray">CITEȘTE →</a>
+      </div>
+
+      <!-- Story card 4 -->
+      <div class="group">
+        <div class="aspect-[3/4] img-placeholder mb-4" style="background: #e8e4de;"></div>
+        <p class="font-fira text-[10px] uppercase tracking-widest mb-2" style="color: #2C4A2E;">ARTE VIZUALE · DEC 2025</p>
+        <h3 class="font-playfair text-xl font-600 text-brand-dark mb-2 leading-tight group-hover:italic transition-all">Atelierele de pe Amzei: Artiști în Curți Interioare</h3>
+        <p class="font-manrope text-sm text-warm-gray mb-3 leading-relaxed">Vizitând singurii sculptori care mai lucrează în centrul Bucureștiului.</p>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-forest text-white px-2 py-0.5 font-fira text-[9px] uppercase">PRIETEN</span>
+        </div>
+        <a href="#" class="font-fira text-[10px] uppercase tracking-widest text-brand-dark border-b border-brand-dark pb-0.5 hover:text-warm-gray">CITEȘTE →</a>
+      </div>
+
+      <!-- Story card 5 -->
+      <div class="group">
+        <div class="aspect-[3/4] img-placeholder mb-4" style="background: #dbd8d2;"></div>
+        <p class="font-fira text-[10px] uppercase tracking-widest mb-2 text-warm-gray">ARHITECTURĂ · NOV 2025</p>
+        <h3 class="font-playfair text-xl font-600 text-brand-dark mb-2 leading-tight group-hover:italic transition-all">Fațadele Art Nouveau ale Amzei</h3>
+        <p class="font-manrope text-sm text-warm-gray mb-3 leading-relaxed">Documentar fotografic al celor 14 fațade istorice rămase intacte.</p>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-white border border-warm-border px-2 py-0.5 font-fira text-[9px] uppercase text-warm-gray">PUBLIC</span>
+        </div>
+        <a href="#" class="font-fira text-[10px] uppercase tracking-widest text-brand-dark border-b border-brand-dark pb-0.5 hover:text-warm-gray">CITEȘTE →</a>
+      </div>
+
+      <!-- Story card 6 — Patron only, locked -->
+      <div class="group relative overflow-hidden">
+        <div class="aspect-[3/4] mb-4" style="background: #1A1A1A; filter: grayscale(80%) brightness(0.4);"></div>
+        <div class="absolute inset-0 flex flex-col items-center justify-center" style="background: rgba(251,250,243,0.9);">
+          <p class="font-fira text-3xl mb-2">🔒</p>
+          <p class="font-fira text-[10px] uppercase tracking-widest text-warm-gray mb-1">EXCLUSIV PATRON</p>
+          <p class="font-playfair text-base font-600 text-brand-dark text-center px-6 mb-4 italic">"Interviuri Private: Proprietarii Amzei"</p>
+          <a href="#" class="bg-brand-dark-2 text-white font-fira text-[10px] uppercase tracking-widest px-4 py-2">DEVINO PATRON →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- OPEN ARTICLE (inline preview) -->
+<section id="article" class="bg-white py-20 border-t border-warm-border">
+  <div class="max-w-[1440px] mx-auto px-16">
+    <p class="font-fira text-xs tracking-widest uppercase text-warm-gray mb-10">03 / ARTICOL DESCHIS</p>
+
+    <!-- Article header -->
+    <div class="max-w-[780px] mx-auto mb-12">
+      <p class="font-fira text-[10px] uppercase tracking-widest mb-3" style="color: #503AA8;">CULTURĂ URBANĂ · 04 APR 2026</p>
+      <h2 class="font-playfair mb-4 italic" style="font-size: 3.25rem; line-height: 1.0; font-weight: 700; color: #111111;">
+        Bicicliștii Bucureștiului Belle Époque
+      </h2>
+      <div class="flex items-center gap-4 border-b border-warm-border pb-6">
+        <p class="font-fira text-xs text-warm-gray uppercase tracking-widest">Andrei Vasilescu</p>
+        <span class="text-warm-border">·</span>
+        <p class="font-fira text-xs text-warm-gray">12 min lectură</p>
+        <span class="text-warm-border">·</span>
+        <p class="font-fira text-xs text-warm-gray">04 Apr 2026</p>
+        <span class="ml-auto bg-forest text-white px-2 py-0.5 font-fira text-[9px] uppercase">PRIETEN</span>
+      </div>
+    </div>
+
+    <!-- Article body -->
+    <div class="max-w-[680px] mx-auto">
+      <div class="article-body">
+        <p class="mb-6">
+          La sfârșitul secolului al XIX-lea, bicicleta era mai mult decât un mijloc de transport în București — era un simbol al modernității, al libertății și al aspirației europene. Strada Amzei, pe atunci una dintre arterele centrale ale cartierului Cotroceni extins, adăpostea trei dintre primele magazine specializate în „velocipede" din capitală.
+        </p>
+        <p class="mb-6">
+          Documentele de arhivă descoperite recent la Biblioteca Națională arată că în 1897 funcționau în București nu mai puțin de 12 cluburi de bicicliști, fiecare cu regulamente stricte, uniforme și trasee predefinite prin parcuri și bulevarde.
+        </p>
+      </div>
+
+      <!-- Pull quote -->
+      <blockquote class="pull-quote">
+        "Bicicleta a democratizat mișcarea prin oraș — pentru prima dată, un om de condiție modestă putea traversa Bucureștiul la viteza unui boier în trăsură."
+      </blockquote>
+
+      <!-- Mid-article image -->
+      <div class="my-8">
+        <div class="w-full h-64 img-placeholder" style="background: #e0ddd6;"></div>
+        <p class="font-fira text-[10px] uppercase tracking-widest text-warm-gray mt-2">Cicliști pe Calea Victoriei, cca. 1903. Fotografie din colecția MNAC.</p>
+      </div>
+
+      <div class="article-body">
+        <p class="mb-6">
+          Clubul „Velocipediștii Amzei", înființat în 1894, număra în rândul membrilor săi arhitecți, medici și câțiva dintre primii fotografi profesioniști ai orașului. Reuniunile aveau loc duminica dimineața, la cafeneaua din intersecția actualei piețe Amzei.
+        </p>
+      </div>
+
+      <!-- Member-only content blur -->
+      <div class="blur-overlay mt-6">
+        <div class="article-body opacity-20">
+          <p class="mb-6">
+            Arhivele municipale păstrează listele de membri și procesele-verbale ale ședințelor. Cel mai fascinant document este o scrisoare din 1901, în care...
+          </p>
+          <p class="mb-6">
+            Conexiunea cu actuala locație La Mița Biciclista nu este întâmplătoare. Clădirea din Str. Biserica Amzei 9 a adăpostit, între 1895 și 1910...
+          </p>
+        </div>
+        <div class="unlock-cta">
+          <p class="font-fira text-xs uppercase tracking-widest text-warm-gray mb-2">Continuare disponibilă pentru</p>
+          <a href="#" class="bg-forest text-white font-manrope font-700 text-sm tracking-widest uppercase px-8 py-3 hover:bg-forest-light transition-colors inline-flex items-center gap-2 mb-3">
+            CONTINUĂ CA PRIETEN →
+          </a>
+          <p class="font-fira text-[10px] text-warm-gray">49 RON/lună · anulabil oricând</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER STRIP -->
+<section style="background: #1A1A1A;" class="py-16">
+  <div class="max-w-[1440px] mx-auto px-16 flex items-center justify-between">
+    <div>
+      <h2 class="font-playfair text-3xl font-600 italic text-white mb-2">Nu rata nicio poveste.</h2>
+      <p class="font-fira text-xs uppercase tracking-widest" style="color: rgba(255,255,255,0.4);">Newsletter editorial lunar · gratuit</p>
+    </div>
+    <div class="flex gap-0 w-full max-w-md">
+      <input type="email" placeholder="adresa@ta.ro" class="flex-1 bg-white/10 border-b-2 border-white/20 focus:border-brand-yellow text-white font-fira text-sm px-4 py-3 placeholder-white/30 focus:outline-none bg-transparent"/>
+      <button class="bg-brand-yellow text-brand-dark font-manrope font-700 text-xs tracking-widest uppercase px-8 py-3 hover:bg-[#e6d400] transition-colors shrink-0">
+        ABONEAZĂ-TE
+      </button>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

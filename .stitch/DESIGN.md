@@ -253,6 +253,28 @@ Breakpoints:
 
 ---
 
+### 2.10 Community Engagement — Membership & Cultural Hub Screens (LAM-162)
+
+Mobile-first PWA and desktop screens for the Community Engagement module. Design language: dual-surface — public/member-facing uses Editorial Monolith (Manrope + Fira Code + Playfair Display, warm parchment, forest green #2C4A2E, brass gold #B8962E); admin screens use Hospitality Platform tokens (Inter, warm off-white, same green/gold).
+
+| File | Screen | Viewport | Status |
+|---|---|---|---|
+| `designs/lmbsc-membership-landing.html` | Membership Landing — tier comparison (Gratuit/Prieten/Patron), hero, comparison table, FAQ, heritage block | 1440px (desktop) | ✅ Generated |
+| `designs/lmbsc-membership-onboarding.html` | Member Onboarding — 3-step wizard (Step 2: tier selection shown), step progress indicator, tier cards, sticky CTA | 390px (mobile) | ✅ Generated |
+| `designs/lmbsc-member-dashboard.html` | Member Dashboard — profile identity, tier badge, points/progress bar, upcoming events, exclusive content feed, quick actions, bottom nav | 390px (mobile) | ✅ Generated |
+| `designs/lmbsc-cultural-hub.html` | Cultural Hub / Events Calendar — filterable event grid (7 categories), featured event, event detail modal, past events archive | 1440px (desktop) | ✅ Generated |
+| `designs/lmbsc-heritage-stories.html` | Heritage Stories — "Povești din Micul Paris" editorial listing, open article with drop cap, pull quote, member-only blur overlay | 1440px (desktop) | ✅ Generated |
+| `designs/lmbsc-admin-membership.html` | Admin: Membership Management — KPI cards, member table (8 rows, status badges), filter bar, tier management side panel, pagination | 1440px (desktop) | ✅ Generated |
+| `designs/lmbsc-newsletter-subscription.html` | Newsletter Subscription — hero subscribe form, benefit cards (4), past issues preview (3), Patron-gated archive block with blur overlay, topic preference toggles | 1440px (desktop) | ✅ Generated |
+| `designs/lmbsc-collaborator-directory.html` | Creative Collaborator Directory — page header + breadcrumb, sticky filter bar (7 discipline chips + search), featured collaborator spotlight (asymmetric 60/40), 12-card directory grid, apply-to-join form, member-only locked profiles | 1440px (desktop) | ✅ Generated |
+
+**Design decisions:**
+- Playfair Display italic used for article titles and editorial headings (authentic literary magazine feel)
+- Forest green `#2C4A2E` left-border accent on selected tier cards signals active state without using color-fill alone (WCAG)
+- Brass gold `#B8962E` reserved exclusively for Patron tier — reinforces tier scarcity signal
+- Member-only content blur overlay uses `backdrop-filter: blur(6px)` with a soft parchment overlay — readable enough to tantalize, blurred enough to gate
+- Admin table uses JetBrains Mono for IDs, dates, and currency amounts — consistent with Hospitality Platform monospace convention
+
 ### 2.9 PWA Mobile Guest Experience Screens (LAM-55)
 
 Mobile-first PWA screens (390px). Design system: Editorial Monolith adapted for touch — 0px radius, no shadows, Manrope + Fira Code, yellow #FFEE58 primary, Fira Code for all prices and monospace metadata.

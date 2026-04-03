@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestionare Membri — Admin LMBSC</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "forest": "#2C4A2E",
+        "forest-light": "#4A7A4C",
+        "forest-muted": "#EAF0EA",
+        "brass": "#B8962E",
+        "brass-light": "#F5E9C4",
+        "surface": "#FAF6F0",
+        "surface-raised": "#FFFFFF",
+        "text-primary": "#1A1A1A",
+        "text-secondary": "#5A5A5A",
+        "text-muted": "#9A9A9A",
+        "warm-border": "#E4DDD5",
+        "focus-ring": "#2C4A2E",
+        "status-seated": "#2C4A2E",
+        "status-seated-bg": "#EAF0EA",
+        "status-warn": "#D97706",
+        "status-warn-bg": "#FEF3C7",
+        "status-error": "#DC2626",
+        "status-error-bg": "#FEE2E2",
+        "status-gray": "#6B7280",
+        "status-gray-bg": "#F3F4F6",
+      },
+      fontFamily: {
+        "inter": ["Inter", "-apple-system", "sans-serif"],
+        "playfair": ["Playfair Display", "Georgia", "serif"],
+        "mono": ["JetBrains Mono", "Fira Code", "monospace"],
+      },
+      borderRadius: {
+        "none": "0px", "DEFAULT": "4px", "sm": "4px",
+        "md": "8px", "lg": "12px", "xl": "16px", "full": "9999px",
+      },
+    },
+  },
+}
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background: #FAF6F0; }
+  .font-playfair { font-family: 'Playfair Display', serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  /* Sidebar active item */
+  .nav-item { display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 20px; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.8); cursor: pointer; transition: all 0.15s; }
+  .nav-item:hover { background: rgba(255,255,255,0.08); }
+  .nav-item.active { color: white; background: rgba(255,255,255,0.1); border-left: 3px solid #B8962E; }
+  .nav-item.active { padding-left: 17px; }
+  /* Table */
+  .table-row { transition: background 0.1s; }
+  .table-row:hover { background: #FAF6F0; }
+  /* Checkbox custom */
+  .custom-checkbox { width: 16px; height: 16px; border: 1.5px solid #E4DDD5; background: white; cursor: pointer; appearance: none; }
+  .custom-checkbox:checked { background: #2C4A2E; border-color: #2C4A2E; }
+  /* Sortable header */
+  .sort-arrow { opacity: 0.4; margin-left: 4px; font-size: 10px; }
+  th:hover .sort-arrow { opacity: 1; }
+</style>
+</head>
+<body class="bg-surface text-text-primary">
+<div class="flex h-screen overflow-hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="w-60 shrink-0 flex flex-col h-screen" style="background: #2C4A2E;">
+    <!-- Logo -->
+    <div class="h-16 flex items-center justify-center border-b border-white/10 px-5">
+      <div class="text-center">
+        <p class="font-playfair text-white text-sm font-600 tracking-wide">La Mița</p>
+        <p class="font-mono text-[9px] text-white/40 uppercase tracking-widest">BICICLISTA · ADMIN</p>
+      </div>
+    </div>
+    <!-- Nav -->
+    <nav class="flex-1 py-4 overflow-y-auto">
+      <div class="nav-item">
+        <span class="text-white/60">⊞</span>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-item">
+        <span class="text-white/60">📅</span>
+        <span>Rezervări</span>
+      </div>
+      <div class="nav-item">
+        <span class="text-white/60">🎭</span>
+        <span>Evenimente</span>
+      </div>
+      <div class="nav-item active">
+        <span>👥</span>
+        <span>Membri</span>
+      </div>
+      <div class="nav-item">
+        <span class="text-white/60">📖</span>
+        <span>Meniuri</span>
+      </div>
+      <div class="nav-item">
+        <span class="text-white/60">📊</span>
+        <span>Analitics</span>
+      </div>
+      <div class="nav-item">
+        <span class="text-white/60">✍</span>
+        <span>Povești</span>
+      </div>
+      <div class="mt-4 border-t border-white/10 pt-4">
+        <div class="nav-item">
+          <span class="text-white/60">⚙</span>
+          <span>Setări</span>
+        </div>
+      </div>
+    </nav>
+    <!-- Bottom agent -->
+    <div class="border-t border-white/10 p-4 flex items-center gap-3">
+      <div class="w-8 h-8 flex items-center justify-center text-xs font-700 text-forest" style="background: #EAF0EA;">AD</div>
+      <div>
+        <p class="font-inter text-xs text-white font-500">Admin Decu</p>
+        <p class="font-mono text-[9px] text-white/40">admin@lamita.ro</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 flex overflow-hidden">
+    <div class="flex-1 overflow-y-auto">
+      <!-- PAGE HEADER -->
+      <div class="sticky top-0 z-10 bg-surface border-b border-warm-border px-8 py-4 flex items-center justify-between">
+        <div>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-text-muted mb-0.5">Admin / Membri</p>
+          <h1 class="font-playfair text-3xl font-600 text-text-primary">Gestionare Membri</h1>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="flex items-center gap-2 px-4 py-2 border border-warm-border font-inter text-sm font-600 text-text-secondary hover:bg-white transition-colors" style="border-radius: 4px;">
+            <span>↓</span> EXPORTĂ CSV
+          </button>
+          <button class="flex items-center gap-2 px-4 py-2 font-inter text-sm font-600 text-white hover:bg-forest-light transition-colors" style="background: #2C4A2E; border-radius: 4px;">
+            <span>+</span> ADAUGĂ MEMBRU
+          </button>
+        </div>
+      </div>
+
+      <div class="p-8">
+
+        <!-- KPI CARDS -->
+        <div class="grid grid-cols-4 gap-4 mb-8">
+          <div class="bg-surface-raised border border-warm-border p-5" style="border-radius: 8px; box-shadow: 0 1px 2px rgba(44,74,46,0.06);">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-text-muted mb-2">MEMBRI TOTALI</p>
+            <p class="font-playfair text-4xl font-600 text-text-primary mb-1">247</p>
+            <p class="font-inter text-xs text-forest font-500">+12 luna aceasta</p>
+          </div>
+          <div class="bg-surface-raised border border-warm-border p-5" style="border-radius: 8px; box-shadow: 0 1px 2px rgba(44,74,46,0.06);">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-text-muted mb-2">ABONAMENTE ACTIVE</p>
+            <p class="font-playfair text-4xl font-600 text-text-primary mb-1">198</p>
+            <p class="font-inter text-xs text-forest font-500">80.2% din total</p>
+          </div>
+          <div class="bg-surface-raised border border-warm-border p-5" style="border-radius: 8px; box-shadow: 0 1px 2px rgba(44,74,46,0.06);">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-text-muted mb-2">PATRON</p>
+            <div class="flex items-baseline gap-2 mb-1">
+              <p class="font-playfair text-4xl font-600 text-text-primary">34</p>
+              <span class="px-2 py-0.5 font-mono text-[9px] uppercase text-white" style="background: #B8962E; border-radius: 4px;">EXCLUSIV</span>
+            </div>
+            <p class="font-inter text-xs text-text-secondary">+3 luna aceasta</p>
+          </div>
+          <div class="bg-surface-raised border border-warm-border p-5" style="border-radius: 8px; box-shadow: 0 1px 2px rgba(44,74,46,0.06);">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-text-muted mb-2">VENIT LUNAR</p>
+            <p class="font-playfair text-4xl font-600 text-text-primary mb-1" style="font-family: 'JetBrains Mono', monospace; font-size: 2rem;">12.450 RON</p>
+            <p class="font-inter text-xs text-forest font-500">+8.3% față de Mar</p>
+          </div>
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="bg-surface-raised border border-warm-border p-4 mb-4 flex items-center gap-3" style="border-radius: 8px;">
+          <div class="flex-1 relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">🔍</span>
+            <input type="text" placeholder="Caută după nume, email sau ID..." class="w-full pl-9 pr-4 py-2 border border-warm-border text-sm font-inter text-text-primary placeholder-text-muted focus:outline-none focus:border-forest" style="border-radius: 4px;"/>
+          </div>
+          <select class="border border-warm-border px-3 py-2 text-sm font-inter text-text-secondary focus:outline-none focus:border-forest" style="border-radius: 4px;">
+            <option>Toate Tier-urile</option>
+            <option>Gratuit</option>
+            <option>Prieten</option>
+            <option>Patron</option>
+          </select>
+          <select class="border border-warm-border px-3 py-2 text-sm font-inter text-text-secondary focus:outline-none focus:border-forest" style="border-radius: 4px;">
+            <option>Toate Statusurile</option>
+            <option>Activ</option>
+            <option>Suspendat</option>
+            <option>Expirat</option>
+          </select>
+          <select class="border border-warm-border px-3 py-2 text-sm font-inter text-text-secondary focus:outline-none focus:border-forest" style="border-radius: 4px;">
+            <option>Ultima lună</option>
+            <option>Ultimele 3 luni</option>
+            <option>Acest an</option>
+            <option>Toată perioada</option>
+          </select>
+          <button class="px-5 py-2 font-inter text-sm font-600 text-white hover:bg-forest-light transition-colors" style="background: #2C4A2E; border-radius: 4px;">
+            FILTREAZĂ
+          </button>
+        </div>
+
+        <!-- MEMBERS TABLE -->
+        <div class="bg-surface-raised border border-warm-border" style="border-radius: 8px; box-shadow: 0 1px 2px rgba(44,74,46,0.06); overflow: hidden;">
+          <!-- Bulk actions bar (visible when rows selected) -->
+          <div class="border-b border-warm-border px-5 py-3 flex items-center gap-4" style="background: #EAF0EA;">
+            <p class="font-mono text-xs text-forest uppercase tracking-widest">3 SELECTAȚI</p>
+            <button class="font-inter text-xs text-text-secondary hover:text-text-primary">Schimbă tier</button>
+            <button class="font-inter text-xs text-text-secondary hover:text-text-primary">Exportă selecție</button>
+            <button class="font-inter text-xs text-status-error hover:text-red-800">Suspendă</button>
+          </div>
+
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-warm-border bg-surface">
+                <th class="pl-5 py-3 w-10"><input type="checkbox" class="custom-checkbox"/></th>
+                <th class="text-left py-3 px-4 font-mono text-[10px] uppercase tracking-widest text-text-muted cursor-pointer">NUME <span class="sort-arrow">↑</span></th>
+                <th class="text-left py-3 px-4 font-mono text-[10px] uppercase tracking-widest text-text-muted">EMAIL</th>
+                <th class="text-left py-3 px-4 font-mono text-[10px] uppercase tracking-widest text-text-muted cursor-pointer">TIER <span class="sort-arrow">↕</span></th>
+                <th class="text-left py-3 px-4 font-mono text-[10px] uppercase tracking-widest text-text-muted cursor-pointer">ÎNREGISTRAT <span class="sort-arrow">↕</span></th>
+                <th class="text-left py-3 px-4 font-mono text-[10px] uppercase tracking-widest text-text-muted">STATUS</th>
+                <th class="text-right py-3 px-4 font-mono text-[10px] uppercase tracking-widest text-text-muted cursor-pointer">CHELTUIELI <span class="sort-arrow">↕</span></th>
+                <th class="py-3 px-4 w-20"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-warm-border">
+
+              <!-- Row 1 — Patron -->
+              <tr class="table-row">
+                <td class="pl-5 py-3.5"><input type="checkbox" class="custom-checkbox" checked/></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 flex items-center justify-center text-xs font-700 text-white" style="background: #B8962E; border-radius: 4px;">AM</div>
+                    <p class="font-inter text-sm font-500 text-text-primary">Andrei Marinescu</p>
+                  </div>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">andrei.m@gmail.com</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-white" style="background: #B8962E; border-radius: 4px;">PATRON</span>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">15 Ian 2026</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-forest" style="background: #EAF0EA; border: 1px solid rgba(44,74,46,0.2); border-radius: 4px;">ACTIV</span>
+                </td>
+                <td class="py-3.5 px-4 text-right"><p class="font-mono text-sm text-text-primary font-500">890 RON</p></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button class="text-text-muted hover:text-text-primary text-sm">✎</button>
+                    <button class="text-text-muted hover:text-text-primary text-sm">👁</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 2 — Prieten -->
+              <tr class="table-row">
+                <td class="pl-5 py-3.5"><input type="checkbox" class="custom-checkbox" checked/></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 flex items-center justify-center text-xs font-700 text-white" style="background: #2C4A2E; border-radius: 4px;">EC</div>
+                    <p class="font-inter text-sm font-500 text-text-primary">Elena Constantin</p>
+                  </div>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">elena.c@yahoo.ro</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-forest" style="background: #EAF0EA; border: 1px solid rgba(44,74,46,0.2); border-radius: 4px;">PRIETEN</span>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">03 Feb 2026</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-forest" style="background: #EAF0EA; border: 1px solid rgba(44,74,46,0.2); border-radius: 4px;">ACTIV</span>
+                </td>
+                <td class="py-3.5 px-4 text-right"><p class="font-mono text-sm text-text-primary font-500">245 RON</p></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button class="text-text-muted hover:text-text-primary text-sm">✎</button>
+                    <button class="text-text-muted hover:text-text-primary text-sm">👁</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 3 — Gratuit -->
+              <tr class="table-row">
+                <td class="pl-5 py-3.5"><input type="checkbox" class="custom-checkbox" checked/></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 flex items-center justify-center text-xs font-700 text-text-secondary" style="background: #F3F4F6; border-radius: 4px;">MP</div>
+                    <p class="font-inter text-sm font-500 text-text-primary">Mihai Popescu</p>
+                  </div>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">mihai.p@gmail.com</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-text-secondary" style="background: #F3F4F6; border: 1px solid rgba(107,114,128,0.2); border-radius: 4px;">GRATUIT</span>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">20 Feb 2026</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-forest" style="background: #EAF0EA; border: 1px solid rgba(44,74,46,0.2); border-radius: 4px;">ACTIV</span>
+                </td>
+                <td class="py-3.5 px-4 text-right"><p class="font-mono text-sm text-text-muted">0 RON</p></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button class="text-text-muted hover:text-text-primary text-sm">✎</button>
+                    <button class="text-text-muted hover:text-text-primary text-sm">👁</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 4 — Patron -->
+              <tr class="table-row">
+                <td class="pl-5 py-3.5"><input type="checkbox" class="custom-checkbox"/></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 flex items-center justify-center text-xs font-700 text-white" style="background: #B8962E; border-radius: 4px;">ID</div>
+                    <p class="font-inter text-sm font-500 text-text-primary">Ioana Dumitrescu</p>
+                  </div>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">ioana.d@hotmail.com</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-white" style="background: #B8962E; border-radius: 4px;">PATRON</span>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">08 Ian 2026</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-forest" style="background: #EAF0EA; border: 1px solid rgba(44,74,46,0.2); border-radius: 4px;">ACTIV</span>
+                </td>
+                <td class="py-3.5 px-4 text-right"><p class="font-mono text-sm text-text-primary font-500">1.240 RON</p></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button class="text-text-muted hover:text-text-primary text-sm">✎</button>
+                    <button class="text-text-muted hover:text-text-primary text-sm">👁</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 5 — Suspended -->
+              <tr class="table-row">
+                <td class="pl-5 py-3.5"><input type="checkbox" class="custom-checkbox"/></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 flex items-center justify-center text-xs font-700 text-white" style="background: #6B7280; border-radius: 4px;">AI</div>
+                    <p class="font-inter text-sm font-500 text-text-secondary">Alexandru Ionescu</p>
+                  </div>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-muted">alex.i@gmail.com</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-forest" style="background: #EAF0EA; border: 1px solid rgba(44,74,46,0.2); border-radius: 4px;">PRIETEN</span>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-muted">14 Mar 2026</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600" style="background: #FEF3C7; border: 1px solid rgba(217,119,6,0.3); border-radius: 4px; color: #D97706;">SUSPENDAT</span>
+                </td>
+                <td class="py-3.5 px-4 text-right"><p class="font-mono text-sm text-text-muted">120 RON</p></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button class="text-text-muted hover:text-text-primary text-sm">✎</button>
+                    <button class="text-text-muted hover:text-text-primary text-sm">👁</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 6 -->
+              <tr class="table-row">
+                <td class="pl-5 py-3.5"><input type="checkbox" class="custom-checkbox"/></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 flex items-center justify-center text-xs font-700 text-white" style="background: #2C4A2E; border-radius: 4px;">RV</div>
+                    <p class="font-inter text-sm font-500 text-text-primary">Ruxandra Vasilescu</p>
+                  </div>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">ruxandra.v@gmail.com</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-forest" style="background: #EAF0EA; border: 1px solid rgba(44,74,46,0.2); border-radius: 4px;">PRIETEN</span>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">25 Mar 2026</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-forest" style="background: #EAF0EA; border: 1px solid rgba(44,74,46,0.2); border-radius: 4px;">ACTIV</span>
+                </td>
+                <td class="py-3.5 px-4 text-right"><p class="font-mono text-sm text-text-primary font-500">49 RON</p></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button class="text-text-muted hover:text-text-primary text-sm">✎</button>
+                    <button class="text-text-muted hover:text-text-primary text-sm">👁</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 7 — Expired -->
+              <tr class="table-row">
+                <td class="pl-5 py-3.5"><input type="checkbox" class="custom-checkbox"/></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 flex items-center justify-center text-xs font-700 text-white" style="background: #6B7280; border-radius: 4px;">CO</div>
+                    <p class="font-inter text-sm font-500 text-text-muted">Cristian Oancea</p>
+                  </div>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-muted">cristian.o@yahoo.ro</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-text-secondary" style="background: #F3F4F6; border: 1px solid rgba(107,114,128,0.2); border-radius: 4px;">GRATUIT</span>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-muted">10 Dec 2025</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600" style="background: #FEE2E2; border: 1px solid rgba(220,38,38,0.2); border-radius: 4px; color: #DC2626;">EXPIRAT</span>
+                </td>
+                <td class="py-3.5 px-4 text-right"><p class="font-mono text-sm text-text-muted">0 RON</p></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button class="text-text-muted hover:text-text-primary text-sm">✎</button>
+                    <button class="text-text-muted hover:text-text-primary text-sm">👁</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 8 — Patron -->
+              <tr class="table-row">
+                <td class="pl-5 py-3.5"><input type="checkbox" class="custom-checkbox"/></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 flex items-center justify-center text-xs font-700 text-white" style="background: #B8962E; border-radius: 4px;">PF</div>
+                    <p class="font-inter text-sm font-500 text-text-primary">Paula Florescu</p>
+                  </div>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">paula.f@gmail.com</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-white" style="background: #B8962E; border-radius: 4px;">PATRON</span>
+                </td>
+                <td class="py-3.5 px-4"><p class="font-mono text-xs text-text-secondary">01 Feb 2026</p></td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 font-mono text-[10px] uppercase font-600 text-forest" style="background: #EAF0EA; border: 1px solid rgba(44,74,46,0.2); border-radius: 4px;">ACTIV</span>
+                </td>
+                <td class="py-3.5 px-4 text-right"><p class="font-mono text-sm text-text-primary font-500">774 RON</p></td>
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button class="text-text-muted hover:text-text-primary text-sm">✎</button>
+                    <button class="text-text-muted hover:text-text-primary text-sm">👁</button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+          <!-- PAGINATION -->
+          <div class="border-t border-warm-border px-5 py-3 flex items-center justify-between">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-text-muted">Afișând 1–8 din 247 membri</p>
+            <div class="flex items-center gap-2">
+              <button class="w-8 h-8 flex items-center justify-center border border-warm-border font-mono text-xs text-text-muted hover:bg-surface" style="border-radius: 4px;">‹</button>
+              <button class="w-8 h-8 flex items-center justify-center font-mono text-xs text-white" style="background: #2C4A2E; border-radius: 4px;">1</button>
+              <button class="w-8 h-8 flex items-center justify-center border border-warm-border font-mono text-xs text-text-secondary hover:bg-surface" style="border-radius: 4px;">2</button>
+              <button class="w-8 h-8 flex items-center justify-center border border-warm-border font-mono text-xs text-text-secondary hover:bg-surface" style="border-radius: 4px;">3</button>
+              <span class="font-mono text-xs text-text-muted px-1">...</span>
+              <button class="w-8 h-8 flex items-center justify-center border border-warm-border font-mono text-xs text-text-secondary hover:bg-surface" style="border-radius: 4px;">31</button>
+              <button class="w-8 h-8 flex items-center justify-center border border-warm-border font-mono text-xs text-text-muted hover:bg-surface" style="border-radius: 4px;">›</button>
+              <select class="ml-3 border border-warm-border px-2 py-1 font-mono text-[10px] text-text-muted focus:outline-none" style="border-radius: 4px;">
+                <option>25 / pagină</option>
+                <option>50 / pagină</option>
+                <option>100 / pagină</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TIER MANAGEMENT SIDE PANEL -->
+    <aside class="w-80 shrink-0 border-l border-warm-border overflow-y-auto bg-surface-raised">
+      <div class="p-6">
+        <h2 class="font-playfair text-xl font-600 text-text-primary mb-1">Abonamente</h2>
+        <p class="font-mono text-[10px] uppercase tracking-widest text-text-muted mb-6">Configurare Tier-uri</p>
+
+        <!-- Gratuit tier -->
+        <div class="border border-warm-border p-4 mb-3" style="border-radius: 8px; background: #FAF6F0;">
+          <div class="flex items-center justify-between mb-2">
+            <p class="font-mono text-xs uppercase tracking-widest text-text-secondary font-600">GRATUIT</p>
+            <button class="font-mono text-[10px] uppercase tracking-widest text-text-muted hover:text-text-primary underline">EDITEAZĂ</button>
+          </div>
+          <p class="font-playfair text-2xl text-text-primary font-600 mb-1">0 RON</p>
+          <div class="flex items-center justify-between">
+            <p class="font-mono text-[10px] text-text-muted">49 membri activi</p>
+            <span class="px-2 py-0.5 font-mono text-[9px] uppercase text-text-secondary" style="background: #F3F4F6; border-radius: 4px;">19.8%</span>
+          </div>
+        </div>
+
+        <!-- Prieten tier -->
+        <div class="border p-4 mb-3" style="border-radius: 8px; border-left: 4px solid #2C4A2E; border-top: 1px solid #E4DDD5; border-right: 1px solid #E4DDD5; border-bottom: 1px solid #E4DDD5;">
+          <div class="flex items-center justify-between mb-2">
+            <p class="font-mono text-xs uppercase tracking-widest text-forest font-600">PRIETEN</p>
+            <button class="font-mono text-[10px] uppercase tracking-widest text-text-muted hover:text-text-primary underline">EDITEAZĂ</button>
+          </div>
+          <p class="font-playfair text-2xl text-text-primary font-600 mb-1">49 RON <span class="font-inter text-sm font-400 text-text-secondary">/ lună</span></p>
+          <div class="flex items-center justify-between">
+            <p class="font-mono text-[10px] text-text-muted">164 membri activi</p>
+            <span class="px-2 py-0.5 font-mono text-[9px] uppercase text-forest" style="background: #EAF0EA; border-radius: 4px;">66.4%</span>
+          </div>
+        </div>
+
+        <!-- Patron tier -->
+        <div class="p-4 mb-6" style="border-radius: 8px; background: #1A1A1A; border-left: 4px solid #B8962E;">
+          <div class="flex items-center justify-between mb-2">
+            <p class="font-mono text-xs uppercase tracking-widest font-600" style="color: #B8962E;">PATRON</p>
+            <button class="font-mono text-[10px] uppercase tracking-widest text-white/40 hover:text-white/70 underline">EDITEAZĂ</button>
+          </div>
+          <p class="font-playfair text-2xl font-600 mb-1" style="color: #B8962E;">129 RON <span class="font-inter text-sm font-400 text-white/40">/ lună</span></p>
+          <div class="flex items-center justify-between">
+            <p class="font-mono text-[10px] text-white/40">34 membri activi</p>
+            <span class="px-2 py-0.5 font-mono text-[9px] uppercase text-white/70" style="background: rgba(184,150,46,0.2); border-radius: 4px;">13.8%</span>
+          </div>
+        </div>
+
+        <!-- Revenue summary -->
+        <div class="border border-warm-border p-4 mb-5" style="border-radius: 8px;">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-text-muted mb-3">VENIT LUNAR ESTIMAT</p>
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <p class="font-inter text-xs text-text-secondary">Prieten (164 × 49)</p>
+              <p class="font-mono text-xs text-text-primary">8.036 RON</p>
+            </div>
+            <div class="flex justify-between">
+              <p class="font-inter text-xs text-text-secondary">Patron (34 × 129)</p>
+              <p class="font-mono text-xs text-text-primary">4.386 RON</p>
+            </div>
+            <div class="flex justify-between border-t border-warm-border pt-2 mt-2">
+              <p class="font-inter text-sm font-600 text-text-primary">TOTAL</p>
+              <p class="font-mono text-sm font-600 text-forest">12.422 RON</p>
+            </div>
+          </div>
+        </div>
+
+        <a href="#" class="font-mono text-[11px] uppercase tracking-widest text-forest underline underline-offset-4 hover:text-forest-light">
+          CONFIGUREAZĂ BENEFICII →
+        </a>
+      </div>
+    </aside>
+
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Devino Membru — La Mița Biciclista</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Fira+Code:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "brand-yellow": "#FFEE58",
+        "brand-dark": "#111111",
+        "brand-dark-2": "#1A1A1A",
+        "forest": "#2C4A2E",
+        "forest-light": "#4A7A4C",
+        "forest-muted": "#EAF0EA",
+        "brass": "#B8962E",
+        "brass-light": "#F5E9C4",
+        "parchment": "#FBFAF3",
+        "surface-low": "#F5F4ED",
+        "surface-mid": "#E9E8E2",
+        "warm-border": "#E4DDD5",
+        "warm-gray": "#686868",
+        "olive": "#4A4734",
+      },
+      fontFamily: {
+        "manrope": ["Manrope", "sans-serif"],
+        "fira": ["Fira Code", "monospace"],
+        "playfair": ["Playfair Display", "Georgia", "serif"],
+      },
+      borderRadius: {
+        "none": "0px", "DEFAULT": "0px", "sm": "0px",
+        "md": "0px", "lg": "0px", "xl": "0px", "full": "0px",
+      },
+    },
+  },
+}
+</script>
+<style>
+  body { font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased; background: #FBFAF3; }
+  .font-fira { font-family: 'Fira Code', monospace; }
+  .font-playfair { font-family: 'Playfair Display', serif; }
+  .text-hero { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.0; font-weight: 800; }
+  .check-green::before { content: "✓"; color: #2C4A2E; font-weight: 700; margin-right: 8px; }
+  .check-gold::before { content: "✓"; color: #B8962E; font-weight: 700; margin-right: 8px; }
+  .dash-gray::before { content: "—"; color: #9A9A9A; margin-right: 8px; }
+  table thead th { font-family: 'Fira Code', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .accordion-body { display: none; }
+  .accordion-item.open .accordion-body { display: block; }
+  .accordion-item.open .accordion-arrow { transform: rotate(180deg); }
+  .tier-card-patron { background: #1A1A1A; color: white; }
+</style>
+</head>
+<body class="bg-parchment text-brand-dark">
+
+<!-- NAV -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-parchment border-b border-warm-border">
+  <div class="max-w-[1440px] mx-auto px-16 h-16 flex items-center justify-between">
+    <a href="#" class="font-manrope font-800 text-sm tracking-widest uppercase text-brand-dark">
+      La Mița<br><span class="font-fira text-xs tracking-widest text-warm-gray">BICICLISTA</span>
+    </a>
+    <div class="flex items-center gap-8">
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray hover:text-brand-dark">Brasserie</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray hover:text-brand-dark">Meniuri</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray hover:text-brand-dark">Hub Cultural</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-forest font-semibold border-b-2 border-forest">Membri</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray hover:text-brand-dark">Autentificare</a>
+      <a href="#tiers" class="bg-brand-yellow text-brand-dark font-manrope font-700 text-xs tracking-widest uppercase px-6 py-3 hover:bg-[#e6d400] transition-colors">
+        DEVINO MEMBRU
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="bg-brand-dark-2 pt-16">
+  <div class="max-w-[1440px] mx-auto px-16 py-28 grid grid-cols-12 gap-6 items-center">
+    <div class="col-span-7">
+      <p class="font-fira text-xs tracking-widest uppercase text-warm-gray mb-6">01 / COMUNITATE</p>
+      <h1 class="text-hero text-white font-manrope mb-6 leading-none">
+        MICUL PARIS<br/>
+        <span class="text-brand-yellow">ÎN INIMA TA.</span>
+      </h1>
+      <p class="font-manrope font-400 text-lg text-white/70 max-w-lg mb-10 leading-relaxed">
+        Devino parte din comunitatea La Mița. Acces exclusiv la evenimente culturale, conținut editorial și privilegiile unui local cu suflet.
+      </p>
+      <div class="flex items-center gap-4">
+        <a href="#tiers" class="bg-brand-yellow text-brand-dark font-manrope font-700 text-sm tracking-widest uppercase px-8 py-4 hover:bg-[#e6d400] transition-colors inline-flex items-center gap-2">
+          ALEGE ABONAMENTUL TĂU <span class="text-lg">→</span>
+        </a>
+        <a href="#about" class="font-fira text-xs tracking-widest uppercase text-white/50 hover:text-white/80 underline underline-offset-4">
+          Află mai mult
+        </a>
+      </div>
+    </div>
+    <div class="col-span-5 flex justify-end gap-4">
+      <!-- Archival imagery placeholders -->
+      <div class="w-48 h-64 bg-white/5 border border-white/10 flex items-end p-3">
+        <p class="font-fira text-[10px] text-white/30 uppercase tracking-widest">ARHIVĂ / 1924</p>
+      </div>
+      <div class="w-48 h-48 mt-16 bg-white/5 border border-white/10 flex items-end p-3">
+        <p class="font-fira text-[10px] text-white/30 uppercase tracking-widest">STR. B. AMZEI</p>
+      </div>
+    </div>
+  </div>
+  <!-- Stats bar -->
+  <div class="border-t border-white/10 max-w-[1440px] mx-auto px-16 py-6 grid grid-cols-4 gap-0">
+    <div class="border-r border-white/10 pr-8">
+      <p class="font-fira text-2xl text-brand-yellow">247</p>
+      <p class="font-fira text-xs text-white/40 uppercase tracking-widest mt-1">Membri activi</p>
+    </div>
+    <div class="border-r border-white/10 px-8">
+      <p class="font-fira text-2xl text-brand-yellow">34</p>
+      <p class="font-fira text-xs text-white/40 uppercase tracking-widest mt-1">Patroni</p>
+    </div>
+    <div class="border-r border-white/10 px-8">
+      <p class="font-fira text-2xl text-brand-yellow">12+</p>
+      <p class="font-fira text-xs text-white/40 uppercase tracking-widest mt-1">Evenimente / lună</p>
+    </div>
+    <div class="pl-8">
+      <p class="font-fira text-2xl text-brand-yellow">2026</p>
+      <p class="font-fira text-xs text-white/40 uppercase tracking-widest mt-1">Lansat în</p>
+    </div>
+  </div>
+</section>
+
+<!-- TIER CARDS -->
+<section id="tiers" class="bg-parchment py-24">
+  <div class="max-w-[1440px] mx-auto px-16">
+    <div class="mb-14">
+      <p class="font-fira text-xs tracking-widest uppercase text-warm-gray mb-3">02 / ABONAMENTE</p>
+      <h2 class="font-manrope font-800 text-5xl text-brand-dark">Alege nivelul tău<br/>de implicare.</h2>
+    </div>
+
+    <div class="grid grid-cols-3 gap-0 border border-warm-border">
+      <!-- FREE -->
+      <div class="bg-surface-low p-10 border-r border-warm-border flex flex-col">
+        <div class="mb-8">
+          <p class="font-fira text-xs tracking-widest uppercase text-warm-gray mb-3">GRATUIT</p>
+          <p class="font-fira text-4xl text-brand-dark font-500">0 RON</p>
+          <p class="font-fira text-xs text-warm-gray mt-1">/ lună, pentru totdeauna</p>
+        </div>
+        <ul class="space-y-3 flex-1 mb-10">
+          <li class="font-manrope text-sm text-brand-dark check-green">Newsletter săptămânal</li>
+          <li class="font-manrope text-sm text-brand-dark check-green">Meniu digital</li>
+          <li class="font-manrope text-sm text-brand-dark check-green">Rezervări online</li>
+          <li class="font-manrope text-sm text-warm-gray dash-gray">Reduceri la comandă</li>
+          <li class="font-manrope text-sm text-warm-gray dash-gray">Bilete la evenimente</li>
+          <li class="font-manrope text-sm text-warm-gray dash-gray">Conținut exclusiv</li>
+          <li class="font-manrope text-sm text-warm-gray dash-gray">Rezervări prioritare</li>
+          <li class="font-manrope text-sm text-warm-gray dash-gray">Acces seri private</li>
+        </ul>
+        <a href="#" class="border border-brand-dark text-brand-dark font-manrope font-700 text-xs tracking-widest uppercase px-6 py-3 text-center hover:bg-brand-dark hover:text-white transition-colors">
+          ÎNREGISTRARE GRATUITĂ
+        </a>
+      </div>
+
+      <!-- PRIETEN (recommended) -->
+      <div class="bg-white p-10 border-r border-warm-border flex flex-col relative" style="border-left: 4px solid #2C4A2E;">
+        <div class="absolute top-0 right-0 bg-brand-yellow px-3 py-1">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brand-dark">RECOMANDAT</p>
+        </div>
+        <div class="mb-8">
+          <p class="font-fira text-xs tracking-widest uppercase text-forest mb-3">PRIETEN</p>
+          <p class="font-fira text-4xl text-brand-dark font-500">49 RON</p>
+          <p class="font-fira text-xs text-warm-gray mt-1">/ lună · anulabil oricând</p>
+        </div>
+        <ul class="space-y-3 flex-1 mb-10">
+          <li class="font-manrope text-sm text-brand-dark check-green">Tot ce include GRATUIT</li>
+          <li class="font-manrope text-sm text-brand-dark check-green">10% reducere la orice comandă</li>
+          <li class="font-manrope text-sm text-brand-dark check-green">Acces la Evenimente Publice</li>
+          <li class="font-manrope text-sm text-brand-dark check-green">Newsletter exclusiv cu preview</li>
+          <li class="font-manrope text-sm text-brand-dark check-green">Profil cultural personal</li>
+          <li class="font-manrope text-sm text-brand-dark check-green">2 rezervări prioritare / lună</li>
+          <li class="font-manrope text-sm text-brand-dark check-green">Badge PRIETEN în profil</li>
+          <li class="font-manrope text-sm text-warm-gray dash-gray">Seri & expoziții private</li>
+        </ul>
+        <a href="#" class="bg-forest text-white font-manrope font-700 text-xs tracking-widest uppercase px-6 py-3 text-center hover:bg-forest-light transition-colors">
+          ABONEAZĂ-TE ACUM
+        </a>
+      </div>
+
+      <!-- PATRON -->
+      <div class="p-10 flex flex-col relative tier-card-patron" style="border-left: 4px solid #B8962E;">
+        <div class="absolute top-0 right-0 bg-brass px-3 py-1">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-white">EXCLUSIV</p>
+        </div>
+        <div class="mb-8">
+          <p class="font-fira text-xs tracking-widest uppercase text-brass mb-3">PATRON</p>
+          <p class="font-fira text-4xl text-white font-500" style="color: #B8962E;">129 RON</p>
+          <p class="font-fira text-xs mt-1" style="color: rgba(255,255,255,0.4);">/ lună · acces complet</p>
+        </div>
+        <ul class="space-y-3 flex-1 mb-10">
+          <li class="font-manrope text-sm text-white check-gold">Tot ce include PRIETEN</li>
+          <li class="font-manrope text-sm text-white check-gold">Masă rezervată permanent</li>
+          <li class="font-manrope text-sm text-white check-gold">Acces seri & expoziții private</li>
+          <li class="font-manrope text-sm text-white check-gold">Invitații vernisaje exclusive</li>
+          <li class="font-manrope text-sm text-white check-gold">Acces backstage la evenimente</li>
+          <li class="font-manrope text-sm text-white check-gold">Bilete gratuite (2/lună)</li>
+          <li class="font-manrope text-sm text-white check-gold">Badge PATRON aurit în profil</li>
+          <li class="font-manrope text-sm text-white check-gold">Consultație privată cu echipa</li>
+        </ul>
+        <a href="#" class="font-manrope font-700 text-xs tracking-widest uppercase px-6 py-3 text-center transition-colors inline-flex items-center justify-center gap-2" style="background: #B8962E; color: white;">
+          DEVINO PATRON <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="bg-surface-low py-20">
+  <div class="max-w-[1440px] mx-auto px-16">
+    <p class="font-fira text-xs tracking-widest uppercase text-warm-gray mb-10">03 / COMPARAȚIE COMPLETĂ</p>
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="border-b-2 border-brand-dark">
+            <th class="text-left py-4 pr-8 font-fira text-xs tracking-widest text-warm-gray uppercase w-1/2">Beneficiu</th>
+            <th class="text-center py-4 px-6 font-fira text-xs tracking-widest uppercase text-warm-gray">GRATUIT</th>
+            <th class="text-center py-4 px-6 font-fira text-xs tracking-widest uppercase text-forest border-l border-r border-warm-border">PRIETEN</th>
+            <th class="text-center py-4 px-6 font-fira text-xs tracking-widest uppercase text-brass">PATRON</th>
+          </tr>
+        </thead>
+        <tbody class="font-manrope text-sm">
+          <tr class="border-b border-warm-border">
+            <td class="py-4 pr-8 text-brand-dark font-500">Newsletter săptămânal</td>
+            <td class="text-center py-4 text-forest font-700">✓</td>
+            <td class="text-center py-4 text-forest font-700 bg-white/50">✓</td>
+            <td class="text-center py-4 text-brass font-700">✓</td>
+          </tr>
+          <tr class="border-b border-warm-border">
+            <td class="py-4 pr-8 text-brand-dark font-500">Meniu digital & rezervări</td>
+            <td class="text-center py-4 text-forest font-700">✓</td>
+            <td class="text-center py-4 text-forest font-700 bg-white/50">✓</td>
+            <td class="text-center py-4 text-brass font-700">✓</td>
+          </tr>
+          <tr class="border-b border-warm-border">
+            <td class="py-4 pr-8 text-brand-dark font-500">Reducere 10% la comandă</td>
+            <td class="text-center py-4 text-warm-gray">—</td>
+            <td class="text-center py-4 text-forest font-700 bg-white/50">✓</td>
+            <td class="text-center py-4 text-brass font-700">✓</td>
+          </tr>
+          <tr class="border-b border-warm-border">
+            <td class="py-4 pr-8 text-brand-dark font-500">Acces la evenimente publice</td>
+            <td class="text-center py-4 text-warm-gray">—</td>
+            <td class="text-center py-4 text-forest font-700 bg-white/50">✓</td>
+            <td class="text-center py-4 text-brass font-700">✓</td>
+          </tr>
+          <tr class="border-b border-warm-border">
+            <td class="py-4 pr-8 text-brand-dark font-500">Rezervări prioritare (2/lună)</td>
+            <td class="text-center py-4 text-warm-gray">—</td>
+            <td class="text-center py-4 text-forest font-700 bg-white/50">✓</td>
+            <td class="text-center py-4 text-brass font-700">✓</td>
+          </tr>
+          <tr class="border-b border-warm-border">
+            <td class="py-4 pr-8 text-brand-dark font-500">Conținut editorial exclusiv</td>
+            <td class="text-center py-4 text-warm-gray">—</td>
+            <td class="text-center py-4 text-forest font-700 bg-white/50">✓</td>
+            <td class="text-center py-4 text-brass font-700">✓</td>
+          </tr>
+          <tr class="border-b border-warm-border">
+            <td class="py-4 pr-8 text-brand-dark font-500">Masă rezervată permanent</td>
+            <td class="text-center py-4 text-warm-gray">—</td>
+            <td class="text-center py-4 text-warm-gray bg-white/50">—</td>
+            <td class="text-center py-4 text-brass font-700">✓</td>
+          </tr>
+          <tr class="border-b border-warm-border">
+            <td class="py-4 pr-8 text-brand-dark font-500">Seri & expoziții private</td>
+            <td class="text-center py-4 text-warm-gray">—</td>
+            <td class="text-center py-4 text-warm-gray bg-white/50">—</td>
+            <td class="text-center py-4 text-brass font-700">✓</td>
+          </tr>
+          <tr class="border-b border-warm-border">
+            <td class="py-4 pr-8 text-brand-dark font-500">Bilete gratuite (2/lună)</td>
+            <td class="text-center py-4 text-warm-gray">—</td>
+            <td class="text-center py-4 text-warm-gray bg-white/50">—</td>
+            <td class="text-center py-4 text-brass font-700">✓</td>
+          </tr>
+          <tr>
+            <td class="py-4 pr-8 text-brand-dark font-500">Acces backstage + consultație</td>
+            <td class="text-center py-4 text-warm-gray">—</td>
+            <td class="text-center py-4 text-warm-gray bg-white/50">—</td>
+            <td class="text-center py-4 text-brass font-700">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- HERITAGE STORY BLOCK -->
+<section id="about" class="bg-parchment py-24">
+  <div class="max-w-[1440px] mx-auto px-16 grid grid-cols-12 gap-12 items-center">
+    <!-- Imagery placeholder -->
+    <div class="col-span-5">
+      <div class="w-full h-80 bg-surface-mid flex items-end p-4 mb-4" style="filter: sepia(20%) contrast(0.9);">
+        <p class="font-fira text-[10px] uppercase tracking-widest text-warm-gray">ARHIVĂ · BUCUREȘTI · 1928</p>
+      </div>
+      <div class="w-3/4 h-40 bg-surface-low flex items-end p-4">
+        <p class="font-fira text-[10px] uppercase tracking-widest text-warm-gray">STR. BISERICA AMZEI 9</p>
+      </div>
+    </div>
+    <!-- Editorial copy -->
+    <div class="col-span-7">
+      <p class="font-fira text-xs tracking-widest uppercase text-warm-gray mb-4">04 / COMUNITATE</p>
+      <h2 class="font-playfair text-4xl font-600 text-brand-dark mb-6 leading-tight italic">
+        O comunitate de oameni<br/>care prețuiesc frumosul.
+      </h2>
+      <p class="font-manrope text-base text-warm-gray leading-relaxed mb-6">
+        La Mița Biciclista s-a născut dintr-un simplu principiu: că frumosul, cultura și conviviabilitatea trebuie să fie accesibile celor care le caută cu adevărat. Ne-am construit în inima Micului Paris bucureștean.
+      </p>
+      <p class="font-manrope text-base text-warm-gray leading-relaxed mb-8">
+        Membrii noștri nu sunt clienți — sunt coautorii acestui loc. Evenimentele pe care le organizăm, poveștile pe care le publicăm, serile pe care le construim împreună sunt posibile datorită comunității care susține această viziune.
+      </p>
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-1 bg-brand-yellow"></div>
+        <p class="font-fira text-xs uppercase tracking-widest text-warm-gray">Str. Biserica Amzei 9, București</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="bg-surface-low py-20">
+  <div class="max-w-[1440px] mx-auto px-16">
+    <p class="font-fira text-xs tracking-widest uppercase text-warm-gray mb-10">05 / ÎNTREBĂRI FRECVENTE</p>
+    <div class="max-w-3xl">
+      <!-- Accordion items -->
+      <div class="accordion-item open border-b border-warm-border py-6 cursor-pointer" onclick="this.classList.toggle('open')">
+        <div class="flex items-center justify-between">
+          <p class="font-manrope font-600 text-base text-brand-dark">Pot anula abonamentul oricând?</p>
+          <span class="accordion-arrow font-fira text-warm-gray transition-transform">↓</span>
+        </div>
+        <div class="accordion-body mt-4">
+          <p class="font-manrope text-sm text-warm-gray leading-relaxed">Da. Abonamentele PRIETEN și PATRON pot fi anulate în orice moment din profilul tău. Accesul rămâne activ până la sfârșitul perioadei plătite.</p>
+        </div>
+      </div>
+      <div class="accordion-item border-b border-warm-border py-6 cursor-pointer" onclick="this.classList.toggle('open')">
+        <div class="flex items-center justify-between">
+          <p class="font-manrope font-600 text-base text-brand-dark">Cum funcționează rezervarea prioritară?</p>
+          <span class="accordion-arrow font-fira text-warm-gray transition-transform">↓</span>
+        </div>
+        <div class="accordion-body mt-4">
+          <p class="font-manrope text-sm text-warm-gray leading-relaxed">Membrii PRIETEN primesc acces la rezervări cu 48h înainte de deschiderea publică. Membrii PATRON au masa rezervată permanent în zona preferată.</p>
+        </div>
+      </div>
+      <div class="accordion-item border-b border-warm-border py-6 cursor-pointer" onclick="this.classList.toggle('open')">
+        <div class="flex items-center justify-between">
+          <p class="font-manrope font-600 text-base text-brand-dark">Ce înseamnă „acces la evenimente private"?</p>
+          <span class="accordion-arrow font-fira text-warm-gray transition-transform">↓</span>
+        </div>
+        <div class="accordion-body mt-4">
+          <p class="font-manrope text-sm text-warm-gray leading-relaxed">Organizăm lunar seri exclusive — vernisaje, concerte de cameră, degustări — cu capacitate limitată, rezervate exclusiv membrilor PATRON. Invitațiile sunt trimise cu 72h înainte prin newsletter.</p>
+        </div>
+      </div>
+      <div class="accordion-item py-6 cursor-pointer" onclick="this.classList.toggle('open')">
+        <div class="flex items-center justify-between">
+          <p class="font-manrope font-600 text-base text-brand-dark">Pot face upgrade din GRATUIT la PRIETEN?</p>
+          <span class="accordion-arrow font-fira text-warm-gray transition-transform">↓</span>
+        </div>
+        <div class="accordion-body mt-4">
+          <p class="font-manrope text-sm text-warm-gray leading-relaxed">Bineînțeles. Din profilul tău poți face upgrade la orice abonament oricând. Plata se calculează proporțional cu zilele rămase din luna curentă.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-brand-dark-2 py-16">
+  <div class="max-w-[1440px] mx-auto px-16 grid grid-cols-12 gap-8">
+    <div class="col-span-4">
+      <p class="font-manrope font-800 text-white text-sm tracking-widest uppercase mb-1">La Mița Biciclista</p>
+      <p class="font-fira text-xs text-white/40 tracking-widest mb-6">STABILIMENT CREATIV</p>
+      <p class="font-manrope text-sm text-white/50 leading-relaxed">Str. Biserica Amzei 9<br/>Sector 1, București</p>
+    </div>
+    <div class="col-span-2">
+      <p class="font-fira text-xs uppercase tracking-widest text-white/30 mb-4">Meniu</p>
+      <ul class="space-y-2">
+        <li><a href="#" class="font-manrope text-sm text-white/50 hover:text-white">Brasserie</a></li>
+        <li><a href="#" class="font-manrope text-sm text-white/50 hover:text-white">Meniuri</a></li>
+        <li><a href="#" class="font-manrope text-sm text-white/50 hover:text-white">Rezervări</a></li>
+      </ul>
+    </div>
+    <div class="col-span-2">
+      <p class="font-fira text-xs uppercase tracking-widest text-white/30 mb-4">Comunitate</p>
+      <ul class="space-y-2">
+        <li><a href="#" class="font-manrope text-sm text-white/50 hover:text-white">Membri</a></li>
+        <li><a href="#" class="font-manrope text-sm text-white/50 hover:text-white">Hub Cultural</a></li>
+        <li><a href="#" class="font-manrope text-sm text-white/50 hover:text-white">Povești</a></li>
+      </ul>
+    </div>
+    <div class="col-span-4">
+      <p class="font-fira text-xs uppercase tracking-widest text-white/30 mb-4">Newsletter</p>
+      <div class="flex gap-0">
+        <input type="email" placeholder="adresa@ta.ro" class="flex-1 bg-white/10 border-0 border-b border-white/20 text-white font-fira text-sm px-4 py-3 placeholder-white/30 focus:outline-none focus:border-brand-yellow"/>
+        <button class="bg-brand-yellow text-brand-dark font-manrope font-700 text-xs tracking-widest uppercase px-6 py-3">→</button>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-[1440px] mx-auto px-16 mt-12 pt-6 border-t border-white/10 flex justify-between items-center">
+    <p class="font-fira text-xs text-white/30">© 2026 La Mița Biciclista. Toate drepturile rezervate.</p>
+    <div class="flex gap-6">
+      <a href="#" class="font-fira text-xs text-white/30 hover:text-white/60 uppercase tracking-widest">Instagram</a>
+      <a href="#" class="font-fira text-xs text-white/30 hover:text-white/60 uppercase tracking-widest">Facebook</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

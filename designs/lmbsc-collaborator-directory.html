@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Directorul Creativ — La Mița Biciclista</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Fira+Code:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "brand-yellow": "#FFEE58",
+        "brand-dark": "#111111",
+        "brand-dark-2": "#1A1A1A",
+        "forest": "#2C4A2E",
+        "forest-light": "#4A7A4C",
+        "forest-muted": "#EAF0EA",
+        "brass": "#B8962E",
+        "brass-light": "#F5E9C4",
+        "parchment": "#FBFAF3",
+        "surface-low": "#F5F4ED",
+        "surface-mid": "#E9E8E2",
+        "warm-border": "#E4DDD5",
+        "warm-gray": "#686868",
+        "olive": "#4A4734",
+      },
+      fontFamily: {
+        "manrope": ["Manrope", "sans-serif"],
+        "fira": ["Fira Code", "monospace"],
+        "playfair": ["Playfair Display", "Georgia", "serif"],
+      },
+      borderRadius: {
+        "none": "0px", "DEFAULT": "0px", "sm": "0px",
+        "md": "0px", "lg": "0px", "xl": "0px", "full": "0px",
+      },
+    },
+  },
+}
+</script>
+<style>
+  body { font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased; background: #FBFAF3; }
+  .font-fira { font-family: 'Fira Code', monospace; }
+  .font-playfair { font-family: 'Playfair Display', serif; }
+  .font-manrope { font-family: 'Manrope', sans-serif; }
+  .collab-card { transition: border-left-color 0.2s; border-left: 3px solid transparent; }
+  .collab-card:hover { border-left-color: #2C4A2E; background: #F5F4ED; }
+  .filter-chip { cursor: pointer; transition: all 0.15s; }
+  .filter-chip.active { background: #2C4A2E; color: white; border-color: #2C4A2E; }
+  .filter-chip:not(.active):hover { border-color: #2C4A2E; color: #2C4A2E; }
+  .availability-dot-green { width: 7px; height: 7px; background: #4A7A4C; border-radius: 0; display: inline-block; }
+  .availability-dot-gray { width: 7px; height: 7px; background: #9A9A9A; border-radius: 0; display: inline-block; }
+  .tag-chip { font-family: 'Fira Code', monospace; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid #CCC7AE; padding: 2px 7px; color: #4A4734; }
+  .sticky-bar { position: sticky; top: 64px; z-index: 40; }
+  .portrait-block { background: #EAF0EA; }
+  .portrait-block-gold { background: #F5E9C4; }
+  .portrait-block-pink { background: #F6CFF4; }
+  .portrait-block-blue { background: #DCE8F5; }
+  .featured-portrait { background: #E4DDD5; }
+</style>
+</head>
+<body class="bg-parchment text-brand-dark">
+
+<!-- NAV -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-parchment border-b border-warm-border">
+  <div class="max-w-[1440px] mx-auto px-16 h-16 flex items-center justify-between">
+    <a href="#" class="font-manrope font-800 text-sm tracking-widest uppercase text-brand-dark">
+      La Mița<br><span class="font-fira text-xs tracking-widest text-warm-gray">BICICLISTA</span>
+    </a>
+    <div class="flex items-center gap-8">
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray hover:text-brand-dark">Brasserie</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray hover:text-brand-dark">Meniuri</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-forest font-semibold border-b-2 border-forest">Comunitate</a>
+      <a href="#" class="font-fira text-xs tracking-widest uppercase text-warm-gray hover:text-brand-dark">Membri</a>
+      <a href="#" class="bg-brand-yellow text-brand-dark font-manrope font-700 text-xs tracking-widest uppercase px-6 py-3 hover:bg-[#e6d400] transition-colors">
+        DEVINO MEMBRU
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<section class="pt-16 bg-parchment">
+  <div class="max-w-[1440px] mx-auto px-16 pt-14 pb-10">
+    <p class="font-fira text-[11px] tracking-widest uppercase text-warm-gray mb-2">
+      ACASĂ / COMUNITATE / <span class="text-brand-dark">COLABORATORI</span>
+    </p>
+    <div class="flex items-end justify-between mt-6">
+      <div>
+        <p class="font-fira text-xs tracking-[0.2em] uppercase text-brass mb-3">DIRECTORUL CREATIV</p>
+        <h1 class="font-playfair italic text-brand-dark mb-4" style="font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.0;">
+          Colaboratori &amp; Artiști
+        </h1>
+        <p class="font-manrope text-base text-olive leading-relaxed max-w-xl">
+          Creatori, artiști, muzicieni, scriitori și vizionari care dau viață spațiului nostru.
+        </p>
+      </div>
+      <div class="text-right">
+        <p class="font-fira text-xs text-warm-gray">
+          <span class="text-brand-dark font-500">87</span> colaboratori activi
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FILTER BAR (sticky) -->
+<div class="sticky-bar bg-white border-b border-warm-border">
+  <div class="max-w-[1440px] mx-auto px-16 py-4 flex items-center gap-6">
+    <!-- Search -->
+    <div class="relative flex-shrink-0" style="width: 280px;">
+      <input
+        type="text"
+        placeholder="Caută după nume, disciplină…"
+        class="w-full h-9 px-3 font-manrope text-[13px] text-brand-dark bg-transparent border-0 border-b-2 border-warm-border focus:border-forest focus:outline-none placeholder-warm-gray"
+      />
+    </div>
+
+    <!-- Filter chips -->
+    <div class="flex items-center gap-2 flex-wrap" id="filter-chips">
+      <button class="filter-chip active font-fira text-[11px] tracking-widest uppercase px-4 py-1.5 border border-warm-border" data-filter="all">TOȚI</button>
+      <button class="filter-chip font-fira text-[11px] tracking-widest uppercase px-4 py-1.5 border border-warm-border text-olive" data-filter="vizual">VIZUAL</button>
+      <button class="filter-chip font-fira text-[11px] tracking-widest uppercase px-4 py-1.5 border border-warm-border text-olive" data-filter="muzica">MUZICĂ</button>
+      <button class="filter-chip font-fira text-[11px] tracking-widest uppercase px-4 py-1.5 border border-warm-border text-olive" data-filter="literar">LITERAR</button>
+      <button class="filter-chip font-fira text-[11px] tracking-widest uppercase px-4 py-1.5 border border-warm-border text-olive" data-filter="performance">PERFORMANCE</button>
+      <button class="filter-chip font-fira text-[11px] tracking-widest uppercase px-4 py-1.5 border border-warm-border text-olive" data-filter="fotografie">FOTOGRAFIE</button>
+      <button class="filter-chip font-fira text-[11px] tracking-widest uppercase px-4 py-1.5 border border-warm-border text-olive" data-filter="design">DESIGN</button>
+    </div>
+
+    <!-- Sort -->
+    <div class="ml-auto flex-shrink-0">
+      <select class="font-fira text-[11px] uppercase tracking-widest text-warm-gray bg-transparent border-0 focus:outline-none cursor-pointer">
+        <option>SORTEAZĂ: RECENT ADĂUGAȚI</option>
+        <option>SORTEAZĂ: ALFABET</option>
+        <option>SORTEAZĂ: DISCIPLINĂ</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEATURED COLLABORATOR -->
+<section class="bg-surface-low">
+  <div class="max-w-[1440px] mx-auto px-16 py-14">
+    <p class="font-fira text-xs tracking-[0.2em] uppercase text-warm-gray mb-8">COLABORATOR FEATURED</p>
+    <div class="flex gap-16 items-start">
+
+      <!-- Left: copy (60%) -->
+      <div class="flex-1" style="flex: 0 0 58%;">
+        <p class="font-fira text-xs tracking-widest uppercase text-brass mb-4">ARTE VIZUALE · INSTALAȚIE</p>
+        <h2 class="font-playfair italic text-brand-dark mb-5" style="font-size: 2.5rem; line-height: 1.1;">
+          Ioana Bălan
+        </h2>
+        <p class="font-manrope text-[15px] text-olive leading-relaxed mb-7 max-w-lg">
+          Artistă vizuală cu baza la București, Ioana lucrează la intersecția dintre memorie colectivă și spațiu arhitectural. Instalațiile ei transformă decoruri abandonate în narațiuni vii — folosind textile, lumină și arhive fotografice locale. În rezidență la La Mița Biciclista din ianuarie 2026.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-8">
+          <span class="tag-chip">INSTALAȚIE</span>
+          <span class="tag-chip">TEXTILE</span>
+          <span class="tag-chip">SITE-SPECIFIC</span>
+          <span class="tag-chip">ARHIVĂ</span>
+          <span class="tag-chip">REZIDENȚE</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="#" class="bg-forest text-white font-manrope font-700 text-xs tracking-[0.12em] uppercase px-7 py-3 hover:bg-forest-light transition-colors">
+            VEZI PROFILUL COMPLET
+          </a>
+          <a href="#" class="font-fira text-xs tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">
+            CONTACT
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: portrait (40%) -->
+      <div class="flex-1 relative" style="flex: 0 0 38%;">
+        <div class="featured-portrait w-full flex items-center justify-center relative" style="height: 380px;">
+          <span class="font-playfair italic text-warm-gray/40" style="font-size: 7rem; line-height: 1;">IB</span>
+          <div class="absolute top-4 right-4 bg-brass text-white font-fira text-[10px] tracking-widest uppercase px-3 py-1">
+            FEATURED
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- Gold rule -->
+  <div class="max-w-[1440px] mx-auto px-16">
+    <div class="h-0.5 bg-brass/30"></div>
+  </div>
+</section>
+
+<!-- COLLABORATOR GRID -->
+<section class="bg-parchment">
+  <div class="max-w-[1440px] mx-auto px-16 py-16">
+    <div class="grid grid-cols-3 gap-6" id="collab-grid">
+
+      <!-- Card 1 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-forest/40" style="font-size: 4rem;">AM</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">MUZICĂ · JAZZ</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Alexandru Marian</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Pianist și compozitor. Rezident permanent al Salonului Istoric, concerte lunare și ateliere de improvizație.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">JAZZ</span>
+            <span class="tag-chip">IMPROVIZAȚIE</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-green"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">disponibil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block-gold w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-brass/40" style="font-size: 4rem;">CP</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">LITERAR · ESEU</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Cristina Popescu</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Scriitoare și critic literar. Autoare a coloanei lunare „Cafeneaua Infinitului" în buletinul nostru.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">ESEU</span>
+            <span class="tag-chip">CRITICĂ</span>
+            <span class="tag-chip">TRADUCERI</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-green"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">disponibil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block-pink w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-[#a0509a]/40" style="font-size: 4rem;">RE</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">FOTOGRAFIE · DOCUMENTAR</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Radu Enescu</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Fotograf documentar. Proiectul „Stradă, 1930–2026" arhivează transformările Bucureștiului prin juxtapunere temporală.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">DOCUMENTAR</span>
+            <span class="tag-chip">ARHIVĂ</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-gray"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">ocupat</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block-blue w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-[#3060a0]/30" style="font-size: 4rem;">MV</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">DESIGN · GRAFIC</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Mihaela Voicu</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Designer grafic specializat în identitate vizuală pentru proiecte culturale. Artdirector al publicației anuale MIȚA.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">BRANDING</span>
+            <span class="tag-chip">PRINT</span>
+            <span class="tag-chip">TIPOGRAFIE</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-green"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">disponibil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-forest/30" style="font-size: 4rem;">DL</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">PERFORMANCE · DANS</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Diana Lazăr</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Coregrafă și interpretă. Explorează relația dintre corp și arhitectura istorică în performance-uri site-specific.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">DANS</span>
+            <span class="tag-chip">SITE-SPECIFIC</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-green"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">disponibil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block-gold w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-brass/30" style="font-size: 4rem;">GS</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">ARTE VIZUALE · PICTURĂ</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">George Stan</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Pictor. Lucrările sale reconstituie memoria orașului printr-o paletă de ocru, indigo și negru de fum — vernisaj planificat mai 2026.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">PICTURĂ</span>
+            <span class="tag-chip">ULEI</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-gray"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">ocupat</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block-pink w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-[#a0509a]/30" style="font-size: 4rem;">LC</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">LITERAR · POEZIE</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Lavinia Cârstea</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Poetă și traducătoare. Organizează lunar „Serile de Poezie" la etajul Salonului Istoric — lecturi bilingve RO/FR.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">POEZIE</span>
+            <span class="tag-chip">LECTURI</span>
+            <span class="tag-chip">BILINGV</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-green"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">disponibil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block-blue w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-[#3060a0]/30" style="font-size: 4rem;">VN</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">MUZICĂ · AMBIENT</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Victor Neguț</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Muzician electronic și sound designer. Creează ambient-uri sonore pentru spațiile expoziționale ale casei.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">AMBIENT</span>
+            <span class="tag-chip">SOUND ART</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-green"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">disponibil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 9 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-forest/30" style="font-size: 4rem;">AF</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">DESIGN · CERAMICĂ</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Ana Florescu</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Ceramistă. Creează obiecte de uz cotidian inspirate de formele ornamentale ale Bucureștiului art nouveau.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">CERAMICĂ</span>
+            <span class="tag-chip">OBIECTE</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-green"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">disponibil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 10 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block-gold w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-brass/30" style="font-size: 4rem;">BM</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">FOTOGRAFIE · PORTRET</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Bogdan Mihai</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Fotograf de portret și editorial. Colaborator al revistei Dilema Veche; expoziții regulate la MIȚA.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">PORTRET</span>
+            <span class="tag-chip">EDITORIAL</span>
+            <span class="tag-chip">FILM</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-gray"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">ocupat</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 11 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block-pink w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-[#a0509a]/30" style="font-size: 4rem;">EC</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">PERFORMANCE · TEATRU</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Elena Coman</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Actriță și regizoare de teatru documentar. Produce spectacole bazate pe interviuri cu locuitorii cartierului Amzei.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">TEATRU</span>
+            <span class="tag-chip">DOCUMENTAR</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-green"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">disponibil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 12 -->
+      <div class="collab-card bg-white p-0 cursor-pointer">
+        <div class="portrait-block-blue w-full flex items-center justify-center" style="height: 200px;">
+          <span class="font-playfair italic text-[#3060a0]/30" style="font-size: 4rem;">TP</span>
+        </div>
+        <div class="p-5">
+          <p class="font-fira text-[10px] tracking-widest uppercase text-brass mb-1">ARTE VIZUALE · SCULPTURĂ</p>
+          <h3 class="font-manrope font-700 text-base text-brand-dark mb-1">Tudor Pavel</h3>
+          <p class="font-manrope text-[12px] text-olive leading-relaxed mb-3 line-clamp-2">
+            Sculptor. Lucrează cu materiale recuperate din demolările urbane ale Bucureștiului — fier, beton, lemn.
+          </p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="tag-chip">SCULPTURĂ</span>
+            <span class="tag-chip">FOUND OBJECT</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="#" class="font-fira text-[11px] tracking-widest uppercase text-forest border-b border-forest pb-0.5 hover:text-forest-light">PROFIL</a>
+            <div class="flex items-center gap-1.5">
+              <span class="availability-dot-green"></span>
+              <span class="font-fira text-[10px] text-warm-gray uppercase tracking-wider">disponibil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Load more -->
+    <div class="flex justify-center mt-12">
+      <button class="border border-warm-border text-olive font-manrope font-600 text-xs tracking-[0.1em] uppercase px-10 py-3 hover:border-forest hover:text-forest transition-colors">
+        ÎNCARCĂ MAI MULȚI (75)
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- APPLY TO JOIN -->
+<section class="bg-forest">
+  <div class="max-w-[1440px] mx-auto px-16 py-20">
+    <div class="grid grid-cols-2 gap-16 items-start">
+
+      <!-- Left: CTA copy -->
+      <div>
+        <p class="font-fira text-xs tracking-[0.2em] uppercase text-white/50 mb-5">FACI PARTE DIN LUMEA CREATIVĂ?</p>
+        <h2 class="font-playfair italic text-white mb-5" style="font-size: 2.2rem; line-height: 1.15;">
+          Alătură-te directorului nostru
+        </h2>
+        <p class="font-manrope text-white/70 text-[15px] leading-relaxed">
+          Suntem mereu în căutare de colaboratori care împărtășesc valorile spațiului nostru: autenticitate, dialog intercultural și grijă pentru patrimoniul local.
+        </p>
+      </div>
+
+      <!-- Right: Form -->
+      <form class="flex flex-col gap-5">
+        <div>
+          <label class="font-fira text-[10px] uppercase tracking-widest text-white/50 block mb-2">Numele tău</label>
+          <input type="text" placeholder="Prenume Nume" class="w-full h-10 px-3 bg-white text-brand-dark font-manrope text-sm border-0 focus:outline-none focus:ring-2 focus:ring-brass placeholder-warm-gray"/>
+        </div>
+        <div>
+          <label class="font-fira text-[10px] uppercase tracking-widest text-white/50 block mb-2">Adresa de email</label>
+          <input type="email" placeholder="adresa@ta.ro" class="w-full h-10 px-3 bg-white text-brand-dark font-manrope text-sm border-0 focus:outline-none focus:ring-2 focus:ring-brass placeholder-warm-gray"/>
+        </div>
+        <div>
+          <label class="font-fira text-[10px] uppercase tracking-widest text-white/50 block mb-2">Disciplina principală</label>
+          <select class="w-full h-10 px-3 bg-white text-brand-dark font-manrope text-sm border-0 focus:outline-none focus:ring-2 focus:ring-brass appearance-none cursor-pointer">
+            <option value="" disabled selected>Selectează disciplina…</option>
+            <option>Arte vizuale</option>
+            <option>Muzică</option>
+            <option>Literar</option>
+            <option>Performance</option>
+            <option>Fotografie</option>
+            <option>Design</option>
+            <option>Altele</option>
+          </select>
+        </div>
+        <button type="submit" class="bg-brass text-white font-manrope font-700 text-xs tracking-[0.12em] uppercase h-12 hover:bg-[#9a7a26] transition-colors mt-2">
+          TRIMITE CANDIDATURA
+        </button>
+      </form>
+
+    </div>
+  </div>
+</section>
+
+<!-- MEMBER-ONLY LOCKED PROFILES -->
+<section class="bg-parchment">
+  <div class="max-w-[1440px] mx-auto px-16 py-16">
+    <p class="font-fira text-xs tracking-[0.2em] uppercase text-warm-gray mb-3">CONȚINUT EXCLUSIV PENTRU MEMBRI</p>
+    <h3 class="font-manrope font-700 text-lg text-brand-dark mb-8">Profile extinse &amp; contacte directe</h3>
+
+    <div class="grid grid-cols-4 gap-4 relative">
+      <!-- 4 blurred cards -->
+      <div class="bg-white p-4" style="filter: blur(4px); pointer-events: none; user-select: none;">
+        <div class="portrait-block w-full h-28 mb-3 flex items-center justify-center">
+          <span class="font-playfair italic text-3xl text-forest/20">MR</span>
+        </div>
+        <p class="font-fira text-[9px] uppercase text-brass mb-1">CURATOR</p>
+        <p class="font-manrope text-sm font-700">Maria Radu</p>
+        <p class="font-manrope text-[11px] text-olive mt-1 line-clamp-2">Portfolio exclusiv cu 40 de proiecte documentate.</p>
+      </div>
+      <div class="bg-white p-4" style="filter: blur(4px); pointer-events: none; user-select: none;">
+        <div class="portrait-block-gold w-full h-28 mb-3 flex items-center justify-center">
+          <span class="font-playfair italic text-3xl text-brass/20">SI</span>
+        </div>
+        <p class="font-fira text-[9px] uppercase text-brass mb-1">ARHITECT</p>
+        <p class="font-manrope text-sm font-700">Sergiu Ionescu</p>
+        <p class="font-manrope text-[11px] text-olive mt-1 line-clamp-2">Proiecte de patrimoniu și restaurare arhitecturală.</p>
+      </div>
+      <div class="bg-white p-4" style="filter: blur(4px); pointer-events: none; user-select: none;">
+        <div class="portrait-block-pink w-full h-28 mb-3 flex items-center justify-center">
+          <span class="font-playfair italic text-3xl text-[#a0509a]/20">OD</span>
+        </div>
+        <p class="font-fira text-[9px] uppercase text-brass mb-1">ILUSTRATOR</p>
+        <p class="font-manrope text-sm font-700">Oana Dumitrescu</p>
+        <p class="font-manrope text-[11px] text-olive mt-1 line-clamp-2">Carte ilustrată și identitate vizuală pentru edituri.</p>
+      </div>
+      <div class="bg-white p-4" style="filter: blur(4px); pointer-events: none; user-select: none;">
+        <div class="portrait-block-blue w-full h-28 mb-3 flex items-center justify-center">
+          <span class="font-playfair italic text-3xl text-[#3060a0]/20">NT</span>
+        </div>
+        <p class="font-fira text-[9px] uppercase text-brass mb-1">MUZICIAN</p>
+        <p class="font-manrope text-sm font-700">Nicolae Tudor</p>
+        <p class="font-manrope text-[11px] text-olive mt-1 line-clamp-2">Compoziție contemporană și colaborări internaționale.</p>
+      </div>
+
+      <!-- Overlay CTA -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="bg-parchment/95 px-10 py-8 text-center">
+          <div class="text-brass text-3xl mb-3">🔒</div>
+          <p class="font-fira text-[11px] uppercase tracking-widest text-warm-gray mb-5">Acces exclusiv pentru membri</p>
+          <a href="/membri" class="bg-forest text-white font-manrope font-700 text-xs tracking-[0.12em] uppercase px-8 py-3 hover:bg-forest-light transition-colors inline-block">
+            DEVINO MEMBRU
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-forest">
+  <div class="max-w-[1440px] mx-auto px-16 py-8 flex items-center justify-between">
+    <p class="font-fira text-[11px] text-white/50 tracking-wide">
+      La Mița Biciclista · Str. Biserica Amzei 9, București · <a href="mailto:hello@lamitabiciclista.ro" class="hover:text-white/80">hello@lamitabiciclista.ro</a>
+    </p>
+    <div class="flex items-center gap-6">
+      <a href="#" class="font-fira text-[11px] text-white/40 uppercase tracking-widest hover:text-white/70">Instagram</a>
+      <a href="#" class="font-fira text-[11px] text-white/40 uppercase tracking-widest hover:text-white/70">Facebook</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Filter chips
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
