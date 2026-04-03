@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { MemberContentGate } from "@/components/MemberContentGate";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
 const VENUE_ID = process.env.NEXT_PUBLIC_VENUE_ID ?? "146fd211-ae20-5ebe-a7af-3c195ab89ae8";
@@ -129,32 +130,34 @@ export default function StoryPage({ params }: { params: Promise<{ slug: string }
         {/* Decorative rule */}
         <div style={{ height: 3, background: "var(--color-accent)", width: 48, borderRadius: 2, marginBottom: 40 }} />
 
-        {/* Body */}
-        <div style={{ fontSize: 16, lineHeight: 1.8, color: "var(--color-text)" }}>
-          {sections.filter(s => s.length > 0).map((block, i) => {
-            const text = block.join(" ");
-            // Simple heading detection
-            if (text.startsWith("# ")) {
+        {/* Body — gated for members only */}
+        <MemberContentGate>
+          <div style={{ fontSize: 16, lineHeight: 1.8, color: "var(--color-text)" }}>
+            {sections.filter(s => s.length > 0).map((block, i) => {
+              const text = block.join(" ");
+              // Simple heading detection
+              if (text.startsWith("# ")) {
+                return (
+                  <h2 key={i} style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700, color: "var(--color-text)", margin: "40px 0 16px", lineHeight: 1.3 }}>
+                    {text.replace(/^#+\s*/, "")}
+                  </h2>
+                );
+              }
+              if (text.startsWith("## ")) {
+                return (
+                  <h3 key={i} style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 700, color: "var(--color-text)", margin: "32px 0 12px" }}>
+                    {text.replace(/^#+\s*/, "")}
+                  </h3>
+                );
+              }
               return (
-                <h2 key={i} style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700, color: "var(--color-text)", margin: "40px 0 16px", lineHeight: 1.3 }}>
-                  {text.replace(/^#+\s*/, "")}
-                </h2>
+                <p key={i} style={{ margin: "0 0 24px" }}>
+                  {text.replace(/\*\*([^*]+)\*\*/g, "$1").replace(/\*([^*]+)\*/g, "$1")}
+                </p>
               );
-            }
-            if (text.startsWith("## ")) {
-              return (
-                <h3 key={i} style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 700, color: "var(--color-text)", margin: "32px 0 12px" }}>
-                  {text.replace(/^#+\s*/, "")}
-                </h3>
-              );
-            }
-            return (
-              <p key={i} style={{ margin: "0 0 24px" }}>
-                {text.replace(/\*\*([^*]+)\*\*/g, "$1").replace(/\*([^*]+)\*/g, "$1")}
-              </p>
-            );
-          })}
-        </div>
+            })}
+          </div>
+        </MemberContentGate>
 
         {/* Footer */}
         <div style={{ marginTop: 56, paddingTop: 32, borderTop: "1px solid var(--color-border)" }}>
