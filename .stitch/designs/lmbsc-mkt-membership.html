@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>La Mița Biciclista — Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --color-primary: #2C4A2E; --color-primary-light: #4A7A4C; --color-primary-muted: #EAF0EA;
+  --color-primary-dark: #1E3A20; --color-accent: #B8962E; --color-accent-light: #F5E9C4;
+  --color-accent-muted: #FBF4E3; --color-surface: #FAF6F0; --color-surface-low: #F4EFE8;
+  --color-raised: #FFFFFF; --color-text: #1A1A1A; --color-text-sec: #5A5A5A;
+  --color-text-muted: #9A9A9A; --color-border: #E4DDD5;
+  --shadow-sm: 0 1px 3px rgba(44,74,46,0.08); --shadow-md: 0 4px 16px rgba(44,74,46,0.12);
+  --shadow-lg: 0 8px 32px rgba(44,74,46,0.18);
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', sans-serif;
+}
+body { font-family: var(--font-body); background: var(--color-surface); color: var(--color-text); width: 1280px; overflow-x: hidden; }
+
+/* NAV */
+.nav { position: sticky; top: 0; z-index: 200; background: rgba(250,246,240,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-border); height: 68px; display: flex; align-items: center; padding: 0 64px; }
+.nav__brand { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--color-primary); margin-right: auto; text-decoration: none; }
+.nav__links { display: flex; align-items: center; gap: 36px; list-style: none; margin-right: 40px; }
+.nav__links a { font-size: 14px; font-weight: 500; color: var(--color-text-sec); text-decoration: none; }
+.nav__links a.active { color: var(--color-primary); font-weight: 600; }
+.nav__cta { display: inline-flex; align-items: center; height: 38px; padding: 0 20px; background: var(--color-primary); color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--radius-sm); text-decoration: none; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(155deg, #1a2e1b 0%, #2c4a2e 50%, #3d5e3f 100%);
+  padding: 96px 64px 80px; text-align: center; position: relative; overflow: hidden;
+}
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 60%, rgba(184,150,46,0.12) 0%, transparent 60%); }
+.hero__label { font-size: 11px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(184,150,46,0.85); margin-bottom: 20px; position: relative; z-index: 1; }
+.hero__title { font-family: var(--font-display); font-size: 60px; font-weight: 400; font-style: italic; color: #fff; line-height: 1.12; margin-bottom: 20px; position: relative; z-index: 1; }
+.hero__desc { font-size: 17px; color: rgba(255,255,255,0.68); max-width: 560px; margin: 0 auto; line-height: 1.65; position: relative; z-index: 1; }
+
+/* TIER CARDS */
+.tiers-section { padding: 80px 64px; }
+.section-label { font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 12px; }
+.section-heading { font-family: var(--font-display); font-size: 38px; font-weight: 600; color: var(--color-text); margin-bottom: 8px; }
+.section-desc { font-size: 16px; color: var(--color-text-sec); max-width: 520px; line-height: 1.6; margin-bottom: 48px; }
+
+.tiers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1152px; margin: 0 auto; align-items: start; }
+
+.tier-card {
+  background: var(--color-raised);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px 32px;
+  position: relative;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.tier-card:hover { box-shadow: var(--shadow-md); }
+.tier-card--featured {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-8px);
+}
+.tier-card--patron { border-color: var(--color-accent); }
+
+.tier-card__badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--color-primary); color: #fff;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 4px 16px; border-radius: 999px;
+  white-space: nowrap;
+}
+.tier-card--patron .tier-card__badge { background: var(--color-accent); }
+
+.tier-card__icon {
+  width: 48px; height: 48px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+  background: var(--color-primary-muted); color: var(--color-primary);
+}
+.tier-card--patron .tier-card__icon { background: var(--color-accent-muted); color: var(--color-accent); }
+
+.tier-card__name { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--color-text); margin-bottom: 6px; }
+.tier-card__tagline { font-size: 13px; color: var(--color-text-sec); margin-bottom: 24px; line-height: 1.5; }
+
+.tier-card__price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 28px; }
+.tier-card__price-amount { font-size: 40px; font-weight: 700; color: var(--color-primary); line-height: 1; }
+.tier-card--patron .tier-card__price-amount { color: var(--color-accent); }
+.tier-card__price-currency { font-size: 18px; font-weight: 600; color: var(--color-text-muted); }
+.tier-card__price-period { font-size: 13px; color: var(--color-text-muted); }
+
+.tier-card__divider { height: 1px; background: var(--color-border); margin-bottom: 24px; }
+
+.tier-card__features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.tier-card__feature { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--color-text-sec); line-height: 1.45; }
+.tier-card__feature-icon { flex-shrink: 0; margin-top: 1px; color: var(--color-primary); }
+.tier-card--patron .tier-card__feature-icon { color: var(--color-accent); }
+.tier-card__feature--disabled { color: var(--color-text-muted); }
+.tier-card__feature--disabled .tier-card__feature-icon { color: var(--color-text-muted); }
+
+.btn-tier-primary {
+  width: 100%; height: 46px; display: flex; align-items: center; justify-content: center;
+  background: var(--color-primary); color: #fff;
+  font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  border-radius: var(--radius-sm); text-decoration: none; border: none; cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-tier-primary:hover { background: var(--color-primary-light); }
+.tier-card--patron .btn-tier-primary { background: var(--color-accent); }
+.tier-card--patron .btn-tier-primary:hover { background: #9a7a26; }
+.btn-tier-outline {
+  width: 100%; height: 46px; display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--color-border); color: var(--color-text-sec);
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  border-radius: var(--radius-sm); text-decoration: none; cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-tier-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+/* BENEFITS SECTION */
+.benefits { background: var(--color-surface-low); padding: 80px 64px; }
+.benefits__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; max-width: 1152px; margin: 0 auto; margin-top: 48px; }
+.benefit-card { }
+.benefit-card__icon { width: 52px; height: 52px; background: var(--color-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--color-primary); margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+.benefit-card__title { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--color-text); margin-bottom: 8px; }
+.benefit-card__desc { font-size: 13px; color: var(--color-text-sec); line-height: 1.65; }
+
+/* COMPARISON TABLE */
+.comparison { padding: 64px 64px 80px; max-width: 1280px; }
+.comparison__heading { font-family: var(--font-display); font-size: 32px; font-weight: 600; color: var(--color-text); margin-top: 12px; margin-bottom: 40px; }
+.comp-table { width: 100%; max-width: 900px; border-collapse: collapse; }
+.comp-table th { padding: 12px 20px; font-size: 13px; font-weight: 600; text-align: center; border-bottom: 2px solid var(--color-border); }
+.comp-table th:first-child { text-align: left; color: var(--color-text-sec); font-weight: 500; }
+.comp-table th.tier-col { color: var(--color-text); }
+.comp-table th.tier-col--featured { color: var(--color-primary); }
+.comp-table th.tier-col--patron { color: var(--color-accent); }
+.comp-table td { padding: 12px 20px; font-size: 13px; color: var(--color-text-sec); border-bottom: 1px solid var(--color-border); text-align: center; }
+.comp-table td:first-child { text-align: left; color: var(--color-text); }
+.comp-table tr:hover td { background: var(--color-surface); }
+.check { color: var(--color-primary); font-size: 16px; font-weight: 700; }
+.check--patron { color: var(--color-accent); }
+.dash { color: var(--color-text-muted); }
+
+/* TESTIMONIALS */
+.testimonials { background: var(--color-raised); padding: 80px 64px; }
+.testimonials__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; max-width: 1152px; margin: 48px auto 0; }
+.testimonial-card { background: var(--color-surface); border-radius: var(--radius-md); padding: 28px 24px; }
+.testimonial-card__quote { font-family: var(--font-display); font-style: italic; font-size: 16px; line-height: 1.65; color: var(--color-text); margin-bottom: 20px; }
+.testimonial-card__author { display: flex; align-items: center; gap: 12px; }
+.testimonial-card__avatar { width: 40px; height: 40px; background: var(--color-primary-muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--color-primary); flex-shrink: 0; }
+.testimonial-card__name { font-size: 14px; font-weight: 600; color: var(--color-text); }
+.testimonial-card__tier { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
+
+/* FINAL CTA */
+.final-cta { background: var(--color-primary); padding: 72px 64px; text-align: center; }
+.final-cta__title { font-family: var(--font-display); font-size: 44px; font-weight: 400; font-style: italic; color: #fff; margin-bottom: 16px; line-height: 1.15; }
+.final-cta__desc { font-size: 16px; color: rgba(255,255,255,0.7); max-width: 480px; margin: 0 auto 36px; line-height: 1.65; }
+.final-cta__actions { display: flex; align-items: center; justify-content: center; gap: 16px; }
+.btn-primary-gold { display: inline-flex; align-items: center; height: 48px; padding: 0 32px; background: var(--color-accent); color: #fff; font-size: 14px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--radius-sm); text-decoration: none; }
+.btn-outline-white { display: inline-flex; align-items: center; height: 48px; padding: 0 32px; border: 1.5px solid rgba(255,255,255,0.4); color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 500; border-radius: var(--radius-sm); text-decoration: none; }
+
+/* FOOTER */
+.footer { background: var(--color-primary-dark); padding: 48px 64px 32px; }
+.footer__grid { display: grid; grid-template-columns: 2fr 1fr 1.4fr 1.6fr; gap: 40px; max-width: 1152px; margin: 0 auto 40px; }
+.footer__brand-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+.footer__desc { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.55); margin-bottom: 16px; }
+.footer__address { font-size: 12px; line-height: 1.7; color: rgba(255,255,255,0.45); }
+.footer__col-title { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 16px; }
+.footer__nav-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer__nav-links a { font-size: 13px; color: rgba(255,255,255,0.55); text-decoration: none; }
+.footer__bottom { border-top: 1px solid rgba(255,255,255,0.10); padding-top: 20px; display: flex; justify-content: space-between; max-width: 1152px; margin: 0 auto; }
+.footer__copyright { font-size: 12px; color: rgba(255,255,255,0.3); }
+.footer__legal { display: flex; gap: 20px; }
+.footer__legal a { font-size: 12px; color: rgba(255,255,255,0.3); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav__brand">La Mița Biciclista</a>
+  <ul class="nav__links">
+    <li><a href="/brasserie">Brasserie</a></li>
+    <li><a href="/evenimente">Evenimente</a></li>
+    <li><a href="/membership" class="active">Membership</a></li>
+    <li><a href="/despre">Despre Noi</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+  <a href="/hospitality/reserve" class="nav__cta">Rezervă</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero__label">Comunitate</p>
+  <h1 class="hero__title">Alătură-te comunității<br>La Mița Biciclista</h1>
+  <p class="hero__desc">Membrii noștri sunt sufletul locului — pasionați de cultură, gastronomie și arta de a trăi frumos. Alătură-te comunității și bucură-te de beneficii exclusive.</p>
+</section>
+
+<!-- TIER CARDS -->
+<section class="tiers-section">
+  <div style="text-align:center;margin-bottom:56px;">
+    <p class="section-label" style="text-align:center;">Planuri de Membership</p>
+    <h2 class="section-heading" style="text-align:center;">Alege nivelul care ți se potrivește</h2>
+    <p class="section-desc" style="max-width:560px;margin:0 auto;">Fiecare nivel de membership include beneficii unice, atent gândite pentru a face experiența ta la La Mița Biciclista mai specială.</p>
+  </div>
+
+  <div class="tiers-grid">
+    <!-- Tier 1: Prieten -->
+    <div class="tier-card">
+      <div class="tier-card__icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <p class="tier-card__name">Prieten</p>
+      <p class="tier-card__tagline">Intrarea în comunitatea La Mița Biciclista. Perfect pentru cei care iubesc locul.</p>
+      <div class="tier-card__price">
+        <span class="tier-card__price-currency">RON</span>
+        <span class="tier-card__price-amount">120</span>
+        <span class="tier-card__price-period">/ an</span>
+      </div>
+      <div class="tier-card__divider"></div>
+      <ul class="tier-card__features">
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Card digital de membru LMBSC
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Newsletter exclusiv cu povești din culise
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          10% reducere la braserie (zilnic)
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Invitații prioritare la evenimente publice
+        </li>
+        <li class="tier-card__feature tier-card__feature--disabled">
+          <span class="tier-card__feature-icon">–</span>
+          Acces la evenimente numai pentru membri
+        </li>
+        <li class="tier-card__feature tier-card__feature--disabled">
+          <span class="tier-card__feature-icon">–</span>
+          Masa rezervată permanentă
+        </li>
+      </ul>
+      <a href="/hospitality/membership?tier=prieten" class="btn-tier-outline">Devino Prieten</a>
+    </div>
+
+    <!-- Tier 2: Patron (Featured) -->
+    <div class="tier-card tier-card--featured">
+      <div class="tier-card__badge">Cel mai popular</div>
+      <div class="tier-card__icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="tier-card__name">Patron</p>
+      <p class="tier-card__tagline">Susținătorul comunității. Beneficii extinse și acces la evenimentele exclusive.</p>
+      <div class="tier-card__price">
+        <span class="tier-card__price-currency">RON</span>
+        <span class="tier-card__price-amount">360</span>
+        <span class="tier-card__price-period">/ an</span>
+      </div>
+      <div class="tier-card__divider"></div>
+      <ul class="tier-card__features">
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Tot ce include Prieten +
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          15% reducere la braserie și events
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Acces la evenimente exclusive lunar
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Acces la Directorul Colaboratorilor
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Povești Heritage în exclusivitate
+        </li>
+        <li class="tier-card__feature tier-card__feature--disabled">
+          <span class="tier-card__feature-icon">–</span>
+          Masa rezervată permanentă
+        </li>
+      </ul>
+      <a href="/hospitality/membership?tier=patron" class="btn-tier-primary">Devino Patron</a>
+    </div>
+
+    <!-- Tier 3: Benefactor -->
+    <div class="tier-card tier-card--patron">
+      <div class="tier-card__badge">Tier exclusiv</div>
+      <div class="tier-card__icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+      </div>
+      <p class="tier-card__name">Benefactor</p>
+      <p class="tier-card__tagline">Parteneri și mecenați ai comunității La Mița Biciclista. Cel mai înalt nivel de implicare.</p>
+      <div class="tier-card__price">
+        <span class="tier-card__price-currency">RON</span>
+        <span class="tier-card__price-amount">1200</span>
+        <span class="tier-card__price-period">/ an</span>
+      </div>
+      <div class="tier-card__divider"></div>
+      <ul class="tier-card__features">
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Tot ce include Patron +
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          20% reducere nelimitată
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Masă rezervată permanentă (2 persoane)
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Invitație la cina anuală a fondatorilor
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Placheta cu numele tău la intrare
+        </li>
+        <li class="tier-card__feature">
+          <span class="tier-card__feature-icon">✓</span>
+          Numere dedicate în publicațiile LMBSC
+        </li>
+      </ul>
+      <a href="/hospitality/membership?tier=benefactor" class="btn-tier-primary">Devino Benefactor</a>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS SECTION -->
+<section class="benefits">
+  <div style="max-width:1152px;margin:0 auto;">
+    <p class="section-label">De ce membership?</p>
+    <h2 class="section-heading">Beneficii care fac diferența</h2>
+    <div class="benefits__grid">
+      <div class="benefit-card">
+        <div class="benefit-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <h3 class="benefit-card__title">Reduceri la braserie</h3>
+        <p class="benefit-card__desc">Reduceri directe la meniu, băuturi și evenimente gastronomice, aplicate automat cu cardul tău de membru.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </div>
+        <h3 class="benefit-card__title">Acces prioritar la evenimente</h3>
+        <p class="benefit-card__desc">Primești invitații cu 48h înainte de publicarea generală. Biletele la evenimentele populare se epuizează rapid.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="benefit-card__title">Comunitate de suflet</h3>
+        <p class="benefit-card__desc">Faci parte dintr-o comunitate de 200+ membri pasionați de cultură, artă, gastronomie și viața Bucureștiului.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <h3 class="benefit-card__title">Povești Heritage exclusive</h3>
+        <p class="benefit-card__desc">Acces la arhiva editorială — articole, interviuri și documente despre istoria locului și a Bucureștiului interbelic.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div style="text-align:center;margin-bottom:0;">
+    <p class="section-label" style="text-align:center;">Ce spun membrii noștri</p>
+    <h2 class="section-heading" style="text-align:center;">Voci din comunitate</h2>
+  </div>
+  <div class="testimonials__grid">
+    <div class="testimonial-card">
+      <p class="testimonial-card__quote">„Am descoperit La Mița Biciclista prin prieteni și am decis imediat să devin Patron. Evenimentele exclusive lunare sunt de departe cel mai frumos lucru pe care-l fac în București."</p>
+      <div class="testimonial-card__author">
+        <div class="testimonial-card__avatar">A</div>
+        <div>
+          <p class="testimonial-card__name">Alexandra M.</p>
+          <p class="testimonial-card__tier">Patron · Membru din 2023</p>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <p class="testimonial-card__quote">„Cardul de Prieten mi-a schimbat micul dejun. Vin de două ori pe săptămână, reducerea se simte și atmosfera e mereu exactă cum trebuie. Merită din plin."</p>
+      <div class="testimonial-card__author">
+        <div class="testimonial-card__avatar">R</div>
+        <div>
+          <p class="testimonial-card__name">Radu C.</p>
+          <p class="testimonial-card__tier">Prieten · Membru din 2024</p>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <p class="testimonial-card__quote">„Ca Benefactor, am o relație specială cu locul acesta. Știu oamenii din echipă, particip la cina fondatorilor și mă simt co-creatorul unui spațiu pe care-l iubesc."</p>
+      <div class="testimonial-card__author">
+        <div class="testimonial-card__avatar">M</div>
+        <div>
+          <p class="testimonial-card__name">Mircea T.</p>
+          <p class="testimonial-card__tier">Benefactor · Membru din 2022</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2 class="final-cta__title">Gata să te alături nouă?</h2>
+  <p class="final-cta__desc">Înregistrarea durează 2 minute. Beneficiile încep imediat.</p>
+  <div class="final-cta__actions">
+    <a href="/hospitality/membership" class="btn-primary-gold">Alege planul tău</a>
+    <a href="/despre" class="btn-outline-white">Mai întâi, descoperă locul</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__grid">
+    <div>
+      <p class="footer__brand-name">La Mița Biciclista</p>
+      <p class="footer__desc">Braserie, salon cultural și spațiu expozițional în inima Bucureștiului.</p>
+      <address class="footer__address">Str. Biserica Amzei 9, Sector 1, București<br>+40 21 XXX XXXX</address>
+    </div>
+    <div>
+      <p class="footer__col-title">Navigare</p>
+      <ul class="footer__nav-links">
+        <li><a href="/brasserie">Brasserie &amp; Meniu</a></li>
+        <li><a href="/evenimente">Evenimente</a></li>
+        <li><a href="/membership">Membership</a></li>
+        <li><a href="/despre">Despre Noi</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer__col-title">Program</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Luni – Vineri</span><span style="color:rgba(255,255,255,0.75);font-weight:500">08:00–23:00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Sâmbătă</span><span style="color:rgba(255,255,255,0.75);font-weight:500">09:00–24:00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Duminică</span><span style="color:rgba(255,255,255,0.75);font-weight:500">09:00–22:00</span></div>
+      </div>
+    </div>
+    <div>
+      <p class="footer__col-title">Membership</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:14px;line-height:1.55;">Întrebări? Scrie-ne sau sună-ne direct.</p>
+      <a href="mailto:membership@lamitabiciclista.ro" style="font-size:13px;color:var(--color-accent-light);text-decoration:none;">membership@lamitabiciclista.ro</a>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <p class="footer__copyright">© 2025 La Mița Biciclista. Toate drepturile rezervate.</p>
+    <nav class="footer__legal">
+      <a href="/politica-confidentialitate">Politică confidențialitate</a>
+      <a href="/termeni">Termeni</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

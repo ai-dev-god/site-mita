@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>La Mița Biciclista — Braserie · Artă · Patrimoniu · București</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-primary:       #2C4A2E;
+  --color-primary-light: #4A7A4C;
+  --color-primary-muted: #EAF0EA;
+  --color-primary-dark:  #1E3A20;
+  --color-accent:        #B8962E;
+  --color-accent-light:  #F5E9C4;
+  --color-accent-muted:  #FBF4E3;
+  --color-surface:       #FAF6F0;
+  --color-surface-low:   #F4EFE8;
+  --color-raised:        #FFFFFF;
+  --color-text:          #1A1A1A;
+  --color-text-sec:      #5A5A5A;
+  --color-text-muted:    #9A9A9A;
+  --color-border:        #E4DDD5;
+  --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+  --shadow-md:  0 4px 16px rgba(44,74,46,0.12);
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  color: var(--color-text);
+  width: 1280px;
+  overflow-x: hidden;
+}
+
+/* ── NAV ────────────────────────────────────────── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(250,246,240,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+  height: 68px;
+  display: flex;
+  align-items: center;
+  padding: 0 64px;
+  gap: 0;
+}
+
+.nav__brand {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  margin-right: auto;
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+  margin-right: 40px;
+}
+
+.nav__links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-sec);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color 0.15s;
+}
+.nav__links a:hover { color: var(--color-primary); }
+
+.nav__cta {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 20px;
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.nav__cta:hover { background: var(--color-primary-light); }
+
+/* ── HERO ───────────────────────────────────────── */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 720px;
+  background: linear-gradient(160deg, #1a2e1b 0%, #2c4a2e 45%, #3d6640 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero__bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(184,150,46,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 40%),
+    radial-gradient(circle at 60% 80%, rgba(44,74,46,0.3) 0%, transparent 50%);
+}
+
+/* Decorative arched window motif */
+.hero__arch {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  width: 560px;
+  height: 680px;
+  border: 1px solid rgba(184,150,46,0.18);
+  border-radius: 50% 50% 0 0 / 60% 60% 0 0;
+  pointer-events: none;
+}
+.hero__arch-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  width: 480px;
+  height: 600px;
+  border: 1px solid rgba(184,150,46,0.10);
+  border-radius: 50% 50% 0 0 / 60% 60% 0 0;
+  pointer-events: none;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 80px;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(184,150,46,0.9);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.hero__eyebrow::before, .hero__eyebrow::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: rgba(184,150,46,0.5);
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: 88px;
+  font-weight: 400;
+  font-style: italic;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.0;
+  margin-bottom: 28px;
+}
+
+.hero__tagline {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 48px;
+}
+
+.hero__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 32px;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: #9a7a26; }
+
+.btn-outline-white {
+  display: inline-flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 32px;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.85);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-outline-white:hover { border-color: rgba(255,255,255,0.7); color: #fff; }
+
+.hero__scroll {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.4);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.hero__scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(184,150,46,0.6), transparent);
+}
+
+/* ── BRAND STORY ────────────────────────────────── */
+.brand-story {
+  background: var(--color-surface);
+  padding: 112px 64px;
+}
+
+.section-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 20px;
+}
+
+.brand-story__grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 80px;
+  align-items: center;
+  max-width: 1152px;
+  margin: 0 auto;
+}
+
+.brand-story__rule {
+  width: 40px;
+  height: 2px;
+  background: var(--color-accent);
+  margin-bottom: 24px;
+}
+
+.brand-story__heading {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin-bottom: 28px;
+}
+
+.brand-story__body {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--color-text-sec);
+  margin-bottom: 16px;
+}
+
+.brand-story__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-top: 12px;
+  letter-spacing: 0.02em;
+}
+.brand-story__link:hover { color: var(--color-accent); }
+.brand-story__link svg { width: 16px; height: 16px; }
+
+.brand-story__image {
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: linear-gradient(145deg, #d4c9b8 0%, #bfb3a2 50%, #a8997d 100%);
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+}
+.brand-story__image::after {
+  content: 'FOTOGRAFIE VENUE';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.6);
+}
+
+/* ── THREE SPACES ───────────────────────────────── */
+.spaces {
+  background: var(--color-surface-low);
+  padding: 80px 64px;
+}
+
+.spaces__header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.spaces__heading {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-top: 12px;
+}
+
+.spaces__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1152px;
+  margin: 0 auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-raised);
+}
+
+.space-card {
+  padding: 40px 36px 36px;
+  border-right: 1px solid var(--color-border);
+}
+.space-card:last-child { border-right: none; }
+
+.space-card__num {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+.space-card__icon {
+  width: 44px;
+  height: 44px;
+  background: var(--color-primary-muted);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: var(--color-primary);
+}
+
+.space-card__title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 12px;
+}
+
+.space-card__desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-text-sec);
+  margin-bottom: 24px;
+}
+
+.space-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+/* ── EVENTS PREVIEW ─────────────────────────────── */
+.events {
+  background: var(--color-raised);
+  padding: 96px 64px;
+}
+
+.events__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 48px;
+  max-width: 1152px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 48px;
+}
+
+.events__heading {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-top: 8px;
+}
+
+.events__see-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  padding-bottom: 4px;
+  border-bottom: 1.5px solid var(--color-primary);
+}
+
+.events__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1152px;
+  margin: 0 auto;
+}
+
+.event-card {
+  background: var(--color-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.event-card:hover { box-shadow: var(--shadow-md); }
+
+.event-card__img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #c8bcaa 0%, #b5a690 100%);
+  position: relative;
+}
+
+.event-card__date-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: var(--color-accent);
+  color: #fff;
+  width: 48px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+}
+.event-card__date-day {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+.event-card__date-month {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.event-card__body {
+  padding: 20px 20px 24px;
+}
+
+.event-card__cat {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 10px;
+}
+
+.event-card__title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+
+.event-card__desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-sec);
+}
+
+/* ── MEMBERSHIP CTA ─────────────────────────────── */
+.membership-cta {
+  background: var(--color-primary);
+  padding: 80px 64px;
+  text-align: center;
+}
+
+.membership-cta__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(184,150,46,0.9);
+  margin-bottom: 20px;
+}
+
+.membership-cta__title {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 400;
+  font-style: italic;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+
+.membership-cta__desc {
+  font-size: 16px;
+  color: rgba(255,255,255,0.72);
+  max-width: 560px;
+  margin: 0 auto 40px;
+  line-height: 1.65;
+}
+
+.membership-cta__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* ── FOOTER ─────────────────────────────────────── */
+.footer {
+  background: var(--color-primary-dark);
+  padding: 64px 64px 40px;
+  color: rgba(255,255,255,0.75);
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.4fr 1.6fr;
+  gap: 48px;
+  max-width: 1152px;
+  margin: 0 auto 56px;
+}
+
+.footer__brand-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.footer__desc {
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 20px;
+}
+
+.footer__address {
+  font-size: 12px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.5);
+}
+
+.footer__social {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+.footer__social-icon {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.footer__social-icon:hover { border-color: rgba(184,150,46,0.5); color: #B8962E; }
+
+.footer__col-title {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 20px;
+}
+
+.footer__nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.footer__nav-links a {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.footer__nav-links a:hover { color: rgba(255,255,255,0.9); }
+
+.footer__hours {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footer__hours-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.footer__hours-day { color: rgba(255,255,255,0.5); }
+.footer__hours-time { color: rgba(255,255,255,0.8); font-weight: 500; }
+
+.footer__newsletter-input-wrap {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.footer__newsletter-input {
+  flex: 1;
+  height: 38px;
+  padding: 0 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+}
+.footer__newsletter-input::placeholder { color: rgba(255,255,255,0.35); }
+.footer__newsletter-btn {
+  height: 38px;
+  padding: 0 16px;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.footer__newsletter-btn:hover { background: #9a7a26; }
+.footer__newsletter-note {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 8px;
+}
+
+.footer__bottom {
+  border-top: 1px solid rgba(255,255,255,0.10);
+  padding-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1152px;
+  margin: 0 auto;
+}
+.footer__copyright {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+}
+.footer__legal {
+  display: flex;
+  gap: 24px;
+}
+.footer__legal a {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.footer__legal a:hover { color: rgba(255,255,255,0.6); }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────────────── -->
+<nav class="nav">
+  <a href="/" class="nav__brand">La Mița Biciclista</a>
+  <ul class="nav__links">
+    <li><a href="/brasserie">Brasserie</a></li>
+    <li><a href="/evenimente">Evenimente</a></li>
+    <li><a href="/membership">Membership</a></li>
+    <li><a href="/despre">Despre Noi</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+  <a href="/hospitality/reserve" class="nav__cta">Rezervă</a>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero__bg-pattern"></div>
+  <div class="hero__arch"></div>
+  <div class="hero__arch-inner"></div>
+  <div class="hero__content">
+    <p class="hero__eyebrow">Str. Biserica Amzei 9, Sector 1, București</p>
+    <h1 class="hero__title">La Mița Biciclista</h1>
+    <p class="hero__tagline">Braserie · Artă · Patrimoniu · București</p>
+    <div class="hero__actions">
+      <a href="/despre" class="btn-primary">Descoperă Povestea</a>
+      <a href="/hospitality/reserve" class="btn-outline-white">Rezervă o Masă</a>
+    </div>
+  </div>
+  <div class="hero__scroll">
+    <div class="hero__scroll-line"></div>
+    <span>Continuă</span>
+  </div>
+</section>
+
+<!-- ── BRAND STORY ───────────────────────────────────────────────────── -->
+<section class="brand-story">
+  <div class="brand-story__grid">
+    <div class="brand-story__text">
+      <p class="section-label">Povestea Noastră</p>
+      <div class="brand-story__rule"></div>
+      <h2 class="brand-story__heading">O poveste veche<br>de decenii, vie și astăzi</h2>
+      <p class="brand-story__body">
+        La Mița Biciclista s-a născut dintr-o dorință profundă de a aduce în prezent spiritul boem al Bucureștiului interbelic. Spațiul nostru de pe Strada Biserica Amzei 9 este mai mult decât un restaurant — este un loc unde istoria, arta și gastronomia se întâlnesc.
+      </p>
+      <p class="brand-story__body">
+        Braseria noastră celebrează tradițiile culinare francoromâne, cu un meniu care onorează ingredientele locale și tehnicile clasice. Salonul nostru istoric găzduiește expoziții, lansări de carte și serate muzicale, păstrând viu spiritul cultural al orașului.
+      </p>
+      <p class="brand-story__body">
+        Fiecare detaliu — de la cornișele sculptate până la oglindele vechi — a fost ales cu grijă pentru a recrea atmosfera autentică a unei braserii pariziene de epocă, adaptată sensibilității contemporane.
+      </p>
+      <a href="/despre" class="brand-story__link">
+        Citește întreaga poveste
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </a>
+    </div>
+    <div class="brand-story__image"></div>
+  </div>
+</section>
+
+<!-- ── THREE SPACES ──────────────────────────────────────────────────── -->
+<section class="spaces">
+  <div class="spaces__header">
+    <p class="section-label">Spațiile Noastre</p>
+    <h2 class="spaces__heading">Trei lumi, un singur loc</h2>
+  </div>
+  <div class="spaces__grid">
+    <!-- Brasserie -->
+    <div class="space-card">
+      <p class="space-card__num">01</p>
+      <div class="space-card__icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11h18M3 11a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2M3 11v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4M12 7V5M8 7V5M16 7V5"/></svg>
+      </div>
+      <h3 class="space-card__title">Brasserie</h3>
+      <p class="space-card__desc">Bucătărie franco-română clasică, preparate din ingrediente locale și sezoniere, vin natural și cocktailuri de autor. Servit la parter, în ambient cald și luminos.</p>
+      <a href="/brasserie" class="space-card__link">
+        Vezi meniul
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </a>
+    </div>
+    <!-- Salon -->
+    <div class="space-card">
+      <p class="space-card__num">02</p>
+      <div class="space-card__icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+      </div>
+      <h3 class="space-card__title">Salon Historic</h3>
+      <p class="space-card__desc">La etaj, un salon cu tavane înalte și ornamente originale. Gazda evenimentelor culturale, lansărilor de carte, concertelor intime și expozițiilor de artă contemporană.</p>
+      <a href="/evenimente" class="space-card__link">
+        Evenimente
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </a>
+    </div>
+    <!-- Expo -->
+    <div class="space-card">
+      <p class="space-card__num">03</p>
+      <div class="space-card__icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+      </div>
+      <h3 class="space-card__title">Galerie &amp; Expo</h3>
+      <p class="space-card__desc">Un spațiu dedicat artei vizuale, fotografiei și designului. Expoziții rotative ale artiștilor bucureșteni și internaționali, deschise publicului și membrilor comunității noastre.</p>
+      <a href="/galerie" class="space-card__link">
+        Galerie curentă
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── EVENTS PREVIEW ────────────────────────────────────────────────── -->
+<section class="events">
+  <div class="events__header">
+    <div>
+      <p class="section-label">Agenda Culturală</p>
+      <h2 class="events__heading">Evenimente &amp; Expoziții</h2>
+    </div>
+    <a href="/evenimente" class="events__see-all">
+      Vezi toate evenimentele
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </a>
+  </div>
+  <div class="events__grid">
+    <!-- Event 1 -->
+    <div class="event-card">
+      <div class="event-card__img">
+        <div class="event-card__date-badge">
+          <span class="event-card__date-day">18</span>
+          <span class="event-card__date-month">Apr</span>
+        </div>
+      </div>
+      <div class="event-card__body">
+        <span class="event-card__cat">Expoziție</span>
+        <h3 class="event-card__title">Geometrii Interioare — Lucrări noi de Mara Ionescu</h3>
+        <p class="event-card__desc">O explorare a formei și golului în spațiul urban bucureștean, prin gravuri originale pe zinc și litografie.</p>
+      </div>
+    </div>
+    <!-- Event 2 -->
+    <div class="event-card">
+      <div class="event-card__img">
+        <div class="event-card__date-badge">
+          <span class="event-card__date-day">24</span>
+          <span class="event-card__date-month">Apr</span>
+        </div>
+      </div>
+      <div class="event-card__body">
+        <span class="event-card__cat">Concert</span>
+        <h3 class="event-card__title">Seară de Jazz Acoustic — Trio Elara &amp; Invitați</h3>
+        <p class="event-card__desc">O seară cu jazz contemporan românesc într-un format intim, cu cina inclusă la rezervarea anticipată.</p>
+      </div>
+    </div>
+    <!-- Event 3 -->
+    <div class="event-card">
+      <div class="event-card__img">
+        <div class="event-card__date-badge">
+          <span class="event-card__date-day">02</span>
+          <span class="event-card__date-month">Mai</span>
+        </div>
+      </div>
+      <div class="event-card__body">
+        <span class="event-card__cat">Lansare</span>
+        <h3 class="event-card__title">Lansare de Carte: „Micul Paris, ieri și mâine"</h3>
+        <p class="event-card__desc">Discuție cu autorul Alexandru Dima despre patrimoniul arhitectural al Bucureștiului și impactul modernizării.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MEMBERSHIP CTA ────────────────────────────────────────────────── -->
+<section class="membership-cta">
+  <p class="membership-cta__label">Comunitate</p>
+  <h2 class="membership-cta__title">Alătură-te comunității noastre</h2>
+  <p class="membership-cta__desc">
+    Membrii La Mița Biciclista se bucură de acces prioritar la evenimente, reduceri la braserie, invitații exclusive și o comunitate de pasionați de cultură, gastronomie și arte.
+  </p>
+  <div class="membership-cta__actions">
+    <a href="/hospitality/membership" class="btn-primary">Devino Membru</a>
+    <a href="/membership" class="btn-outline-white">Află mai mult</a>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer__grid">
+    <!-- Col 1: Brand -->
+    <div>
+      <p class="footer__brand-name">La Mița Biciclista</p>
+      <p class="footer__desc">Braserie, salon cultural și spațiu expozițional în inima Bucureștiului. Un loc cu poveste, gust și caracter.</p>
+      <address class="footer__address">
+        Str. Biserica Amzei 9, Sector 1<br>
+        București, România<br>
+        +40 21 XXX XXXX
+      </address>
+      <div class="footer__social">
+        <a href="#" class="footer__social-icon" aria-label="Instagram">IG</a>
+        <a href="#" class="footer__social-icon" aria-label="Facebook">FB</a>
+      </div>
+    </div>
+    <!-- Col 2: Nav -->
+    <div>
+      <p class="footer__col-title">Navigare</p>
+      <ul class="footer__nav-links">
+        <li><a href="/brasserie">Brasserie &amp; Meniu</a></li>
+        <li><a href="/evenimente">Evenimente</a></li>
+        <li><a href="/membership">Membership</a></li>
+        <li><a href="/despre">Despre Noi</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/hospitality/reserve">Rezervări</a></li>
+      </ul>
+    </div>
+    <!-- Col 3: Hours -->
+    <div>
+      <p class="footer__col-title">Program</p>
+      <div class="footer__hours">
+        <div class="footer__hours-row">
+          <span class="footer__hours-day">Luni – Vineri</span>
+          <span class="footer__hours-time">08:00 – 23:00</span>
+        </div>
+        <div class="footer__hours-row">
+          <span class="footer__hours-day">Sâmbătă</span>
+          <span class="footer__hours-time">09:00 – 24:00</span>
+        </div>
+        <div class="footer__hours-row">
+          <span class="footer__hours-day">Duminică</span>
+          <span class="footer__hours-time">09:00 – 22:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- Col 4: Newsletter -->
+    <div>
+      <p class="footer__col-title">Newsletter</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:14px;line-height:1.55;">Primești primul invitațiile la evenimente, noutăți din braserie și povești din culisele locului.</p>
+      <div class="footer__newsletter-input-wrap">
+        <input type="email" class="footer__newsletter-input" placeholder="adresa@email.com">
+        <button class="footer__newsletter-btn">Abonează-te</button>
+      </div>
+      <p class="footer__newsletter-note">Fără spam. Dezabonare oricând.</p>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <p class="footer__copyright">© 2025 La Mița Biciclista. Toate drepturile rezervate.</p>
+    <nav class="footer__legal">
+      <a href="/politica-confidentialitate">Politică de confidențialitate</a>
+      <a href="/termeni">Termeni și condiții</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

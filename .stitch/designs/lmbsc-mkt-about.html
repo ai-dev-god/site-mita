@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>La Mița Biciclista — Despre Noi &amp; Patrimoniu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --color-primary: #2C4A2E; --color-primary-light: #4A7A4C; --color-primary-muted: #EAF0EA;
+  --color-primary-dark: #1E3A20; --color-accent: #B8962E; --color-accent-light: #F5E9C4;
+  --color-accent-muted: #FBF4E3; --color-surface: #FAF6F0; --color-surface-low: #F4EFE8;
+  --color-raised: #FFFFFF; --color-text: #1A1A1A; --color-text-sec: #5A5A5A;
+  --color-text-muted: #9A9A9A; --color-border: #E4DDD5;
+  --shadow-sm: 0 1px 3px rgba(44,74,46,0.08); --shadow-md: 0 4px 16px rgba(44,74,46,0.12);
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', sans-serif;
+}
+body { font-family: var(--font-body); background: var(--color-surface); color: var(--color-text); width: 1280px; overflow-x: hidden; }
+
+/* NAV */
+.nav { position: sticky; top: 0; z-index: 200; background: rgba(250,246,240,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-border); height: 68px; display: flex; align-items: center; padding: 0 64px; }
+.nav__brand { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--color-primary); margin-right: auto; text-decoration: none; }
+.nav__links { display: flex; align-items: center; gap: 36px; list-style: none; margin-right: 40px; }
+.nav__links a { font-size: 14px; font-weight: 500; color: var(--color-text-sec); text-decoration: none; }
+.nav__links a.active { color: var(--color-primary); font-weight: 600; }
+.nav__cta { display: inline-flex; align-items: center; height: 38px; padding: 0 20px; background: var(--color-primary); color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--radius-sm); text-decoration: none; }
+
+/* HERO */
+.hero { background: linear-gradient(155deg, #1a2e1b 0%, #2c4a2e 55%, #3d5e3f 100%); padding: 96px 64px 80px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 75% 50%, rgba(184,150,46,0.11) 0%, transparent 55%); }
+.hero__breadcrumb { font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 24px; display: flex; align-items: center; gap: 8px; position: relative; z-index: 1; }
+.hero__label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(184,150,46,0.85); margin-bottom: 16px; position: relative; z-index: 1; }
+.hero__title { font-family: var(--font-display); font-size: 60px; font-weight: 400; font-style: italic; color: #fff; line-height: 1.1; margin-bottom: 20px; position: relative; z-index: 1; }
+.hero__desc { font-size: 17px; color: rgba(255,255,255,0.65); max-width: 580px; line-height: 1.65; position: relative; z-index: 1; }
+
+/* INTRO EDITORIAL */
+.intro-editorial { padding: 96px 64px; display: grid; grid-template-columns: 1fr 480px; gap: 96px; align-items: center; max-width: 1280px; }
+.intro__label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 20px; }
+.intro__heading { font-family: var(--font-display); font-size: 44px; font-weight: 600; line-height: 1.15; color: var(--color-text); margin-bottom: 24px; letter-spacing: -0.02em; }
+.intro__rule { width: 40px; height: 2px; background: var(--color-accent); margin-bottom: 24px; }
+.intro__body { font-size: 16px; line-height: 1.8; color: var(--color-text-sec); margin-bottom: 16px; }
+.intro__pullquote { font-family: var(--font-display); font-style: italic; font-size: 20px; line-height: 1.6; color: var(--color-text); border-left: 3px solid var(--color-accent); padding: 16px 0 16px 24px; margin: 32px 0; }
+.intro__image { width: 100%; aspect-ratio: 3/4; background: linear-gradient(145deg, #c8bcaa 0%, #b5a690 50%, #9a897a 100%); border-radius: var(--radius-md); position: relative; }
+.intro__image::after { content: 'FOTOGRAFIE VENUE'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; letter-spacing: 0.15em; color: rgba(255,255,255,0.45); }
+
+/* FULL-WIDTH IMAGE STRIP */
+.img-strip { width: 100%; height: 480px; background: linear-gradient(135deg, #3a5c3c 0%, #2c4a2e 40%, #1a2e1b 100%); position: relative; display: flex; align-items: center; justify-content: center; }
+.img-strip::after { content: 'IMAGINE PANORAMICĂ VENUE'; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; color: rgba(255,255,255,0.3); }
+.img-strip__caption { position: absolute; bottom: 32px; left: 64px; font-size: 13px; color: rgba(255,255,255,0.55); font-style: italic; }
+
+/* TIMELINE */
+.timeline-section { padding: 96px 64px; background: var(--color-raised); }
+.timeline-section__label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 12px; }
+.timeline-section__heading { font-family: var(--font-display); font-size: 38px; font-weight: 600; color: var(--color-text); margin-bottom: 56px; }
+
+.timeline { position: relative; max-width: 1000px; }
+.timeline::before { content: ''; position: absolute; left: 160px; top: 0; bottom: 0; width: 1px; background: var(--color-border); }
+
+.timeline-item { display: grid; grid-template-columns: 160px 1fr; gap: 0; margin-bottom: 48px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-item__year-wrap { padding-right: 40px; text-align: right; padding-top: 4px; }
+.timeline-item__year { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--color-primary); }
+.timeline-item__dot { position: absolute; left: 156px; width: 9px; height: 9px; background: var(--color-accent); border-radius: 50%; border: 2px solid var(--color-raised); margin-top: 8px; }
+.timeline-item__content { padding-left: 40px; }
+.timeline-item__title { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--color-text); margin-bottom: 8px; }
+.timeline-item__desc { font-size: 14px; line-height: 1.7; color: var(--color-text-sec); }
+
+/* PHILOSOPHY SECTION */
+.philosophy { background: var(--color-surface-low); padding: 96px 64px; }
+.philosophy__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: center; max-width: 1152px; margin: 0 auto; }
+.philosophy__image { width: 100%; aspect-ratio: 5/6; background: linear-gradient(145deg, #d4c9b8 0%, #bfb3a2 50%, #a8997d 100%); border-radius: var(--radius-md); position: relative; }
+.philosophy__image::after { content: 'FOTOGRAFIE INTERIOR'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; letter-spacing: 0.15em; color: rgba(255,255,255,0.45); }
+.philosophy__text {}
+.philosophy__label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 20px; }
+.philosophy__heading { font-family: var(--font-display); font-size: 38px; font-weight: 600; color: var(--color-text); line-height: 1.2; margin-bottom: 24px; }
+.philosophy__body { font-size: 16px; line-height: 1.8; color: var(--color-text-sec); margin-bottom: 16px; }
+.philosophy__pillars { display: flex; flex-direction: column; gap: 20px; margin-top: 32px; }
+.philosophy__pillar { display: flex; gap: 16px; align-items: flex-start; }
+.philosophy__pillar-num { width: 32px; height: 32px; background: var(--color-accent-muted); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--color-accent); flex-shrink: 0; }
+.philosophy__pillar-title { font-size: 15px; font-weight: 600; color: var(--color-text); margin-bottom: 4px; }
+.philosophy__pillar-desc { font-size: 13px; color: var(--color-text-sec); line-height: 1.6; }
+
+/* TEAM SECTION */
+.team { background: var(--color-raised); padding: 80px 64px; }
+.team__heading { font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--color-text); margin-top: 12px; margin-bottom: 48px; }
+.team__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; max-width: 1152px; }
+.team-card { }
+.team-card__photo { width: 100%; aspect-ratio: 3/4; background: linear-gradient(145deg, #c8bcaa 0%, #b5a690 100%); border-radius: var(--radius-md); margin-bottom: 16px; position: relative; }
+.team-card__photo::after { content: ''; position: absolute; inset: 0; }
+.team-card__name { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--color-text); margin-bottom: 4px; }
+.team-card__role { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 8px; }
+.team-card__desc { font-size: 13px; color: var(--color-text-sec); line-height: 1.6; }
+
+/* MEMBERSHIP CTA BANNER */
+.cta-banner { background: var(--color-primary); padding: 64px 64px; text-align: center; }
+.cta-banner__title { font-family: var(--font-display); font-size: 40px; font-weight: 400; font-style: italic; color: #fff; margin-bottom: 16px; }
+.cta-banner__desc { font-size: 16px; color: rgba(255,255,255,0.68); max-width: 480px; margin: 0 auto 32px; line-height: 1.65; }
+.cta-banner__actions { display: flex; justify-content: center; gap: 16px; }
+.btn-gold { display: inline-flex; align-items: center; height: 46px; padding: 0 28px; background: var(--color-accent); color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--radius-sm); text-decoration: none; }
+.btn-outline-w { display: inline-flex; align-items: center; height: 46px; padding: 0 28px; border: 1.5px solid rgba(255,255,255,0.4); color: rgba(255,255,255,0.85); font-size: 13px; font-weight: 500; border-radius: var(--radius-sm); text-decoration: none; }
+
+/* FOOTER */
+.footer { background: var(--color-primary-dark); padding: 48px 64px 32px; }
+.footer__grid { display: grid; grid-template-columns: 2fr 1fr 1.4fr 1.6fr; gap: 40px; max-width: 1152px; margin: 0 auto 40px; }
+.footer__brand-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+.footer__desc { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.55); margin-bottom: 16px; }
+.footer__address { font-size: 12px; line-height: 1.7; color: rgba(255,255,255,0.45); }
+.footer__col-title { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 16px; }
+.footer__nav-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer__nav-links a { font-size: 13px; color: rgba(255,255,255,0.55); text-decoration: none; }
+.footer__bottom { border-top: 1px solid rgba(255,255,255,0.10); padding-top: 20px; display: flex; justify-content: space-between; max-width: 1152px; margin: 0 auto; }
+.footer__copyright { font-size: 12px; color: rgba(255,255,255,0.3); }
+.footer__legal { display: flex; gap: 20px; }
+.footer__legal a { font-size: 12px; color: rgba(255,255,255,0.3); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav__brand">La Mița Biciclista</a>
+  <ul class="nav__links">
+    <li><a href="/brasserie">Brasserie</a></li>
+    <li><a href="/evenimente">Evenimente</a></li>
+    <li><a href="/membership">Membership</a></li>
+    <li><a href="/despre" class="active">Despre Noi</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+  <a href="/hospitality/reserve" class="nav__cta">Rezervă</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__breadcrumb">
+    <a href="/" style="color:inherit;text-decoration:none;">Acasă</a>
+    <span>›</span>
+    <span style="color:rgba(255,255,255,0.65)">Despre Noi</span>
+  </div>
+  <p class="hero__label">Povestea Noastră</p>
+  <h1 class="hero__title">Patrimoniu,<br>gust și comunitate</h1>
+  <p class="hero__desc">La Mița Biciclista este mai mult decât un restaurant. Este un spațiu viu, în care istoria Bucureștiului, arta contemporană și gastronomia se întâlnesc în jurul unei mese.</p>
+</section>
+
+<!-- INTRO EDITORIAL -->
+<section class="intro-editorial">
+  <div>
+    <p class="intro__label">Cine suntem</p>
+    <div class="intro__rule"></div>
+    <h2 class="intro__heading">Un loc cu poveste, în inima Micului Paris</h2>
+    <p class="intro__body">Ne-am deschis porțile pe Strada Biserica Amzei 9 cu o singură convingere: că Bucureștiul merită un spațiu care să-i celebreze trecutul fără a ignora prezentul. Un loc în care poți lua micul dejun dimineața citind ziarul, prânzi cu prietenii la amiază și asculți jazz seara, fără ca niciuna dintre aceste experiențe să pară nepotrivită.</p>
+    <blockquote class="intro__pullquote">„Vrem să fim locul unde Bucureștiul se regăsește pe sine — nu cel de pe cărțile poștale, ci cel viu, care respiră, care creează și care știe să se bucure."</blockquote>
+    <p class="intro__body">Clădirea noastră datează din anii '30, restaurată cu respect față de detaliile originale — cornișele sculptate, parchetul mozaic, ferestrele cu bolțari de piatră. Am adăugat confort contemporan fără a sacrifica sufletul locului.</p>
+  </div>
+  <div class="intro__image"></div>
+</section>
+
+<!-- FULL-WIDTH IMAGE STRIP -->
+<div class="img-strip">
+  <p class="img-strip__caption">Str. Biserica Amzei 9, Sector 1, București — vedere interioară, Salonul Historic</p>
+</div>
+
+<!-- TIMELINE -->
+<section class="timeline-section">
+  <p class="timeline-section__label">Cronologie</p>
+  <h2 class="timeline-section__heading">O istorie în curs de scriere</h2>
+  <div class="timeline" style="position:relative;">
+    <div class="timeline-item">
+      <div class="timeline-item__year-wrap"><span class="timeline-item__year">1934</span></div>
+      <div style="position:relative;"><div class="timeline-item__dot"></div></div>
+      <div class="timeline-item__content">
+        <h3 class="timeline-item__title">Construcția clădirii</h3>
+        <p class="timeline-item__desc">Imobilul de pe Strada Biserica Amzei 9 este construit în stil neoclasic interbelic, cu elemente Art Deco la fațadă. Devine rapid un punct de referință al cartierului.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-item__year-wrap"><span class="timeline-item__year">1960</span></div>
+      <div style="position:relative;"><div class="timeline-item__dot"></div></div>
+      <div class="timeline-item__content">
+        <h3 class="timeline-item__title">Apertura unui salon literar</h3>
+        <p class="timeline-item__desc">În perioada comunistă, clădirea adăpostește pe ascuns un salon de lectură și dezbateri, frecventat de scriitori și intelectuali bucureșteni.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-item__year-wrap"><span class="timeline-item__year">1989</span></div>
+      <div style="position:relative;"><div class="timeline-item__dot"></div></div>
+      <div class="timeline-item__content">
+        <h3 class="timeline-item__title">Transformare și libertate</h3>
+        <p class="timeline-item__desc">După Revoluție, clădirea trece prin mai mulți proprietari și utilizări diverse. Fresca originală de la parter este descoperită în 1994 în spatele unui perete fals.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-item__year-wrap"><span class="timeline-item__year">2018</span></div>
+      <div style="position:relative;"><div class="timeline-item__dot"></div></div>
+      <div class="timeline-item__content">
+        <h3 class="timeline-item__title">Achiziția și proiectul de restaurare</h3>
+        <p class="timeline-item__desc">Fondatorii La Mița Biciclista achiziționează clădirea și lansează un proiect de restaurare atentă, în colaborare cu arhitecți specializați în patrimoniu și Ministerul Culturii.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-item__year-wrap"><span class="timeline-item__year">2021</span></div>
+      <div style="position:relative;"><div class="timeline-item__dot"></div></div>
+      <div class="timeline-item__content">
+        <h3 class="timeline-item__title">Deschiderea La Mița Biciclista</h3>
+        <p class="timeline-item__desc">Restaurarea se finalizează. Braseria, Salonul Historic și prima galerie de artă se deschid publicului. În prima lună, peste 3.000 de oaspeți ne trec pragul.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-item__year-wrap"><span class="timeline-item__year">2023</span></div>
+      <div style="position:relative;"><div class="timeline-item__dot"></div></div>
+      <div class="timeline-item__content">
+        <h3 class="timeline-item__title">Lansarea programului de Membership</h3>
+        <p class="timeline-item__desc">Comunitatea La Mița Biciclista ia naștere oficial, cu primii 80 de membri fondatori. Programul cultural se extinde la 4 evenimente pe lună.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy">
+  <div class="philosophy__grid">
+    <div class="philosophy__image"></div>
+    <div class="philosophy__text">
+      <p class="philosophy__label">Filosofia Noastră</p>
+      <h2 class="philosophy__heading">Patru convingeri care ne ghidează</h2>
+      <p class="philosophy__body">Nu am deschis La Mița Biciclista pentru a face un business de restaurație. Am deschis-o pentru că simțeam că Bucureștiul are nevoie de un loc care să creadă sincer în câteva lucruri.</p>
+      <div class="philosophy__pillars">
+        <div class="philosophy__pillar">
+          <div class="philosophy__pillar-num">01</div>
+          <div>
+            <p class="philosophy__pillar-title">Patrimoniul trăiește în prezent</p>
+            <p class="philosophy__pillar-desc">Un spațiu istoric nu e muzeu — e un organism viu care trebuie să respire. Restaurăm cu grijă, dar folosim cu bucurie.</p>
+          </div>
+        </div>
+        <div class="philosophy__pillar">
+          <div class="philosophy__pillar-num">02</div>
+          <div>
+            <p class="philosophy__pillar-title">Mâncarea e un act cultural</p>
+            <p class="philosophy__pillar-desc">Ce mâncăm, cum mâncăm și cu cine mâncăm spune ceva despre cine suntem. Bucătăria noastră este o afirmație culturală.</p>
+          </div>
+        </div>
+        <div class="philosophy__pillar">
+          <div class="philosophy__pillar-num">03</div>
+          <div>
+            <p class="philosophy__pillar-title">Arta aparține tuturor</p>
+            <p class="philosophy__pillar-desc">Expozițiile noastre sunt deschise publicului larg. Credința că arta e pentru inițiați ne este profund străină.</p>
+          </div>
+        </div>
+        <div class="philosophy__pillar">
+          <div class="philosophy__pillar-num">04</div>
+          <div>
+            <p class="philosophy__pillar-title">Comunitatea e mai valoroasă decât traficul</p>
+            <p class="philosophy__pillar-desc">Preferăm 200 de oameni care revin cu drag în fiecare săptămână față de 2.000 de trecători ocazionali.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team">
+  <p style="font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--color-primary);margin-bottom:12px;">Echipa</p>
+  <h2 class="team__heading">Oamenii din spatele locului</h2>
+  <div class="team__grid">
+    <div class="team-card">
+      <div class="team-card__photo"></div>
+      <p class="team-card__name">Elena Dumitrescu</p>
+      <p class="team-card__role">Co-fondatoare &amp; Director Artistic</p>
+      <p class="team-card__desc">Fostă curatoare la MNAC, Elena aduce pasiunea pentru patrimoniu și arta contemporană în fiecare decizie editorială a locului.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-card__photo"></div>
+      <p class="team-card__name">Mihai Ionescu</p>
+      <p class="team-card__role">Co-fondator &amp; Director General</p>
+      <p class="team-card__desc">Cu background în restaurare arhitecturală, Mihai a condus proiectul de reabilitare a clădirii și gestionează relațiile cu comunitatea.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-card__photo"></div>
+      <p class="team-card__name">Andrei Dumitrescu</p>
+      <p class="team-card__role">Chef Executiv</p>
+      <p class="team-card__desc">Format la Paris și Lyon, revenit în România convins că bucătăria franco-română e o sinteză unică ce merită celebrată.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-card__photo"></div>
+      <p class="team-card__name">Ioana Popescu</p>
+      <p class="team-card__role">Manager Cultură &amp; Evenimente</p>
+      <p class="team-card__desc">Programatoarea culturală a locului, cu o ureche pentru muzică bună și un ochi pentru arta vizuală care surprinde.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <h2 class="cta-banner__title">Vino să ne cunoști</h2>
+  <p class="cta-banner__desc">Fie că vii pentru micul dejun, pentru un eveniment sau pur și simplu din curiozitate — ușa noastră e mereu deschisă.</p>
+  <div class="cta-banner__actions">
+    <a href="/hospitality/reserve" class="btn-gold">Rezervă o Masă</a>
+    <a href="/contact" class="btn-outline-w">Contactează-ne</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__grid">
+    <div>
+      <p class="footer__brand-name">La Mița Biciclista</p>
+      <p class="footer__desc">Braserie, salon cultural și spațiu expozițional în inima Bucureștiului.</p>
+      <address class="footer__address">Str. Biserica Amzei 9, Sector 1, București<br>+40 21 XXX XXXX</address>
+    </div>
+    <div>
+      <p class="footer__col-title">Navigare</p>
+      <ul class="footer__nav-links">
+        <li><a href="/brasserie">Brasserie &amp; Meniu</a></li>
+        <li><a href="/evenimente">Evenimente</a></li>
+        <li><a href="/membership">Membership</a></li>
+        <li><a href="/despre">Despre Noi</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer__col-title">Program</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Luni – Vineri</span><span style="color:rgba(255,255,255,0.75);font-weight:500">08:00–23:00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Sâmbătă</span><span style="color:rgba(255,255,255,0.75);font-weight:500">09:00–24:00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Duminică</span><span style="color:rgba(255,255,255,0.75);font-weight:500">09:00–22:00</span></div>
+      </div>
+    </div>
+    <div>
+      <p class="footer__col-title">Rezervări</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:14px;line-height:1.55;">Rezervați online sau sunați-ne direct.</p>
+      <a href="/hospitality/reserve" style="display:inline-flex;align-items:center;height:38px;padding:0 20px;background:var(--color-accent);color:#fff;font-size:13px;font-weight:600;border-radius:var(--radius-sm);text-decoration:none;">Rezervă online</a>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <p class="footer__copyright">© 2025 La Mița Biciclista. Toate drepturile rezervate.</p>
+    <nav class="footer__legal">
+      <a href="/politica-confidentialitate">Politică confidențialitate</a>
+      <a href="/termeni">Termeni</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

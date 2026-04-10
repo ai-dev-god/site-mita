@@ -2,15 +2,17 @@
 
 This file is the single source of truth for all LMBSC visual artifacts. It covers two distinct surfaces:
 
-1. **Marketing Site** — the public-facing landing page (`index.html`)
+1. **Marketing Site** — the public-facing website (`lamitabiciclista.ro`) — redesigned screens in Section 1.2
 2. **Hospitality Platform** — the internal SaaS (Next.js 15 app) for hosts, admins, and guests
 
 ---
 
 ## Part 1: Marketing Site Design System
 
+> **LAM-375 Redesign Note:** The marketing site is being redesigned to align with the Hospitality Platform brand tokens (forest green #2C4A2E, brass gold #B8962E, warm off-white #FAF6F0, Playfair Display + Inter). New high-fidelity screens are in Section 1.2. The old "Editorial Monolith" style (Manrope/yellow) is superseded.
+
 ### Brand Identity
-Sophisticated Romanian café/brasserie/salon. European boutique aesthetic. Premium, type-forward, minimalist.
+Sophisticated Romanian café/brasserie/salon. European boutique aesthetic. Warm Parisian brasserie heritage — refined, editorial, historic.
 
 ### Typography
 - **Primary:** Manrope (variable, 200–800) — headings, body, labels
@@ -70,6 +72,30 @@ Sophisticated Romanian café/brasserie/salon. European boutique aesthetic. Premi
 ### Interaction Notes
 - `switchMenu(id)` — pure JS, no framework; toggles active tab styles and panel visibility
 - Tab bar uses `overflow-x: auto` for mobile horizontal scroll
+
+---
+
+### 1.2 Marketing Site Redesign Screens (LAM-375)
+
+Redesign uses **Hospitality Platform brand tokens** (see Part 2, Section 2.1) — forest green, brass gold, warm off-white, Playfair Display + Inter. Stitch project: `projects/4252394021591925819` — "La Mița Biciclista — Public Marketing Website (Redesign)".
+
+| File | Page | Viewport | Status |
+|---|---|---|---|
+| `designs/lmbsc-mkt-homepage.html` | Homepage — hero, brand story, 3 spaces, events preview, membership CTA, footer | 1280px (desktop) | ✅ Generated |
+| `designs/lmbsc-mkt-brasserie.html` | Brasserie & Menu — page hero, menu tabs, 6-item grid (Mic Dejun), chef's note, wine strip | 1280px (desktop) | ✅ Generated |
+| `designs/lmbsc-mkt-events.html` | Evenimente & Expoziții — filter bar, featured event, 4 event cards, upcoming sidebar, newsletter | 1280px (desktop) | ✅ Generated |
+| `designs/lmbsc-mkt-membership.html` | Membership — 3 tier cards (Prieten/Patron/Benefactor), benefits grid, comparison, testimonials, CTA | 1280px (desktop) | ✅ Generated |
+| `designs/lmbsc-mkt-about.html` | Despre Noi & Patrimoniu — editorial intro, full-width image, timeline (1934–2023), philosophy pillars, team | 1280px (desktop) | ✅ Generated |
+| `designs/lmbsc-mkt-contact.html` | Contact & Locație — map/form split, info cards, hours table, social links, reservation CTA | 1280px (desktop) | ✅ Generated |
+
+**Design decisions:**
+- Forest green `#2C4A2E` nav and primary buttons — consistent with hospitality platform; creates seamless brand handoff when user navigates to `/hospitality`
+- Brass gold `#B8962E` date badges, CTA buttons, decorative accents — high-visibility without breaking warmth
+- Playfair Display italic for hero headlines creates old-world editorial gravitas; Inter for all UI/body copy
+- Hero sections use deep forest green gradient with subtle gold radial highlights — avoids needing photography while maintaining atmosphere
+- Tonal section separation (no 1px borders between sections) — consistent with DESIGN.md "No-Line" principle
+- All CTAs that navigate to the hospitality app use exact `/hospitality` paths (`/hospitality/reserve`, `/hospitality/membership`)
+- Membership tier cards: Patron card elevated with `translateY(-8px)` and forest green border — WCAG-compliant active state cue (border + transform, not color alone)
 
 ---
 

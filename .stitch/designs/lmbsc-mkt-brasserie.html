@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>La Mița Biciclista — Brasserie &amp; Meniu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-primary:       #2C4A2E;
+  --color-primary-light: #4A7A4C;
+  --color-primary-muted: #EAF0EA;
+  --color-primary-dark:  #1E3A20;
+  --color-accent:        #B8962E;
+  --color-accent-light:  #F5E9C4;
+  --color-accent-muted:  #FBF4E3;
+  --color-surface:       #FAF6F0;
+  --color-surface-low:   #F4EFE8;
+  --color-raised:        #FFFFFF;
+  --color-text:          #1A1A1A;
+  --color-text-sec:      #5A5A5A;
+  --color-text-muted:    #9A9A9A;
+  --color-border:        #E4DDD5;
+  --shadow-sm:  0 1px 3px rgba(44,74,46,0.08);
+  --shadow-md:  0 4px 16px rgba(44,74,46,0.12);
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  color: var(--color-text);
+  width: 1280px;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+.nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(250,246,240,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+  height: 68px; display: flex; align-items: center; padding: 0 64px; gap: 0;
+}
+.nav__brand { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--color-primary); margin-right: auto; text-decoration: none; }
+.nav__links { display: flex; align-items: center; gap: 36px; list-style: none; margin-right: 40px; }
+.nav__links a { font-size: 14px; font-weight: 500; color: var(--color-text-sec); text-decoration: none; }
+.nav__links a.active { color: var(--color-primary); font-weight: 600; }
+.nav__cta { display: inline-flex; align-items: center; height: 38px; padding: 0 20px; background: var(--color-primary); color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--radius-sm); text-decoration: none; }
+
+/* ── PAGE HERO ── */
+.page-hero {
+  background: linear-gradient(160deg, #1a2e1b 0%, #2c4a2e 60%, #3d5e3f 100%);
+  padding: 96px 64px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(184,150,46,0.12) 0%, transparent 60%);
+}
+.page-hero__breadcrumb {
+  font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 8px; position: relative; z-index: 1;
+}
+.page-hero__label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(184,150,46,0.85); margin-bottom: 16px; position: relative; z-index: 1; }
+.page-hero__title { font-family: var(--font-display); font-size: 64px; font-weight: 400; font-style: italic; color: #fff; line-height: 1.1; margin-bottom: 20px; position: relative; z-index: 1; }
+.page-hero__desc { font-size: 17px; color: rgba(255,255,255,0.68); max-width: 560px; line-height: 1.65; position: relative; z-index: 1; }
+
+/* ── RESERVE BAR ── */
+.reserve-bar {
+  background: var(--color-raised);
+  border-bottom: 1px solid var(--color-border);
+  padding: 20px 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.reserve-bar__text {
+  font-size: 14px; color: var(--color-text-sec); display: flex; align-items: center; gap: 12px;
+}
+.reserve-bar__text strong { color: var(--color-text); }
+.reserve-bar__cta {
+  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 24px;
+  background: var(--color-primary); color: #fff;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  border-radius: var(--radius-sm); text-decoration: none;
+}
+
+/* ── MENU SECTION ── */
+.menu-section { padding: 64px 64px 80px; max-width: 1280px; }
+
+.section-label { font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 12px; }
+
+.menu-section__heading { font-family: var(--font-display); font-size: 38px; font-weight: 600; color: var(--color-text); margin-bottom: 36px; }
+
+/* Tab bar */
+.menu-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--color-border); margin-bottom: 48px; }
+.menu-tab {
+  padding: 12px 28px; font-size: 14px; font-weight: 500; color: var(--color-text-muted);
+  cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+.menu-tab.active { color: var(--color-primary); font-weight: 600; border-bottom-color: var(--color-primary); }
+.menu-tab:not(.active):hover { color: var(--color-text-sec); }
+
+/* Menu items grid */
+.menu-items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.menu-item-card {
+  background: var(--color-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.menu-item-card:hover { box-shadow: var(--shadow-md); }
+
+.menu-item-card__img {
+  width: 100%; height: 180px;
+  background: linear-gradient(135deg, #d4c9b8 0%, #c2b89f 100%);
+  position: relative;
+}
+.menu-item-card__img::after { content: 'FOTOGRAFIE PRODUS'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; letter-spacing: 0.15em; color: rgba(255,255,255,0.5); }
+
+.menu-item-card__body { padding: 16px 18px 18px; }
+
+.menu-item-card__tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.tag {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 8px;
+  background: var(--color-accent-muted); color: var(--color-accent);
+  border-radius: var(--radius-sm); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.tag.veg { background: var(--color-primary-muted); color: var(--color-primary); }
+
+.menu-item-card__name { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--color-text); margin-bottom: 6px; }
+.menu-item-card__desc { font-size: 12px; line-height: 1.6; color: var(--color-text-sec); margin-bottom: 14px; }
+.menu-item-card__footer { display: flex; align-items: center; justify-content: space-between; }
+.menu-item-card__price { font-size: 18px; font-weight: 700; color: var(--color-primary); }
+.menu-item-card__price span { font-size: 12px; font-weight: 400; color: var(--color-text-muted); margin-left: 2px; }
+.menu-item-card__allergens { font-size: 10px; color: var(--color-text-muted); font-style: italic; }
+
+/* ── CHEF'S NOTE ── */
+.chef-note {
+  background: var(--color-primary);
+  margin: 0;
+  padding: 72px 64px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.chef-note__content {}
+.chef-note__label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(184,150,46,0.85); margin-bottom: 20px; }
+.chef-note__title { font-family: var(--font-display); font-size: 36px; font-weight: 600; color: #fff; line-height: 1.25; margin-bottom: 20px; }
+.chef-note__quote {
+  font-family: var(--font-display); font-style: italic; font-size: 18px; color: rgba(255,255,255,0.85);
+  line-height: 1.65; border-left: 3px solid var(--color-accent); padding-left: 24px; margin-bottom: 24px;
+}
+.chef-note__body { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.68); }
+.chef-note__sig { margin-top: 28px; display: flex; flex-direction: column; gap: 2px; }
+.chef-note__sig-name { font-family: var(--font-display); font-size: 18px; font-style: italic; color: var(--color-accent); }
+.chef-note__sig-title { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; }
+
+.chef-note__img-wrap {
+  width: 100%; aspect-ratio: 4/5;
+  background: linear-gradient(145deg, #3a5c3c 0%, #4a7a4c 50%, #2c4a2e 100%);
+  border-radius: var(--radius-md);
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.chef-note__img-wrap::after { content: 'FOTOGRAFIE CHEF'; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; color: rgba(255,255,255,0.35); }
+
+/* ── WINE STRIP ── */
+.wine-strip {
+  background: var(--color-surface-low);
+  padding: 56px 64px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.wine-strip__text {}
+.wine-strip__label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 12px; }
+.wine-strip__heading { font-family: var(--font-display); font-size: 32px; font-weight: 600; color: var(--color-text); margin-bottom: 16px; }
+.wine-strip__body { font-size: 15px; line-height: 1.7; color: var(--color-text-sec); margin-bottom: 24px; }
+.btn-outline-primary {
+  display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 24px;
+  border: 1.5px solid var(--color-primary); color: var(--color-primary);
+  font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  border-radius: var(--radius-sm); text-decoration: none;
+}
+
+.wine-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.wine-card {
+  background: var(--color-raised); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 20px;
+}
+.wine-card__type { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 8px; }
+.wine-card__name { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--color-text); margin-bottom: 4px; }
+.wine-card__region { font-size: 12px; color: var(--color-text-muted); margin-bottom: 12px; }
+.wine-card__price { font-size: 16px; font-weight: 700; color: var(--color-primary); }
+.wine-card__price span { font-size: 11px; color: var(--color-text-muted); font-weight: 400; }
+
+/* ── FOOTER ── */
+.footer { background: var(--color-primary-dark); padding: 48px 64px 32px; color: rgba(255,255,255,0.75); }
+.footer__grid { display: grid; grid-template-columns: 2fr 1fr 1.4fr 1.6fr; gap: 40px; max-width: 1152px; margin: 0 auto 40px; }
+.footer__brand-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+.footer__desc { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.55); margin-bottom: 16px; }
+.footer__address { font-size: 12px; line-height: 1.7; color: rgba(255,255,255,0.45); }
+.footer__col-title { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 16px; }
+.footer__nav-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer__nav-links a { font-size: 13px; color: rgba(255,255,255,0.55); text-decoration: none; }
+.footer__bottom { border-top: 1px solid rgba(255,255,255,0.10); padding-top: 20px; display: flex; justify-content: space-between; max-width: 1152px; margin: 0 auto; }
+.footer__copyright { font-size: 12px; color: rgba(255,255,255,0.3); }
+.footer__legal { display: flex; gap: 20px; }
+.footer__legal a { font-size: 12px; color: rgba(255,255,255,0.3); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav__brand">La Mița Biciclista</a>
+  <ul class="nav__links">
+    <li><a href="/brasserie" class="active">Brasserie</a></li>
+    <li><a href="/evenimente">Evenimente</a></li>
+    <li><a href="/membership">Membership</a></li>
+    <li><a href="/despre">Despre Noi</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+  <a href="/hospitality/reserve" class="nav__cta">Rezervă</a>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero__breadcrumb">
+    <a href="/" style="color:inherit;text-decoration:none;">Acasă</a>
+    <span>›</span>
+    <span style="color:rgba(255,255,255,0.65)">Brasserie</span>
+  </div>
+  <p class="page-hero__label">Braserie &amp; Bucătărie</p>
+  <h1 class="page-hero__title">Savori autentice,<br>în inima orașului</h1>
+  <p class="page-hero__desc">O bucătărie franco-română care celebrează ingredientele locale și sezoniere, preparate cu tehnici clasice și o sensibilitate contemporană.</p>
+</section>
+
+<!-- RESERVE BAR -->
+<div class="reserve-bar">
+  <div class="reserve-bar__text">
+    <span>Program: <strong>Lun–Vin 08:00–23:00</strong> · Sâm–Dum 09:00–24:00</span>
+    <span style="color:var(--color-border)">|</span>
+    <span>Str. Biserica Amzei 9, Sector 1, București</span>
+  </div>
+  <a href="/hospitality/reserve" class="reserve-bar__cta">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    Rezervă o Masă
+  </a>
+</div>
+
+<!-- MENU SECTION -->
+<div class="menu-section">
+  <p class="section-label">Bucătăria Noastră</p>
+  <h2 class="menu-section__heading">Meniurile La Mița Biciclista</h2>
+
+  <!-- Tabs -->
+  <div class="menu-tabs">
+    <div class="menu-tab active">Mic Dejun</div>
+    <div class="menu-tab">Prânz</div>
+    <div class="menu-tab">Cină</div>
+    <div class="menu-tab">Băuturi &amp; Cocktailuri</div>
+    <div class="menu-tab">Deserturi</div>
+  </div>
+
+  <!-- Menu items grid — Mic Dejun tab active -->
+  <div class="menu-items">
+    <!-- Item 1 -->
+    <div class="menu-item-card">
+      <div class="menu-item-card__img"></div>
+      <div class="menu-item-card__body">
+        <div class="menu-item-card__tags">
+          <span class="tag">Semnatură</span>
+          <span class="tag veg">Vegetarian</span>
+        </div>
+        <h3 class="menu-item-card__name">Œufs Bénédicte cu somon afumat</h3>
+        <p class="menu-item-card__desc">Ouă poșate pe english muffin artizanal, somon afumat local, sos hollandaise cu unt brun și capere.</p>
+        <div class="menu-item-card__footer">
+          <p class="menu-item-card__price">52 <span>lei</span></p>
+          <p class="menu-item-card__allergens">ou, gluten, pește</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="menu-item-card">
+      <div class="menu-item-card__img"></div>
+      <div class="menu-item-card__body">
+        <div class="menu-item-card__tags">
+          <span class="tag veg">Vegetarian</span>
+        </div>
+        <h3 class="menu-item-card__name">Croissant beurre cu gem de caise</h3>
+        <p class="menu-item-card__desc">Croissant din unt AOP, crocant la exterior, pufos interior. Cu gem artizanal de caise și unt nesărat.</p>
+        <div class="menu-item-card__footer">
+          <p class="menu-item-card__price">28 <span>lei</span></p>
+          <p class="menu-item-card__allergens">gluten, lactate, ou</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="menu-item-card">
+      <div class="menu-item-card__img"></div>
+      <div class="menu-item-card__body">
+        <div class="menu-item-card__tags">
+          <span class="tag">Clasic</span>
+        </div>
+        <h3 class="menu-item-card__name">Plat de Charcuterie &amp; Brânzeturi</h3>
+        <p class="menu-item-card__desc">Selecție de mezeluri artizanale, brânzeturi maturate, miere de flori, nuci și pâine de casă prăjită.</p>
+        <div class="menu-item-card__footer">
+          <p class="menu-item-card__price">68 <span>lei</span></p>
+          <p class="menu-item-card__allergens">lactate, gluten, nuci</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="menu-item-card">
+      <div class="menu-item-card__img"></div>
+      <div class="menu-item-card__body">
+        <div class="menu-item-card__tags">
+          <span class="tag">Sezonier</span>
+          <span class="tag veg">Vegetarian</span>
+        </div>
+        <h3 class="menu-item-card__name">Porridge de ovăz cu fructe de pădure</h3>
+        <p class="menu-item-card__desc">Ovăz lent, lapte de ovăz, compot de fructe de pădure, granola caramelizată și semințe de chia.</p>
+        <div class="menu-item-card__footer">
+          <p class="menu-item-card__price">36 <span>lei</span></p>
+          <p class="menu-item-card__allergens">gluten, poate conține nuci</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="menu-item-card">
+      <div class="menu-item-card__img"></div>
+      <div class="menu-item-card__body">
+        <div class="menu-item-card__tags">
+          <span class="tag">Semnatură</span>
+        </div>
+        <h3 class="menu-item-card__name">Omletă à la française cu trufe</h3>
+        <p class="menu-item-card__desc">Omletă roulée, gălbenuș intens, cremă de brânză și ulei de trufe negre. Servită cu salată de rucola și rădăcini murate.</p>
+        <div class="menu-item-card__footer">
+          <p class="menu-item-card__price">58 <span>lei</span></p>
+          <p class="menu-item-card__allergens">ou, lactate, gluten</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 6 -->
+    <div class="menu-item-card">
+      <div class="menu-item-card__img"></div>
+      <div class="menu-item-card__body">
+        <div class="menu-item-card__tags">
+          <span class="tag veg">Vegetarian</span>
+        </div>
+        <h3 class="menu-item-card__name">Tartă cu brânză de capră &amp; legume coapte</h3>
+        <p class="menu-item-card__desc">Bază sablée, crème de fromage de chèvre, roșii cherry confit, dovlecel marinat și busuioc proaspăt.</p>
+        <div class="menu-item-card__footer">
+          <p class="menu-item-card__price">44 <span>lei</span></p>
+          <p class="menu-item-card__allergens">gluten, lactate, ou</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:11px;color:var(--color-text-muted);margin-top:24px;line-height:1.6;">
+    Alergeni declarați: gluten (G), ouă (O), lapte (L), pești (P), crustacee (C), arahide (A), nuci (N), soia (S), țelină (Ț), muștar (M), susan (Su). Informații complete la cerere.
+  </p>
+</div>
+
+<!-- CHEF'S NOTE -->
+<section class="chef-note">
+  <div class="chef-note__content">
+    <p class="chef-note__label">Nota Bucătarului</p>
+    <h2 class="chef-note__title">Filosofia noastră culinară</h2>
+    <blockquote class="chef-note__quote">
+      „Gătesc cu produse locale nu pentru că e la modă, ci pentru că pământul românesc oferă ingrediente pe care nicio importantă piață pariziană nu le poate replica."
+    </blockquote>
+    <p class="chef-note__body">
+      La Mița Biciclista, bucătăria este o conversație între trecut și prezent. Ne inspirăm din rețetele clasice francoromâne ale Bucureștiului interbelic, reinterpretate cu ingrediente contemporane de la fermierii și producătorii artizanali cu care lucrăm direct. Sezonalitatea nu este o constrângere — este nucleul fiecărui meniu.
+    </p>
+    <div class="chef-note__sig">
+      <span class="chef-note__sig-name">Andrei Dumitrescu</span>
+      <span class="chef-note__sig-title">Chef Executiv · La Mița Biciclista</span>
+    </div>
+  </div>
+  <div class="chef-note__img-wrap"></div>
+</section>
+
+<!-- WINE STRIP -->
+<section class="wine-strip">
+  <div class="wine-strip__text">
+    <p class="wine-strip__label">Pivnița Noastră</p>
+    <h2 class="wine-strip__heading">Vinuri naturale &amp; producători de suflet</h2>
+    <p class="wine-strip__body">
+      Selecția noastră de vinuri cuprinde producători naturali și biodynamici din Moldova, Dobrogea, Oltenia și, desigur, câteva etichete din Franța și Italia selectate cu grijă de somelier-ul nostru.
+    </p>
+    <a href="#" class="btn-outline-primary">Vezi lista de vinuri</a>
+  </div>
+  <div class="wine-cards">
+    <div class="wine-card">
+      <p class="wine-card__type">Alb</p>
+      <p class="wine-card__name">Fetească Albă</p>
+      <p class="wine-card__region">Crama Gîrboiu, Vrancea</p>
+      <p class="wine-card__price">56 <span>lei / pahar</span></p>
+    </div>
+    <div class="wine-card">
+      <p class="wine-card__type">Roșu</p>
+      <p class="wine-card__name">Pinot Noir Rezervă</p>
+      <p class="wine-card__region">Davino, Dealu Mare</p>
+      <p class="wine-card__price">72 <span>lei / pahar</span></p>
+    </div>
+    <div class="wine-card">
+      <p class="wine-card__type">Orange</p>
+      <p class="wine-card__name">Riesling de Rhin</p>
+      <p class="wine-card__region">Cramele Halewood, Prahova</p>
+      <p class="wine-card__price">64 <span>lei / pahar</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__grid">
+    <div>
+      <p class="footer__brand-name">La Mița Biciclista</p>
+      <p class="footer__desc">Braserie, salon cultural și spațiu expozițional în inima Bucureștiului.</p>
+      <address class="footer__address">Str. Biserica Amzei 9, Sector 1, București<br>+40 21 XXX XXXX</address>
+    </div>
+    <div>
+      <p class="footer__col-title">Navigare</p>
+      <ul class="footer__nav-links">
+        <li><a href="/brasserie">Brasserie &amp; Meniu</a></li>
+        <li><a href="/evenimente">Evenimente</a></li>
+        <li><a href="/membership">Membership</a></li>
+        <li><a href="/despre">Despre Noi</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer__col-title">Program</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Luni – Vineri</span><span style="color:rgba(255,255,255,0.75);font-weight:500">08:00–23:00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Sâmbătă</span><span style="color:rgba(255,255,255,0.75);font-weight:500">09:00–24:00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Duminică</span><span style="color:rgba(255,255,255,0.75);font-weight:500">09:00–22:00</span></div>
+      </div>
+    </div>
+    <div>
+      <p class="footer__col-title">Rezervări</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:14px;line-height:1.55;">Rezervați online sau sunați-ne direct pentru mese mari și ocazii speciale.</p>
+      <a href="/hospitality/reserve" style="display:inline-flex;align-items:center;height:38px;padding:0 20px;background:var(--color-accent);color:#fff;font-size:13px;font-weight:600;border-radius:var(--radius-sm);text-decoration:none;">Rezervă online</a>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <p class="footer__copyright">© 2025 La Mița Biciclista. Toate drepturile rezervate.</p>
+    <nav class="footer__legal">
+      <a href="/politica-confidentialitate">Politică confidențialitate</a>
+      <a href="/termeni">Termeni</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

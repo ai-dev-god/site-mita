@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>La Mița Biciclista — Contact &amp; Locație</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --color-primary: #2C4A2E; --color-primary-light: #4A7A4C; --color-primary-muted: #EAF0EA;
+  --color-primary-dark: #1E3A20; --color-accent: #B8962E; --color-accent-light: #F5E9C4;
+  --color-accent-muted: #FBF4E3; --color-surface: #FAF6F0; --color-surface-low: #F4EFE8;
+  --color-raised: #FFFFFF; --color-text: #1A1A1A; --color-text-sec: #5A5A5A;
+  --color-text-muted: #9A9A9A; --color-border: #E4DDD5; --color-border-focus: #2C4A2E;
+  --shadow-sm: 0 1px 3px rgba(44,74,46,0.08); --shadow-md: 0 4px 16px rgba(44,74,46,0.12);
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', sans-serif;
+}
+body { font-family: var(--font-body); background: var(--color-surface); color: var(--color-text); width: 1280px; overflow-x: hidden; }
+
+/* NAV */
+.nav { position: sticky; top: 0; z-index: 200; background: rgba(250,246,240,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-border); height: 68px; display: flex; align-items: center; padding: 0 64px; }
+.nav__brand { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--color-primary); margin-right: auto; text-decoration: none; }
+.nav__links { display: flex; align-items: center; gap: 36px; list-style: none; margin-right: 40px; }
+.nav__links a { font-size: 14px; font-weight: 500; color: var(--color-text-sec); text-decoration: none; }
+.nav__links a.active { color: var(--color-primary); font-weight: 600; }
+.nav__cta { display: inline-flex; align-items: center; height: 38px; padding: 0 20px; background: var(--color-primary); color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--radius-sm); text-decoration: none; }
+
+/* PAGE HERO */
+.page-hero { background: linear-gradient(155deg, #1a2e1b 0%, #2c4a2e 60%, #3d5e3f 100%); padding: 72px 64px 64px; position: relative; overflow: hidden; }
+.page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 50%, rgba(184,150,46,0.10) 0%, transparent 55%); }
+.page-hero__breadcrumb { font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 24px; display: flex; align-items: center; gap: 8px; position: relative; z-index: 1; }
+.page-hero__label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(184,150,46,0.85); margin-bottom: 16px; position: relative; z-index: 1; }
+.page-hero__title { font-family: var(--font-display); font-size: 52px; font-weight: 400; font-style: italic; color: #fff; line-height: 1.1; margin-bottom: 16px; position: relative; z-index: 1; }
+.page-hero__desc { font-size: 16px; color: rgba(255,255,255,0.65); max-width: 480px; line-height: 1.65; position: relative; z-index: 1; }
+
+/* MAP + CONTACT GRID */
+.contact-grid { display: grid; grid-template-columns: 1fr 520px; min-height: 640px; }
+
+/* MAP PANEL */
+.map-panel { background: linear-gradient(135deg, #d4c9b8 0%, #bfb3a2 40%, #a8997d 100%); position: relative; }
+.map-panel::after { content: 'HARTĂ GOOGLE MAPS\AStr. Biserica Amzei 9, Sector 1, București'; white-space: pre; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; letter-spacing: 0.15em; color: rgba(255,255,255,0.5); text-align: center; }
+.map-panel__pin {
+  position: absolute; bottom: 40px; left: 40px;
+  background: var(--color-raised); border-radius: var(--radius-md);
+  padding: 16px 20px; box-shadow: var(--shadow-md);
+  display: flex; align-items: flex-start; gap: 12px; max-width: 260px;
+}
+.map-panel__pin-icon { width: 36px; height: 36px; background: var(--color-primary-muted); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0; }
+.map-panel__pin-name { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--color-text); margin-bottom: 4px; }
+.map-panel__pin-addr { font-size: 12px; color: var(--color-text-sec); line-height: 1.5; }
+.map-panel__directions { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--color-primary); text-decoration: none; margin-top: 6px; }
+
+/* CONTACT PANEL */
+.contact-panel { background: var(--color-raised); padding: 56px 48px; border-left: 1px solid var(--color-border); }
+.contact-panel__title { font-family: var(--font-display); font-size: 32px; font-weight: 600; color: var(--color-text); margin-bottom: 8px; }
+.contact-panel__desc { font-size: 14px; color: var(--color-text-sec); line-height: 1.6; margin-bottom: 36px; }
+
+/* Form */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.form-group:last-of-type { margin-bottom: 0; }
+.form-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-sec); }
+.form-input {
+  height: 40px; padding: 0 12px;
+  background: var(--color-surface); border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm); color: var(--color-text);
+  font-family: var(--font-body); font-size: 14px; outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-input:focus { border-color: var(--color-border-focus); box-shadow: 0 0 0 3px rgba(44,74,46,0.10); }
+.form-input::placeholder { color: var(--color-text-muted); }
+.form-textarea { height: 120px; padding: 10px 12px; resize: vertical; }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235A5A5A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+.form-submit { width: 100%; height: 46px; background: var(--color-primary); color: #fff; font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border: none; border-radius: var(--radius-sm); cursor: pointer; margin-top: 20px; transition: background 0.15s; }
+.form-submit:hover { background: var(--color-primary-light); }
+.form-note { font-size: 11px; color: var(--color-text-muted); margin-top: 10px; line-height: 1.5; }
+
+/* INFO CARDS ROW */
+.info-row { background: var(--color-surface-low); padding: 56px 64px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.info-card { background: var(--color-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 24px; }
+.info-card__icon { width: 44px; height: 44px; background: var(--color-primary-muted); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--color-primary); margin-bottom: 16px; }
+.info-card__title { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--color-text); margin-bottom: 10px; }
+.info-card__body { font-size: 13px; color: var(--color-text-sec); line-height: 1.65; }
+.info-card__link { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; color: var(--color-primary); text-decoration: none; margin-top: 12px; }
+
+/* HOURS TABLE */
+.hours-section { background: var(--color-raised); padding: 64px 64px; }
+.hours-section__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; max-width: 1000px; align-items: start; }
+.hours-section__label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 12px; }
+.hours-section__heading { font-family: var(--font-display); font-size: 28px; font-weight: 600; color: var(--color-text); margin-bottom: 28px; }
+.hours-table { width: 100%; border-collapse: collapse; }
+.hours-table tr { border-bottom: 1px solid var(--color-border); }
+.hours-table tr:last-child { border-bottom: none; }
+.hours-table td { padding: 12px 0; font-size: 14px; }
+.hours-table td:first-child { color: var(--color-text); font-weight: 500; }
+.hours-table td:last-child { color: var(--color-text-sec); text-align: right; }
+.hours-table .today { background: var(--color-primary-muted); border-radius: var(--radius-sm); padding: 12px 8px; }
+.hours-table .today td:first-child { color: var(--color-primary); font-weight: 600; }
+.hours-table .today td:last-child { color: var(--color-primary); font-weight: 600; }
+.today-badge { display: inline-flex; align-items: center; height: 18px; padding: 0 8px; background: var(--color-accent); color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 999px; margin-left: 8px; vertical-align: middle; }
+
+.social-section {}
+.social-section__label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 12px; }
+.social-section__heading { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--color-text); margin-bottom: 16px; }
+.social-section__desc { font-size: 14px; color: var(--color-text-sec); line-height: 1.65; margin-bottom: 24px; }
+.social-links { display: flex; flex-direction: column; gap: 12px; }
+.social-link { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-decoration: none; transition: border-color 0.15s; }
+.social-link:hover { border-color: var(--color-primary); }
+.social-link__icon { width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.social-link__icon--instagram { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.social-link__icon--facebook { background: #1877f2; }
+.social-link__handle { font-size: 14px; font-weight: 600; color: var(--color-text); }
+.social-link__followers { font-size: 12px; color: var(--color-text-muted); }
+
+/* RESERVE CTA */
+.reserve-cta { background: var(--color-primary); padding: 64px 64px; display: grid; grid-template-columns: 1fr auto; gap: 64px; align-items: center; }
+.reserve-cta__title { font-family: var(--font-display); font-size: 36px; font-weight: 400; font-style: italic; color: #fff; margin-bottom: 10px; }
+.reserve-cta__desc { font-size: 15px; color: rgba(255,255,255,0.68); line-height: 1.65; max-width: 540px; }
+.reserve-cta__actions { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; white-space: nowrap; }
+.btn-gold { display: inline-flex; align-items: center; height: 48px; padding: 0 32px; background: var(--color-accent); color: #fff; font-size: 14px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--radius-sm); text-decoration: none; }
+.btn-outline-w { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 24px; border: 1.5px solid rgba(255,255,255,0.4); color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 500; border-radius: var(--radius-sm); text-decoration: none; }
+
+/* FOOTER */
+.footer { background: var(--color-primary-dark); padding: 48px 64px 32px; }
+.footer__grid { display: grid; grid-template-columns: 2fr 1fr 1.4fr 1.6fr; gap: 40px; max-width: 1152px; margin: 0 auto 40px; }
+.footer__brand-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+.footer__desc { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.55); margin-bottom: 16px; }
+.footer__address { font-size: 12px; line-height: 1.7; color: rgba(255,255,255,0.45); }
+.footer__col-title { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 16px; }
+.footer__nav-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer__nav-links a { font-size: 13px; color: rgba(255,255,255,0.55); text-decoration: none; }
+.footer__bottom { border-top: 1px solid rgba(255,255,255,0.10); padding-top: 20px; display: flex; justify-content: space-between; max-width: 1152px; margin: 0 auto; }
+.footer__copyright { font-size: 12px; color: rgba(255,255,255,0.3); }
+.footer__legal { display: flex; gap: 20px; }
+.footer__legal a { font-size: 12px; color: rgba(255,255,255,0.3); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav__brand">La Mița Biciclista</a>
+  <ul class="nav__links">
+    <li><a href="/brasserie">Brasserie</a></li>
+    <li><a href="/evenimente">Evenimente</a></li>
+    <li><a href="/membership">Membership</a></li>
+    <li><a href="/despre">Despre Noi</a></li>
+    <li><a href="/contact" class="active">Contact</a></li>
+  </ul>
+  <a href="/hospitality/reserve" class="nav__cta">Rezervă</a>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero__breadcrumb">
+    <a href="/" style="color:inherit;text-decoration:none;">Acasă</a>
+    <span>›</span>
+    <span style="color:rgba(255,255,255,0.65)">Contact &amp; Locație</span>
+  </div>
+  <p class="page-hero__label">Vino la noi</p>
+  <h1 class="page-hero__title">Suntem în inima<br>Bucureștiului</h1>
+  <p class="page-hero__desc">La doi pași de Piața Romană, pe Strada Biserica Amzei 9. Vino cu prietenii sau rezervă pentru un eveniment special.</p>
+</section>
+
+<!-- MAP + CONTACT FORM -->
+<div class="contact-grid">
+  <!-- Map panel -->
+  <div class="map-panel" style="position:relative;">
+    <div class="map-panel__pin">
+      <div class="map-panel__pin-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div>
+        <p class="map-panel__pin-name">La Mița Biciclista</p>
+        <p class="map-panel__pin-addr">Str. Biserica Amzei 9<br>Sector 1, București</p>
+        <a href="https://maps.google.com" class="map-panel__directions" target="_blank">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Direcții
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact form -->
+  <div class="contact-panel">
+    <h2 class="contact-panel__title">Scrie-ne</h2>
+    <p class="contact-panel__desc">Avem ceva de anunțat? Vrei să rezervi pentru un eveniment privat sau să colaborezi cu noi? Trimite-ne un mesaj.</p>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Prenume</label>
+        <input type="text" class="form-input" placeholder="Andrei">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nume</label>
+        <input type="text" class="form-input" placeholder="Ionescu">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Adresă de email</label>
+      <input type="email" class="form-input" placeholder="andrei@email.ro">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Telefon (opțional)</label>
+      <input type="tel" class="form-input" placeholder="+40 7XX XXX XXX">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Subiect</label>
+      <select class="form-input form-select">
+        <option value="">Selectează un subiect</option>
+        <option>Rezervare pentru grup mare (10+ persoane)</option>
+        <option>Eveniment privat / corporate</option>
+        <option>Colaborare &amp; parteneriat</option>
+        <option>Presă &amp; media</option>
+        <option>Feedback</option>
+        <option>Altele</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Mesaj</label>
+      <textarea class="form-input form-textarea" placeholder="Cu ce te putem ajuta?"></textarea>
+    </div>
+
+    <button class="form-submit">Trimite Mesajul</button>
+    <p class="form-note">Îți răspundem în maxim 24 de ore în zilele lucrătoare. Datele tale sunt procesate conform GDPR — nu le împărtășim cu terți.</p>
+  </div>
+</div>
+
+<!-- INFO CARDS -->
+<div class="info-row">
+  <div class="info-card">
+    <div class="info-card__icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    </div>
+    <h3 class="info-card__title">Adresă</h3>
+    <p class="info-card__body">Str. Biserica Amzei 9, Sector 1, București 010527<br><br>Intrare și din Str. Mendeleev 10.</p>
+    <a href="https://maps.google.com" class="info-card__link" target="_blank">
+      Deschide în Maps
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </a>
+  </div>
+  <div class="info-card">
+    <div class="info-card__icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    </div>
+    <h3 class="info-card__title">Telefon</h3>
+    <p class="info-card__body">Rezervări și informații:<br><br><strong style="color:var(--color-text);">+40 21 XXX XXXX</strong><br>Lun–Dum, 09:00–21:00</p>
+    <a href="tel:+4021XXXXXXX" class="info-card__link">
+      Sună acum
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </a>
+  </div>
+  <div class="info-card">
+    <div class="info-card__icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </div>
+    <h3 class="info-card__title">Email</h3>
+    <p class="info-card__body">General: <a href="mailto:hello@lamitabiciclista.ro" style="color:var(--color-primary);text-decoration:none;">hello@lamitabiciclista.ro</a><br><br>Membership: <a href="mailto:membership@lamitabiciclista.ro" style="color:var(--color-primary);text-decoration:none;">membership@<br>lamitabiciclista.ro</a></p>
+  </div>
+  <div class="info-card">
+    <div class="info-card__icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    </div>
+    <h3 class="info-card__title">Transport public</h3>
+    <p class="info-card__body">Metro Piața Romană (300m)<br>Metro Piața Victoriei (400m)<br><br>STB: liniile 131, 226, 368 — stația Amzei</p>
+  </div>
+</div>
+
+<!-- HOURS + SOCIAL -->
+<section class="hours-section">
+  <div class="hours-section__grid">
+    <div>
+      <p class="hours-section__label">Program</p>
+      <h2 class="hours-section__heading">Când ne găsești</h2>
+      <table class="hours-table">
+        <tr>
+          <td>Luni</td>
+          <td>08:00 – 23:00</td>
+        </tr>
+        <tr>
+          <td>Marți</td>
+          <td>08:00 – 23:00</td>
+        </tr>
+        <tr>
+          <td>Miercuri</td>
+          <td>08:00 – 23:00</td>
+        </tr>
+        <tr>
+          <td>Joi</td>
+          <td>08:00 – 23:00</td>
+        </tr>
+        <tr class="today">
+          <td>Vineri <span class="today-badge">Azi</span></td>
+          <td>08:00 – 23:00</td>
+        </tr>
+        <tr>
+          <td>Sâmbătă</td>
+          <td>09:00 – 24:00</td>
+        </tr>
+        <tr>
+          <td>Duminică</td>
+          <td>09:00 – 22:00</td>
+        </tr>
+      </table>
+      <p style="font-size:12px;color:var(--color-text-muted);margin-top:16px;line-height:1.55;">
+        Bucătăria se închide cu 45 min înainte de ora de închidere. Programul poate fi modificat în zilele de sărbători legale.
+      </p>
+    </div>
+    <div class="social-section">
+      <p class="social-section__label">Rețele Sociale</p>
+      <h2 class="social-section__heading">Urmărește-ne</h2>
+      <p class="social-section__desc">Postăm zilnic — din bucătărie, din culisele evenimentelor, din galeria de artă și din povestea vie a locului.</p>
+      <div class="social-links">
+        <a href="#" class="social-link">
+          <div class="social-link__icon social-link__icon--instagram">IG</div>
+          <div>
+            <p class="social-link__handle">@lamitabiciclista</p>
+            <p class="social-link__followers">4.200 urmăritori pe Instagram</p>
+          </div>
+        </a>
+        <a href="#" class="social-link">
+          <div class="social-link__icon social-link__icon--facebook">f</div>
+          <div>
+            <p class="social-link__handle">La Mița Biciclista</p>
+            <p class="social-link__followers">6.800 urmăritori pe Facebook</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVE CTA -->
+<section class="reserve-cta">
+  <div>
+    <h2 class="reserve-cta__title">Vrei să rezervi o masă sau un eveniment privat?</h2>
+    <p class="reserve-cta__desc">Sistemul nostru de rezervări online îți permite să alegi data, ora și numărul de persoane direct. Pentru grupuri mari sau events private, sună-ne sau scrie-ne.</p>
+  </div>
+  <div class="reserve-cta__actions">
+    <a href="/hospitality/reserve" class="btn-gold">Rezervă Online</a>
+    <a href="tel:+4021XXXXXXX" class="btn-outline-w">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      Sună-ne direct
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__grid">
+    <div>
+      <p class="footer__brand-name">La Mița Biciclista</p>
+      <p class="footer__desc">Braserie, salon cultural și spațiu expozițional în inima Bucureștiului.</p>
+      <address class="footer__address">Str. Biserica Amzei 9, Sector 1, București<br>+40 21 XXX XXXX</address>
+    </div>
+    <div>
+      <p class="footer__col-title">Navigare</p>
+      <ul class="footer__nav-links">
+        <li><a href="/brasserie">Brasserie &amp; Meniu</a></li>
+        <li><a href="/evenimente">Evenimente</a></li>
+        <li><a href="/membership">Membership</a></li>
+        <li><a href="/despre">Despre Noi</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer__col-title">Program</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Luni – Vineri</span><span style="color:rgba(255,255,255,0.75);font-weight:500">08:00–23:00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Sâmbătă</span><span style="color:rgba(255,255,255,0.75);font-weight:500">09:00–24:00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(255,255,255,0.45)">Duminică</span><span style="color:rgba(255,255,255,0.75);font-weight:500">09:00–22:00</span></div>
+      </div>
+    </div>
+    <div>
+      <p class="footer__col-title">Rezervări</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:14px;line-height:1.55;">Rezervați online sau sunați-ne direct.</p>
+      <a href="/hospitality/reserve" style="display:inline-flex;align-items:center;height:38px;padding:0 20px;background:var(--color-accent);color:#fff;font-size:13px;font-weight:600;border-radius:var(--radius-sm);text-decoration:none;">Rezervă online</a>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <p class="footer__copyright">© 2025 La Mița Biciclista. Toate drepturile rezervate.</p>
+    <nav class="footer__legal">
+      <a href="/politica-confidentialitate">Politică confidențialitate</a>
+      <a href="/termeni">Termeni</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
