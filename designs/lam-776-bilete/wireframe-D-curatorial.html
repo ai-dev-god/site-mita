@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wireframe D — Curatorial / statement · Colecționarii. Numai Pictura.</title>
+<style>
+  :root { --ink:#111; --line:#cfcfcf; --muted:#666; --panel:#f4f4f4; }
+  *,*::before,*::after { box-sizing:border-box; }
+  html,body { margin:0; padding:0; }
+  body { font-family:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Times,serif; background:#fff; color:var(--ink); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .frame { max-width:1080px; margin:0 auto; padding:32px 48px; border-left:1px solid var(--line); border-right:1px solid var(--line); }
+  .framelabel { font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--line); padding:8px 0; margin-bottom:24px; display:flex; justify-content:space-between; gap:16px; }
+
+  header.brandbar { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--ink); margin-bottom:32px; }
+  header.brandbar .brand { font-family:ui-monospace,monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+  header.brandbar nav { font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  header.brandbar nav a { color:inherit; text-decoration:none; margin-left:14px; }
+
+  /* Thesis hero */
+  .thesis { padding:64px 0 72px; border-bottom:1px solid var(--ink); text-align:left; }
+  .thesis .step { font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+  .thesis .tagline { font-family:"Iowan Old Style",serif; font-weight:400; font-size:96px; line-height:.95; letter-spacing:-.02em; margin:24px 0 24px; max-width:18ch; }
+  .thesis .titletag { font-family:ui-monospace,monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); border-top:1px solid var(--ink); padding-top:10px; margin-top:32px; max-width:60ch; }
+  .thesis .show { font-family:"Iowan Old Style",serif; font-size:24px; margin:8px 0 0; }
+
+  .step-marker { display:inline-block; font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); border:1px solid var(--ink); padding:4px 10px; margin-bottom:16px; }
+  h2 { font-family:"Iowan Old Style",serif; font-weight:400; font-size:42px; line-height:1.1; letter-spacing:-.01em; margin:0 0 18px; max-width:24ch; }
+  h3 { font-family:"Iowan Old Style",serif; font-weight:400; font-size:28px; line-height:1.15; margin:18px 0 8px; }
+  p { margin:0 0 16px; max-width:62ch; font-size:17px; }
+  .lead { font-size:20px; line-height:1.45; max-width:54ch; }
+  .pull { font-family:"Iowan Old Style",serif; font-size:34px; line-height:1.18; font-style:italic; max-width:24ch; border-left:2px solid var(--ink); padding:8px 0 8px 18px; margin:36px 0; }
+
+  .annotation { font-family:ui-monospace,monospace; font-size:11px; color:var(--muted); font-style:italic; border-left:2px solid var(--line); padding:8px 12px; margin:12px 0 32px; max-width:80ch; }
+
+  .img { position:relative; border:1px solid var(--ink); background-color:#fafafa;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 100'><line x1='0' y1='0' x2='100' y2='100' stroke='%23bbb' stroke-width='0.5' vector-effect='non-scaling-stroke'/><line x1='100' y1='0' x2='0' y2='100' stroke='%23bbb' stroke-width='0.5' vector-effect='non-scaling-stroke'/></svg>");
+    background-size:100% 100%; display:flex; align-items:center; justify-content:center; }
+  .img .lbl { background:#fff; border:1px solid var(--ink); padding:4px 8px; font-family:ui-monospace,monospace; font-size:11px; color:var(--ink); }
+
+  .step { padding:64px 0; border-bottom:1px solid var(--ink); }
+  .step:last-of-type { border-bottom:0; }
+  .step.with-image { display:grid; grid-template-columns:1.2fr 1fr; gap:48px; align-items:start; }
+  .step.with-image .img { aspect-ratio:4/5; }
+
+  .meta-row { display:flex; gap:24px; margin:0 0 8px; }
+  .meta { font-family:ui-monospace,monospace; font-size:12px; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; }
+
+  .artists-list { display:grid; grid-template-columns:1fr 1fr; gap:32px 48px; }
+  .artists-list article { padding-top:8px; border-top:1px solid var(--line); }
+
+  .credits { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; padding:24px; border:1px solid var(--ink); }
+  .credits h4 { font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 6px; }
+  .credits p { font-family:"Iowan Old Style",serif; font-size:18px; margin:0; }
+
+  .practical { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .practical .block { border:1px solid var(--ink); padding:20px; }
+  .practical h4 { font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 8px; }
+  .practical p { margin:0; font-size:15px; }
+
+  .tickets-final { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:32px; border:1.5px solid var(--ink); flex-wrap:wrap; }
+  .tickets-final .prices { font-family:"Iowan Old Style",serif; font-size:28px; }
+  .tickets-final .who { font-family:ui-monospace,monospace; font-size:11px; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; margin-top:6px; }
+  .btn { display:inline-block; border:1.5px solid var(--ink); padding:14px 22px; font-family:ui-monospace,monospace; font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink); text-decoration:none; }
+  .btn--solid { background:var(--ink); color:#fff; }
+
+  .audience { background:var(--panel); border:1px solid var(--line); padding:24px; margin:64px 0 0; }
+  .audience h2 { font-family:ui-monospace,monospace; font-size:12px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; border-top:0; margin-top:0; }
+  footer.bottom { margin-top:48px; padding-top:16px; border-top:1px solid var(--ink); font-family:ui-monospace,monospace; font-size:11px; color:var(--muted); display:flex; justify-content:space-between; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="framelabel"><span>Wireframe D — Curatorial / statement</span><span>LAM-776 · low-fi · grayscale · structural blueprint</span></div>
+
+  <header class="brandbar">
+    <div class="brand">La Mița Biciclista — Stabiliment Creativ</div>
+    <nav>Teză · Artiști · Vizitează · Bilete</nav>
+  </header>
+
+  <section class="thesis">
+    <span class="step">Statement curatorial · Pasul 0</span>
+    <div class="tagline">Pictura ca act de rezistență.</div>
+    <div class="titletag">Expoziția</div>
+    <div class="show">Colecționarii. Numai Pictura.</div>
+    <div class="meta-row" style="margin-top:24px;">
+      <span class="meta">16 MAI — 16 IULIE 2026</span>
+      <span class="meta">București · Biserica Amzei 9</span>
+      <span class="meta">Curator: Erwin Kessler</span>
+    </div>
+  </section>
+
+  <p class="annotation">De ce hero=tagline și nu titlu: în formatul curatorial, vizitatorul intră prin teză, nu prin nume. Titlul expoziției apare al doilea, sub teză. Biletele lipsesc complet din primul ecran — sunt concluzia argumentului, nu deschiderea lui.</p>
+
+  <section class="step">
+    <span class="step-marker">Pas 1 · Contextul</span>
+    <h2>Anii '90: pictura declarată moartă.</h2>
+    <p class="lead">Începând cu 14 mai 2026, La Mița Biciclista – Stabiliment Creativ deschide publicului prima sa expoziție de artă contemporană: „Colecționarii / Numai Pictura", în șase săli ale casei din strada Biserica Amzei.</p>
+    <p>Expoziția prezintă una dintre cele mai importante colecții private de pictură românească postrevoluționară construită în liniște, timp de trei decenii, de un colecționar care a început să cumpere pictură în anii 90, exact în momentul în care scena artistică românească proclama moartea acestui mediu. Instalația, video-ul și arta digitală deveneau singurele forme legitime de expresie. Pictura era un cuvânt murdar.</p>
+    <div class="pull">Pictura era un cuvânt murdar.</div>
+    <p class="annotation">De ce decupăm fraza: e nucleul tezei. Vizitatorul trebuie să se oprească aici înainte de pasul următor.</p>
+  </section>
+
+  <section class="step">
+    <span class="step-marker">Pas 2 · Contra-mișcarea</span>
+    <h2>Colecționarul a mers în direcția opusă.</h2>
+    <p class="lead">Trei decenii. O colecție construită în liniște. Un mediu — pictura — pe care toată lumea îl declara terminat.</p>
+    <p>Curatoriată de Erwin Kessler, cu un design semnat de Attila Kim, expoziția continuă tradiția expozițiilor de amploare create La Mița Biciclista, care au adus, la ultima expoziție, peste 45.000 de vizitatori în casa istorică.</p>
+    <p class="annotation">De ce 45.000 apare aici și nu ca proof point în hero: în formatul curatorial, cifra nu vinde — confirmă. Apare ca dovadă că publicul a venit deja la expozițiile anterioare, nu ca argument de marketing.</p>
+  </section>
+
+  <section class="step">
+    <span class="step-marker">Pas 3 · Cei 6 artiști</span>
+    <h2>Șase pictori. Două decenii de lucrare.</h2>
+    <p class="lead">Cei 6 artiști din colecție nu sunt un grup, nu sunt o generație unitară, nu sunt o școală. Sunt șase răspunsuri diferite la aceeași întrebare: ce poate face pictura azi.</p>
+    <p class="annotation">De ce artiștii sunt al treilea pas, nu al doilea: în formatul curatorial, întâi se așază teza, apoi vin probele. Artiștii sunt argumentele tezei, nu vedete de afiș.</p>
+
+    <div class="artists-list">
+      <article>
+        <div class="img" style="aspect-ratio:4/5; margin-bottom:14px;"><span class="lbl">[IMG: Comănescu, 4:5]</span></div>
+        <h3>Nicolae Comănescu</h3>
+        <p>Cofondator al Grupului Rostopasca, unul dintre cele mai radicale colective artistice ale tranziției, Comănescu n-a pictat niciodată „ca un pictor". Lucrările lui sunt replici la context: urbane, nervoase, saturate de materia Bucureștiului. De la seriile anilor '90, crude și textuale, la peisajele urbane pixelate și panoramele americane din anii 2000, colecția de față îl urmărește pe parcursul a două decenii. Este artistul cel mai reprezentat în această expoziție și poate cel mai bun argument că pictura românească postrevoluționară nu a fost niciodată un gest retrospectiv, ci unul de confruntare directă cu prezentul.</p>
+      </article>
+      <article>
+        <div class="img" style="aspect-ratio:4/5; margin-bottom:14px;"><span class="lbl">[IMG: Tolici, 4:5]</span></div>
+        <h3>Roman Tolici</h3>
+        <p>Tehnic impecabil, conceptual necruțător. Tolici pictează cu precizia unui hiperrealist și gândește ca un filosof. Un iepure de pluș crucificat. Un creier gigantic blocat într-o curte interioară. Un hangar cu cai lângă o pădure neagră. Fiecare lucrare e un dispozitiv care arată perfect și deranjează profund.</p>
+      </article>
+      <article>
+        <div class="img" style="aspect-ratio:4/5; margin-bottom:14px;"><span class="lbl">[IMG: Ungureanu, 4:5]</span></div>
+        <h3>Ștefan Ungureanu</h3>
+        <p>Picturile lui Ungureanu sunt mașinării vizuale: platforme petroliere care levitează pe fundal de turcoaz, amfiteatre în care mulțimi cenușii asistă la ceva ce nu se vede, corpuri umane care se cațără unele peste altele ca să treacă un zid. Tehnic virtuoz, tematic apocaliptic. Seria „Vanitas" reformulează natura moartă clasică cu brațe robotice și cranii digitale. Un pictor care face pictură de istorie despre un prezent pe care nimeni nu l-a comandat.</p>
+      </article>
+      <article>
+        <div class="img" style="aspect-ratio:4/5; margin-bottom:14px;"><span class="lbl">[IMG: Cernea, 4:5]</span></div>
+        <h3>Codruța Cernea</h3>
+        <p>Flat, pop, irezistibil de elegantă. Un pește roșu ținut în brațe de o figurină cu căciulă. O barcă văzută de sus, schelet alb pe fond roz. O linie de schiuri colorate ca o partitură. Cernea pictează obiecte banale cu o precizie decorativă care le transformă în icoane ale cotidianului. Liniștea aparentă a suprafețelor ascunde un umor fin și un control absolut al compoziției.</p>
+      </article>
+      <article>
+        <div class="img" style="aspect-ratio:4/5; margin-bottom:14px;"><span class="lbl">[IMG: Anghelescu, 4:5]</span></div>
+        <h3>George Anghelescu</h3>
+        <p>Pânzele lui Anghelescu sunt scene de război care nu s-au întâmplat sau care se întâmplă mereu. Figuri în costume de protecție chimică, avioane în picaj, busturi antice prinse în haos tropical. Formatul mare, paleta saturată, densitatea compoziției: totul sugerează o pictură murală contemporană care nu și-a găsit încă peretele.</p>
+      </article>
+      <article>
+        <div class="img" style="aspect-ratio:4/5; margin-bottom:14px;"><span class="lbl">[IMG: Paleologu, 4:5]</span></div>
+        <h3>Ciprian Paleologu</h3>
+        <p>Culoare violentă, corp expus, tensiune maximă. „Genesis the first one" e o imagine care nu se uită ușor: o figură roșie pe fond albastru electric, cu un embrion în brațe. Paleologu pictează la limita dintre expresionism și artă brută, cu o sinceritate vizuală care respinge orice rafinament decorativ.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="step">
+    <span class="step-marker">Pas 4 · Curator &amp; design</span>
+    <h2>Cine a făcut expoziția posibilă.</h2>
+    <div class="credits">
+      <div><h4>Curator</h4><p>Erwin Kessler</p></div>
+      <div><h4>Design expoziție</h4><p>Attila Kim</p></div>
+      <div><h4>Locație</h4><p>La Mița Biciclista — Stabiliment Creativ, Strada Biserica Amzei 9, București</p></div>
+    </div>
+    <p class="annotation">De ce credit-ul curatorial e secțiune proprie: în formatul curatorial, autoritatea celor care au selectat lucrările e parte din argument. Numele Kessler / Kim funcționează ca semnătură pe statement.</p>
+  </section>
+
+  <section class="step">
+    <span class="step-marker">Pas 5 · Vizitează</span>
+    <h2>Cum ajungi la expoziție.</h2>
+    <div class="practical">
+      <div class="block"><h4>Perioadă</h4><p>16 MAI 2026 — 16 IULIE 2026</p></div>
+      <div class="block"><h4>Program</h4><p>Joi–Vineri: 18:00–22:00<br>Sâmbătă–Duminică: 12:00–22:00</p></div>
+    </div>
+  </section>
+
+  <section class="step">
+    <span class="step-marker">Pas 6 · Bilete</span>
+    <h2>Concluzia argumentului.</h2>
+    <p class="lead">Dacă ai citit până aici, biletul nu e o tranzacție — e răspunsul tău la teza expoziției.</p>
+    <div class="tickets-final">
+      <div>
+        <div class="prices"><strong>Bilet întreg</strong> · 30 lei</div>
+        <div class="prices" style="font-size:22px; opacity:.8;">Bilet redus · 15 lei</div>
+        <div class="who">Reducerea: elevi, studenți, pensionari</div>
+      </div>
+      <a class="btn btn--solid" href="#cumpara">Cumpără bilet</a>
+    </div>
+    <p class="annotation">De ce biletele la final și fără proof points: formatul curatorial nu vinde funcțional. Biletul vine după teză, după probe, după curator. Cititorul plătește pentru că s-a aliniat ideologic, nu pentru că prețul e mic.</p>
+  </section>
+
+  <section class="audience">
+    <h2>Pentru ce tip de vizitator e gândită această pagină</h2>
+    <p>Această pagină e gândită pentru vizitatorul care vrea să fie convins ideologic, nu funcțional — colecționarul aspirant, profesorul universitar, criticul de artă, cititorul Dilemei sau Scenei9. E o pagină pentru cineva care își alocă 5 minute să citească, care apreciază autoritatea curatorială și care cumpără biletul pentru că e de acord cu teza, nu pentru că prețul e mic. Funcționează puternic la oamenii care își definesc identitatea prin gusturile culturale. Eșuează cu publicul de masă care vine pentru o ieșire de weekend și nu vrea o lecție de istorie a artei înainte să cumpere.</p>
+  </section>
+
+  <footer class="bottom">
+    <span>La Mița Biciclista — Stabiliment Creativ · Strada Biserica Amzei 9, București</span>
+    <span>Wireframe D · LAM-776</span>
+  </footer>
+</div>
+</body>
+</html>

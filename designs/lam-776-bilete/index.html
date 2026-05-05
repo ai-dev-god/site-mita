@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wireframes — Colecționarii. Numai Pictura. · LAM-776</title>
+<style>
+  :root { --ink:#111; --line:#cfcfcf; --muted:#666; --panel:#f4f4f4; }
+  *,*::before,*::after { box-sizing:border-box; }
+  html,body { margin:0; padding:0; }
+  body { font-family:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Times,serif; background:#fff; color:var(--ink); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .frame { max-width:1080px; margin:0 auto; padding:32px 48px; border-left:1px solid var(--line); border-right:1px solid var(--line); }
+  .framelabel { font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--line); padding:8px 0; margin-bottom:24px; display:flex; justify-content:space-between; gap:16px; }
+  header.brandbar { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--ink); margin-bottom:32px; }
+  header.brandbar .brand { font-family:ui-monospace,monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+  header.brandbar .meta { font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+
+  h1 { font-family:"Iowan Old Style",serif; font-weight:400; font-size:64px; line-height:1.02; letter-spacing:-.015em; margin:32px 0 12px; }
+  .lead { font-size:20px; line-height:1.45; max-width:60ch; color:#222; margin:0 0 8px; }
+  .sub { font-family:ui-monospace,monospace; font-size:12px; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; margin-bottom:32px; }
+
+  .annotation { font-family:ui-monospace,monospace; font-size:11px; color:var(--muted); font-style:italic; border-left:2px solid var(--line); padding:8px 12px; margin:12px 0 32px; max-width:80ch; }
+
+  h2 { font-family:ui-monospace,monospace; font-size:12px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--ink); border-top:1px solid var(--ink); padding-top:10px; margin:48px 0 18px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+
+  .card { display:flex; flex-direction:column; border:1px solid var(--ink); padding:0; text-decoration:none; color:inherit; }
+  .card .preview { aspect-ratio:16/10; border-bottom:1px solid var(--ink); position:relative; background:#fafafa;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 100'><line x1='0' y1='0' x2='100' y2='100' stroke='%23ddd' stroke-width='0.5' vector-effect='non-scaling-stroke'/><line x1='100' y1='0' x2='0' y2='100' stroke='%23ddd' stroke-width='0.5' vector-effect='non-scaling-stroke'/></svg>");
+    background-size:100% 100%; padding:14px; display:flex; flex-direction:column; gap:6px; overflow:hidden; }
+  .card .preview .row { background:#fff; border:1px solid var(--ink); height:14px; }
+  .card .preview .row.title { height:36px; }
+  .card .preview .row.cta { width:120px; background:var(--ink); }
+  .card .preview .row.image { flex:1; background:transparent; border:1px dashed #aaa; }
+  .card .preview .row.thin { width:60%; }
+  .card .body { padding:18px 20px 20px; }
+  .card .label { font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+  .card h3 { font-family:"Iowan Old Style",serif; font-weight:400; font-size:24px; margin:6px 0 8px; }
+  .card p { margin:0 0 8px; font-size:14px; max-width:none; }
+  .card .open { font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink); margin-top:8px; }
+  .card .open::after { content:" →"; }
+
+  .reading { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; padding:18px 20px; border:1px solid var(--ink); margin-bottom:32px; }
+  .reading h4 { font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 6px; }
+  .reading p { margin:0; font-size:14px; max-width:none; }
+
+  ol.steps { padding-left:20px; max-width:70ch; }
+  ol.steps li { margin-bottom:6px; font-size:15px; }
+
+  footer.bottom { margin-top:48px; padding-top:16px; border-top:1px solid var(--ink); font-family:ui-monospace,monospace; font-size:11px; color:var(--muted); display:flex; justify-content:space-between; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="framelabel"><span>Index — 4 wireframes pentru pagina de bilete</span><span>LAM-776 · low-fi · grayscale · structural blueprint</span></div>
+
+  <header class="brandbar">
+    <div class="brand">La Mița Biciclista — Stabiliment Creativ</div>
+    <div class="meta">Pagină internă · pentru decizia board-ului</div>
+  </header>
+
+  <div class="sub">Expoziție · 16 MAI — 16 IULIE 2026 · Biserica Amzei 9</div>
+  <h1>Colecționarii. Numai Pictura.</h1>
+  <p class="lead">Patru direcții posibile pentru pagina de bilete a expoziției. Aceleași texte. Structuri diferite. Fără rafinament vizual — concentrarea e pe ierarhie.</p>
+
+  <p class="annotation">Niciuna dintre cele 4 nu e „mai bună" obiectiv. Diferă prin tipul de vizitator pe care îl convertesc. Citește la final fiecare wireframe — paragraful „Pentru cine".</p>
+
+  <h2>Cele 4 direcții</h2>
+  <div class="grid">
+
+    <a class="card" href="wireframe-A-editorial.html">
+      <div class="preview">
+        <div class="row thin"></div>
+        <div class="row title"></div>
+        <div class="row"></div>
+        <div class="row image"></div>
+        <div class="row"></div>
+        <div class="row"></div>
+      </div>
+      <div class="body">
+        <div class="label">A · Editorial / magazin de artă</div>
+        <h3>Articol lung. Biletele jos.</h3>
+        <p>Tipografie generoasă, mult text, citate-pull-quote, biletele jos de tot. Vinde prin densitate intelectuală.</p>
+        <div class="open">Deschide wireframe A</div>
+      </div>
+    </a>
+
+    <a class="card" href="wireframe-B-galerie.html">
+      <div class="preview">
+        <div class="row image" style="flex:2;"></div>
+        <div class="row thin" style="margin-top:6px;"></div>
+        <div class="row"></div>
+        <div class="row image"></div>
+      </div>
+      <div class="body">
+        <div class="label">B · Galerie / lucrările vorbesc</div>
+        <h3>Imagine întâi. CTA mereu prezent.</h3>
+        <p>Hero = imagine mare cu titlu suprapus minimalist. Artiștii sunt centrul paginii (carusel + grid). Text minim, CTA prezent constant. Vinde prin estetică.</p>
+        <div class="open">Deschide wireframe B</div>
+      </div>
+    </a>
+
+    <a class="card" href="wireframe-C-conversion.html">
+      <div class="preview">
+        <div class="row title"></div>
+        <div class="row cta"></div>
+        <div class="row image"></div>
+        <div class="row"></div>
+        <div class="row"></div>
+      </div>
+      <div class="body">
+        <div class="label">C · Conversion-first</div>
+        <h3>Hero compact. Biletele sus.</h3>
+        <p>Hero compact + CTA, biletele sus (nu jos), proof points (45.000 vizitatori, 6 artiști, 6 săli, 30 ani de colectare), apoi artiștii ca secundar. Vinde funcțional.</p>
+        <div class="open">Deschide wireframe C</div>
+      </div>
+    </a>
+
+    <a class="card" href="wireframe-D-curatorial.html">
+      <div class="preview">
+        <div class="row title" style="height:48px;"></div>
+        <div class="row thin"></div>
+        <div class="row"></div>
+        <div class="row"></div>
+        <div class="row image"></div>
+      </div>
+      <div class="body">
+        <div class="label">D · Curatorial / statement</div>
+        <h3>Teza întâi. Biletele la final.</h3>
+        <p>Construită în jurul tezei „Pictura ca act de rezistență". Secțiuni argumentate în trepte: contextul anilor '90 → contra-mișcarea colecționarului → cei 6 artiști. Bilete la final. Vinde ideologic.</p>
+        <div class="open">Deschide wireframe D</div>
+      </div>
+    </a>
+
+  </div>
+
+  <h2>Ce e identic în toate 4</h2>
+  <div class="reading">
+    <div><h4>Conținut</h4><p>Toate textele sunt cele furnizate de tine. Verbatim, fără adăugiri, fără cifre noi.</p></div>
+    <div><h4>Imagini</h4><p>Toate imaginile sunt dreptunghiuri cu „X" și etichetă descriptivă. Nu există imagini reale.</p></div>
+    <div><h4>Stil</h4><p>Low-fi, grayscale, fără gradiente sau animații. Ce diferă e ordinea, ponderea, ierarhia.</p></div>
+  </div>
+
+  <h2>Cum citești pagina</h2>
+  <ol class="steps">
+    <li>Deschide câte una pe rând. Citește-o ca un vizitator nou — primele 5 secunde, apoi scrolează.</li>
+    <li>Atenție la <em>unde apare biletul</em>: sus, jos, în mijloc, în header.</li>
+    <li>Atenție la <em>cine apare primul</em>: tu (titlul), colecționarul (teza), artistul (imaginea), oferta (prețul).</li>
+    <li>Adnotările gri (italice) sub fiecare secțiune explică <em>de ce</em> am pus-o acolo. Sunt pentru tine.</li>
+    <li>La sfârșitul fiecărui wireframe, paragraful „Pentru cine" descrie tipul de vizitator pe care îl convertește.</li>
+    <li>După ce le citești pe toate 4, alege una (sau combinația care te convinge) și o ducem la design hi-fi.</li>
+  </ol>
+
+  <footer class="bottom">
+    <span>La Mița Biciclista — Stabiliment Creativ · Strada Biserica Amzei 9, București</span>
+    <span>Index · LAM-776</span>
+  </footer>
+</div>
+</body>
+</html>
