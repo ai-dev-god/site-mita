@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Expoziție | Întâlniri. Sau cum se naște o lume nouă</title>
+  <meta name="description" content="Descoperă poveștile unor legături umane care au rezistat dictaturii și războiului, chiar în inima casei de La Mița Biciclista.">
+
+  <!-- Tailwind CDN (for all the className utilities) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React + ReactDOM (UMD) -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+
+  <!-- Babel so the browser can understand JSX in this file -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-white">
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    // ---- tiny helper so we don't need lucide-react ----
+    const IconStub = ({ children }) => (
+      <span style={{ display: 'inline-block', width: '1.2em', textAlign: 'center' }}>
+        {children}
+      </span>
+    );
+
+    const Menu = (props) => <IconStub>≡</IconStub>;
+    const X = (props) => <IconStub>✕</IconStub>;
+    const MapPin = (props) => <IconStub>📍</IconStub>;
+    const Clock = (props) => <IconStub>🕒</IconStub>;
+    const ChevronDown = (props) => <IconStub>⌄</IconStub>;
+    const Headphones = (props) => <IconStub>🎧</IconStub>;
+    const Users = (props) => <IconStub>👥</IconStub>;
+    const Instagram = (props) => <IconStub>📸</IconStub>;
+    const Facebook = (props) => <IconStub>f</IconStub>;
+    const Send = (props) => <IconStub>➤</IconStub>;
+    const Loader2 = (props) => <IconStub>⏳</IconStub>;
+    const Download = (props) => <IconStub>⬇</IconStub>;
+    const Globe = (props) => <IconStub>🌐</IconStub>;
+    const AlertCircle = (props) => <IconStub>⚠️</IconStub>;
+
+    // taking hooks from React so the existing code can still say useState/useEffect/useRef
+    const { useState, useEffect, useRef } = React;
+
+    // ---- App code ----
+   
+    // --- DATA CONSTANTS ---
+
+    const LOGO_URL = "assets/LMBSC_Primary_Logo_White.png";
+    const PAPER_TEXTURE = "https://www.transparenttextures.com/patterns/aged-paper.png";
+
+    const TRANSLATIONS = {
+      ro: {
+        nav: {
+          exhibit: "Expoziția",
+          protagonists: "Protagoniști",
+          testimonials: "Impresii",
+          letter: "Scrisoare",
+          tickets: "Cumpără Bilete"
+        },
+        hero: {
+          date: "30 Octombrie 2025 — 5 Aprilie 2026",
+          title1: "Întâlniri. Sau cum",
+          title2: "se naște o lume nouă.",
+          desc: "Descoperă poveștile unor legături umane care au rezistat dictaturii și războiului, chiar în inima casei de La Mița Biciclista.",
+          program_label: "Program",
+      prog_gen_lbl: "Acces General",
+      prog_gen_val: "Luni, 30.03 - Duminică, 05.04: 12:00 - 21:00",
+      prog_gui_lbl: "Vizite Ghidate",
+      prog_gui_val1: "Luni-Miercuri: 19:00",
+      prog_gui_val2: "Vineri: 19:00",
+      prog_gui_val3: "Sâmbătă-Duminică: 13:00 / 16:00 / 19:00",
+          address_label: "Adresă",
+          disclaimer: "*Accesul se face pe bază de bilet și se achiziționează de la intrare sau online de pe iabilet.ro",
+          btn_about: "Despre Expoziție"
+        },
+        about: {
+          title: "Apropierea umană ca",
+          title_accent: "act de curaj",
+          p1: "Începând cu 31 octombrie 2025, La Mița Biciclista - Stabiliment Creativ deschide publicului una dintre cele mai emoționante expoziții ale anului: „Întâlniri. Sau cum se naște o lume nouă” în etajul 2 și mansarda din strada Biserica Amzei.",
+          p2: "Vizitatorii sunt invitați să descopere poveștile și spațiile intime ale unor prietenii, iubiri și legături umane care au rezistat dictaturii, războiului și trecerii timpului și să reflecteze asupra propriilor întâlniri decisive, propriilor prietenii și iubiri.",
+          p3: "Curatoriată de Andreea Apostu și Edmond Niculușcă, expoziția continuă tradiția expozițiilor de amploare create La Mița Biciclista care au adus peste 30.000 de vizitatori în casa istorică."
+        },
+        protagonists: {
+          label: "Poveștile Expoziției",
+          title: "Protagoniștii",
+          desc: "„Când lumea se închide din nou în frică și neîncredere, aducem în atenția publicului câteva întâlniri exemplare.”",
+          room: "Sala"
+        },
+        testimonials: {
+          label: "Impresii",
+          title: "Ce spun vizitatorii"
+        },
+        tickets: {
+      label: "Planifică vizita",
+      title: "Bilete",
+      desc: "Alege experiența potrivită pentru tine și descoperă povestea casei de La Mița Biciclista.",
+      general: "Acces General",
+      guided: "Vizită Ghidată",
+      voucher: "Voucher Cadou", 
+      student: "Studenți sau Pensionari",
+      audio: "Ghid audio - Engleză & Franceză", 
+      unlimited: "Durata vizitei: nelimitată",
+      curator: "Tur ghidat de curator",
+      duration90: "Durata: 90 min",
+      voucher_desc: "Oferă cadou celor dragi o experiență deosebită despre întâlniri și prietenii!", 
+      voucher_info: "Voucherul poate fi folosit în zilele în care se organizează tururi ghidate în limita locurilor disponibile!",
+      voucher_usage: "Voucherul cadou se poate folosi pentru a plasa o comanda la Vizită Ghidată Expoziție", 
+      buy: "Cumpără Bilet",
+      buy_voucher: "Cumpără Voucher", 
+      recommended: "Recomandat",
+      schools_title: "Tururi Elevi",
+      per_student: "/ elev",
+      schools_price_desc: "Profesorii însoțitori intră gratuit",
+schools_desc_q: "Ești profesor sau părinte?",
+schools_desc_a: "Programează o vizită ghidată pentru elevii tăi (recomandat începând cu clasa a 8-a).",
+      schools_appointment: "Doar cu programare",
+      schools_schedule: "Luni - Vineri: 10:00 - 18:00",
+      schools_duration: "Durată tur: 1h",
+      schools_btn: "Solicită programare"
+    },
+        footer: {
+          support: "Cu sprijinul:",
+          copyright: "LA MIȚA BICICLISTA STABILIMENT CREATIV © COPYRIGHT 2025",
+          privacy: "Privacy Policy",
+          terms: "Terms of Use",
+          more_partners: "Și mulți alții... vezi lista completă"
+        }
+      },
+      en: {
+        nav: {
+          exhibit: "The Exhibition",
+          protagonists: "Protagonists",
+          testimonials: "Impressions",
+          letter: "",
+          tickets: "Buy Tickets"
+        },
+        hero: {
+          date: "October 30, 2025 — April 5, 2026",
+          title1: "Encounters. Or how",
+          title2: "a new world is born.",
+          desc: "Discover the stories of human bonds that withstood dictatorship and war, right in the heart of the La Mița Biciclista house.",
+          program_label: "Schedule",
+      prog_gen_lbl: "General Access",
+      prog_gen_val: "Mon, 30.03-Sun, 05.04: 12:00 - 21:00",
+      prog_gui_lbl: "Guided Tours",
+      prog_gui_val1: "Mon-Wed: 19:00",
+      prog_gui_val2: "Fri: 19:00",
+      prog_gui_val3: "Sat-Sun: 13:00 / 16:00 / 19:00",
+          address_label: "Address",
+          disclaimer: "*Access is based on a ticket purchased at the entrance or online at iabilet.ro",
+          btn_about: "About Exhibition"
+        },
+        about: {
+          title: "Human closeness as an",
+          title_accent: "act of courage",
+          p1: "Starting October 31, 2025, La Mița Biciclista - Creative Establishment opens to the public one of the most emotional exhibitions of the year: 'Encounters. Or how a new world is born' on the 2nd floor and attic of Biserica Amzei street.",
+          p2: "Visitors are invited to discover the stories and intimate spaces of friendships, loves, and human connections that resisted dictatorship, war, and the passage of time, and to reflect on their own decisive encounters.",
+          p3: "Curated by Andreea Apostu and Edmond Niculușcă, the exhibition continues the tradition of major exhibitions created at La Mița Biciclista that have brought over 30,000 visitors to the historic house."
+        },
+        protagonists: {
+          label: "Exhibition Stories",
+          title: "The Protagonists",
+          desc: "“When the world closes itself again in fear and mistrust, we bring to the public's attention a few exemplary encounters.”",
+          room: "Room"
+        },
+        testimonials: {
+          label: "Impressions",
+          title: "Visitor Testimonials"
+        },
+        tickets: {
+      label: "Plan your visit",
+      title: "Tickets",
+      desc: "Choose the right experience for you and discover the stories of encounters that conquered time.",
+      general: "General Access",
+      guided: "Guided Tour",
+      voucher: "Gift Voucher",
+      student: "Students or Seniors",
+      audio: "Audio guide - English & French", 
+      unlimited: "Visit duration: unlimited",
+      curator: "Curator-led tour",
+      duration90: "Duration: 90 min",
+      voucher_desc: "Offer your loved ones a special experience about encounters and friendships!", 
+      voucher_info: "The voucher can be used on days when guided tours are organized, subject to availability!",
+      voucher_usage: "The gift voucher can be used to place an order for the Guided Exhibition Tour", 
+      buy: "Buy Ticket",
+      buy_voucher: "Buy Voucher", 
+      recommended: "Recommended",
+      schools_title: "Student Tours",
+      per_student: "/ student",
+      schools_price_desc: "Accompanying teachers enter for free",
+      schools_desc_q: "Are you a teacher or a parent?", // Part 1
+schools_desc_a: "Schedule a guided tour for your students (recommended from 8th grade).",
+      schools_appointment: "By appointment only",
+      schools_schedule: "Mon - Fri: 10:00 - 18:00",
+      schools_duration: "Tour duration: 1h",
+      schools_btn: "Request an appointment"
+    },
+        footer: {
+          support: "With the support of:",
+          copyright: "LA MIȚA BICICLISTA CREATIVE ESTABLISHMENT © COPYRIGHT 2025",
+          privacy: "Privacy Policy",
+          terms: "Terms of Use",
+          more_partners: "And many others... see full list"
+        }
+      }
+    };
+
+    const PROTAGONISTS_DATA = {
+      ro: [
+          {
+            room: "Sala 1",
+            theme: "O iubire mai lungă decât detenția",
+            names: "Lena Constante & Harry Brauner",
+            text: `Lena Constante și Harry Brauner s-au cunoscut ca tineri cercetători în echipa lui Dimitrie Gusti, uniți de pasiunea pentru folclor și artă. Destinele lor au fost brutal întrerupte de regimul comunist, fiind arestați și condamnați la ani grei de temniță pentru relația cu Lucrețiu Pătrășcanu. Însă, chiar și în întunericul detenției, dragostea le-a rămas reper și speranță. Eliberați în 1964, s-au regăsit și s-au căsătorit, transformând suferința comună într-o legătură indestructibilă până la finalul vieții.`,
+            image: "assets/1.Harry-Brauner-Lena-Constante.jpg"
+          },
+          {
+            room: "Sala 2+3",
+            theme: "Rezistența prin prietenie",
+            names: "Alexandru Paleologu & Nicolae Steinhardt",
+            text: `Prietenia dintre Nicolae Steinhardt și Alexandru Paleologu s-a născut în 1954, sub semnul prigoanei comuniste, și s-a cimentat definitiv în suferința închisorii Jilava. Acolo, în condiții inumane, Steinhardt a trăit miracolul botezului creștin, avându-l ca martor pe Paleologu. Această taină împărtășită a devenit fundamentul unei relații spirituale profunde, care a rezistat dincolo de grațiere, fiind o mărturie vie a faptului că solidaritatea și credința pot învinge orice formă de opresiune.`,
+            image: "assets/2-3.Steinhardt-Paleologu.jpg"
+          },
+          {
+            room: "Sala 3+4",
+            theme: "Uitarea lucrului celui mai de preț",
+            names: "Mihail Sebastian",
+            text: `Pentru Mihail Sebastian, prietenia era esența vieții, însă ascensiunea antisemitismului și izbucnirea războiului l-au condamnat la o singurătate sfâșietoare. Izolat treptat de vechii prieteni din grupul Criterion și trăind cu teama deportării, s-a refugiat în scris și muzică în apartamentul său de pe Calea Victoriei. Deși lumea din jur se prăbușea în ură și violență, Sebastian a continuat să caute punți de legătură, găsind alinare în noi solidarități în cadrul comunității evreiești.`,
+            image: "assets/3-4.Mihail-Sebastian.jpg"
+          },
+          {
+            room: "Sala 4",
+            theme: "Frumusețea care se naște",
+            names: "Horia Bernea & Irina Nicolau",
+            text: `În 1990, într-o Românie abia eliberată, pictorul Horia Bernea și etnologul Irina Nicolau și-au unit forțele pentru a reînvia Muzeul Țăranului Român. Din întâlnirea dintre spiritualitatea vizuală a lui Bernea și rigoarea ludică a Irinei s-a născut un "muzeu viu", unic în Europa. Împreună au transformat o instituție goală într-un spațiu al memoriei și al frumuseții salvatoare, unde tradiția și credința și-au regăsit locul firesc.`,
+            image: "assets/4.Horia-Bernea-Irina-Nicolau.jpg"
+          },
+          {
+            room: "Sala 5",
+            theme: "Antidot împotriva uitării",
+            names: "Ion Vianu & Matei Călinescu",
+            text: `Prietenia dintre Ion Vianu și Matei Călinescu s-a format în adolescență, ca o formă de rezistență boemă împotriva terorii staliniste. Refugiați în cărți și discuții libere, au construit un univers paralel care a supraviețuit chiar și distanței impuse de exil. Fie că erau la București, în SUA sau Elveția, legătura lor s-a păstrat intactă prin corespondență și valori comune, dovedind că o prietenie adevărată este mai puternică decât orice graniță sau regim politic.`,
+            image: "assets/5.Ion-Vianu-Matei-Calinescu.jpg"
+          },
+          {
+            room: "Sala 6",
+            theme: "Loialitate. Și moarte",
+            names: "Gheorghe Ursu",
+            text: `Gheorghe Ursu a plătit cu viața refuzul de a-și trăda prietenii. Inginer și scriitor, a ținut un jurnal secret în care denunța abuzurile regimului Ceaușescu. Arestat și torturat de Securitate în 1985, a rezistat până la moarte fără să divulge niciun nume din cercul său literar. Sacrificiul său rămâne un simbol cutremurător al demnității umane și al loialității supreme în fața unei dictaturi brutale.`,
+            image: "assets/6.Gheorghe-Ursu.jpg"
+          },
+          {
+            room: "Sala 7",
+            theme: "Celui căruia n-am știut să-i țin mâna decât pentru câteva clipe",
+            names: "Eugen Jebeleanu și Yann Verburgh",
+            text: `Întâlnirea dintre Eugen Jebeleanu și Yann Verburgh este o poveste despre puterea vindecătoare a iubirii și a artei. Împreună au construit nu doar o familie, ci și un parteneriat creativ care sfidează prejudecățile. Într-o lume încă marcată de intoleranță, relația lor este o dovadă vie că libertatea de a iubi și solidaritatea sunt singurele antidoturi împotriva urii și a fricii de celălalt.`,
+            image: "assets/7.Eugen-Jebeleanu-Yann-Verburg.jpg"
+          },
+          {
+            room: "Finalul expoziției",
+            theme: "Spațiul de protecție",
+            names: "Mansarda cu mesteceni",
+            text: `Pădurea din mansardă e spațiul de protecție pe care ți-l dă întâlnirea cu celălalt. Mestecenii sunt ceilalți. E spațiul privilegiat și protector al întâlnirilor tale. Întreaga expoziție e și o invitație la disponibilitate și căutare, la răbdare și vulnerabilitate.\n\nE poate un strigăt, ca să înțelegem și noi, și voi, că întâlnirea cu celălalt e cel mai de preț lucru. Întâlnirea cu celălalt e posibilă. Iar dacă are loc, ea va naște lucruri formidabile. Marile întâlniri sunt posibile oricui. Și, în final, e și despre ce lasă în urmă o întâlnire. Ce rămâne vizibil din invizibilul acestui miracol.`,
+            image: "assets/8.Mansarda-Mesteceni.jpg"
+          }
+      ],
+      en: [
+          {
+            room: "Room 1",
+            theme: "A love longer than detention",
+            names: "Lena Constante & Harry Brauner",
+            text: `Lena Constante, a visual artist, and Harry Brauner, an ethnomusicologist, met as young researchers in Dimitrie Gusti's team, united by their passion for folklore and art. Their destinies were brutally interrupted by the communist regime, being arrested and sentenced to heavy years of imprisonment for their relationship with Lucrețiu Pătrășcanu. However, even in the darkness of detention, love remained their landmark and hope. Released in 1964, they reunited and married, transforming common suffering into an indestructible bond until the end of their lives.`,
+            image: "assets/1.Harry-Brauner-Lena-Constante.jpg"
+          },
+          {
+            room: "Room 2+3",
+            theme: "Resistance through friendship",
+            names: "Alexandru Paleologu & Nicolae Steinhardt",
+            text: `The friendship between Nicolae Steinhardt and Alexandru Paleologu was born in 1954, under the sign of communist persecution, and was definitively cemented in the suffering of Jilava prison. There, in inhumane conditions, Steinhardt experienced the miracle of Christian baptism, with Paleologu as his witness. This shared mystery became the foundation of a profound spiritual relationship that endured beyond pardon, serving as living proof that solidarity and faith can overcome any form of oppression.`,
+            image: "assets/2-3.Steinhardt-Paleologu.jpg"
+          },
+          {
+            room: "Room 3+4",
+            theme: "Forgetting the most precious thing",
+            names: "Mihail Sebastian",
+            text: `For Mihail Sebastian, friendship was the essence of life, but the rise of anti-Semitism and the outbreak of war condemned him to heartbreaking loneliness. Gradually isolated from old friends in the Criterion group and living in fear of deportation, he took refuge in writing and music in his apartment on Calea Victoriei. Although the world around him was collapsing into hatred and violence, Sebastian continued to seek bridges, finding solace in new solidarity within the Jewish community.`,
+            image: "assets/3-4.Mihail-Sebastian.jpg"
+          },
+          {
+            room: "Room 4",
+            theme: "The beauty that is born",
+            names: "Horia Bernea & Irina Nicolau",
+            text: `In 1990, in a newly liberated Romania, painter Horia Bernea and ethnologist Irina Nicolau joined forces to revive the Museum of the Romanian Peasant. From the meeting of Bernea's visual spirituality and Irina's playful rigor, a "living museum" was born, unique in Europe. Together they transformed an empty institution into a space of memory and saving beauty, where tradition and faith regained their natural place.`,
+            image: "assets/4.Horia-Bernea-Irina-Nicolau.jpg"
+          },
+          {
+            room: "Room 5",
+            theme: "Antidote against oblivion",
+            names: "Ion Vianu & Matei Călinescu",
+            text: `The friendship between Ion Vianu and Matei Călinescu was formed in adolescence, as a form of bohemian resistance against Stalinist terror. Taking refuge in books and free discussions, they built a parallel universe that survived even the distance imposed by exile. Whether in Bucharest, the USA, or Switzerland, their bond remained intact through correspondence and shared values, proving that true friendship is stronger than any border or political regime.`,
+            image: "assets/5.Ion-Vianu-Matei-Calinescu.jpg"
+          },
+          {
+            room: "Room 6",
+            theme: "Loyalty. And death",
+            names: "Gheorghe Ursu",
+            text: `Gheorghe Ursu paid with his life for his refusal to betray his friends. An engineer and writer, he kept a secret diary denouncing the abuses of the Ceaușescu regime. Arrested and tortured by the Securitate in 1985, he resisted until death without divulging any names from his literary circle. His sacrifice remains a shattering symbol of human dignity and supreme loyalty in the face of a brutal dictatorship.`,
+            image: "assets/6.Gheorghe-Ursu.jpg"
+          },
+          {
+            room: "Room 7",
+            theme: "To the one whose hand I only knew how to hold for a few moments",
+            names: "Eugen Jebeleanu & Yann Verburgh",
+            text: `The encounter between Eugen Jebeleanu and Yann Verburgh is a story about the healing power of love and art. Together they built not only a family but also a creative partnership that defies prejudice. In a world still marked by intolerance, their relationship is living proof that the freedom to love and solidarity are the only antidotes against hatred and fear of the other.`,
+            image: "assets/7.Eugen-Jebeleanu-Yann-Verburg.jpg"
+          },
+          {
+            room: "Exhibition Finale",
+            theme: "The protective space",
+            names: "The Birch Attic",
+            text: `The forest in the attic is the protective space given to you by the encounter with the other. The birches are the others. It is the privileged and protective space of your encounters. The entire exhibition is also an invitation to openness and searching, to patience and vulnerability.\n\nIt is perhaps a cry, so that we and you understand that the encounter with the other is the most precious thing. The encounter with the other is possible. And if it happens, it will give birth to formidable things. Great encounters are possible for anyone. And, finally, it is also about what an encounter leaves behind. What remains visible from the invisible of this miracle.`,
+            image: "assets/8.Mansarda-Mesteceni.jpg"
+          }
+        ]
+    };
+
+    const TESTIMONIALS_DATA = {
+        ro: [
+            { name: "Oana", text: "Minunata expoziție! Chiar mai mult decât atat. Experiența! Mulțumesc!" },
+            { name: "Ioana", text: "Ne-a plăcut mult toată expoziția, toată punerile în scenă a poveștilor atât de emoționante, fiecare cu vibrația ei atât de palpabilă, atât de autentică! Vă mulțumim vouă, 👏 tuturor celor care nu uitați să ne reamintiți că ideologiile pot fi manipulatoare și nu întotdeauna în sensul bun. Mi-a plăcut invitația voastră la întrebări, creativitatea și sensibilitatea în stare pură transmisă atât de viu de tonalitățile vocii lui Edmond Niculușcă! 😍 Crăciun fericit, oameni frumoși! ❤️" },
+            { name: "Nika", text: "O expoziție impresionantă ,încărcată de emoții și mesaje profunde, care m-au însoțit pe tot parcursul vizitei și m-a făcut să reflectez asupra sinelui. Din punctul meu de vedere, toți cei care au posibilitatea ar trebui să o viziteze ,pentru că rămâne cu adevărat în suflet! ❤️👏🏻" },
+            { name: "Simona", text: "Felicitari, ati adus, din nou, cu multa emotie, istoria la scara umana! Turul ghidad e un regal! 👏" }
+        ],
+        en: [
+            { name: "Oana", text: "Wonderful exhibition! Even more than that. The experience! Thank you!" },
+            { name: "Ioana", text: "We loved the whole exhibition, all the staging of such emotional stories, each with its own vibration so palpable, so authentic! Thank you to you, 👏 to all those who do not forget to remind us that ideologies can be manipulative and not always in a good sense. I liked your invitation to questions, the creativity and pure sensitivity transmitted so vividly by the tones of Edmond Niculușcă's voice! 😍 Merry Christmas, beautiful people! ❤️" },
+            { name: "Nika", text: "An impressive exhibition, charged with emotions and profound messages, which accompanied me throughout the visit and made me reflect on the self. From my point of view, everyone who has the possibility should visit it, because it truly remains in the soul! ❤️👏🏻" },
+            { name: "Simona", text: "Congratulations, you have brought history to a human scale again, with much emotion! The guided tour is a royal treat! 👏" }
+        ]
+    };
+
+    const App = () => {
+      const [isScrolled, setIsScrolled] = useState(false);
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const [lang, setLang] = useState('ro'); // 'ro' or 'en'
+      const [langMenuOpen, setLangMenuOpen] = useState(false);
+      
+      // --- STATE PENTRU NOUA SECTIUNE AI ---
+      const [recipient, setRecipient] = useState('');
+      const [topic, setTopic] = useState('');
+      const [isLoading, setIsLoading] = useState(false);
+      const [isDownloading, setIsDownloading] = useState(false);
+      const [generatedLetter, setGeneratedLetter] = useState(null);
+      const [errorMessage, setErrorMessage] = useState(''); // Added error message state
+
+      const letterRef = useRef(null);
+      
+      // --- DERIVED STATE ---
+      const currentT = TRANSLATIONS[lang];
+      const currentProtagonists = PROTAGONISTS_DATA[lang];
+      const currentTestimonials = TESTIMONIALS_DATA[lang];
+      // --- EMAIL TEMPLATES PENTRU SCOLI ---
+      const mailSubjectRo = "Programare tur ghidat elevi";
+      const mailBodyRo = `Buna ziua,
+
+Doresc sa programez o vizita ghidata pentru elevi la expozitia "Intalniri". Mai jos gasiti detaliile:
+
+- Numele institutiei / scolii: [Completati aici]
+- Clasa / Varsta elevilor (recomandat clasa a 8-a+): [Completati aici]
+- Numar estimativ de elevi: [Completati aici]
+- Data dorita: [Completati aic]
+- Ora dorita (L-V intre 10:00 si 18:00): [Completati aici]
+- Numar de telefon pentru contact: [Completati aici]
+
+Asteptam confirmarea dumneavoastra.
+Multumesc,
+[Numele dumneavoastra]`;
+
+      const mailSubjectEn = "Student Guided Tour Booking";
+      const mailBodyEn = `Hello,
+
+I would like to schedule a guided tour for my students at the "Encounters" exhibition. Here are the details:
+
+- School / Institution name: [Fill here]
+- Grade / Age of students (8th grade+ recommended): [Fill here]
+- Estimated number of students: [Fill here]
+- Desired date: [Fill here]
+- Desired time (Mon-Fri between 10:00 and 18:00): [Fill here]
+- Phone number: [Fill here]
+
+Looking forward to your confirmation.
+Thank you,
+[Your name]`;
+
+      // --- EFECTE ---
+      
+      // 1. Google Tag Manager & Scroll Handler
+      useEffect(() => {
+        // Scroll Handler
+        const handleScroll = () => {
+          setIsScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+
+        // Google Tag Manager Injection (Head)
+        const gtmScriptId = 'gtm-script';
+        if (!document.getElementById(gtmScriptId)) {
+          const script = document.createElement('script');
+          script.id = gtmScriptId;
+          script.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-M6TQDJB9');`;
+          document.head.prepend(script);
+        }
+
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      // 2. Inject html2canvas script
+      useEffect(() => {
+        const script = document.createElement('script');
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+        script.async = true;
+        document.body.appendChild(script);
+        return () => {
+          if(document.body.contains(script)) {
+            document.body.removeChild(script);
+          }
+        };
+      }, []);
+
+      const scrollToSection = (id) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          setMobileMenuOpen(false);
+        }
+      };
+
+      // --- LOGICA AI ---
+      const generateLetter = async () => {
+        if (!recipient || !topic) return;
+
+        setIsLoading(true);
+        setGeneratedLetter(null);
+        setErrorMessage(''); // Reset error message
+
+        const systemPrompt = `Ești un scriitor rafinat din Bucureștiul interbelic (anii 1920-1930).
+        
+        IMPORTANT - BRAND SAFETY & MODERARE CONȚINUT:
+        Înainte de a genera orice text, analizează destinatarul ("${recipient}") și subiectul ("${topic}").
+        TREBUIE SĂ REFUZI generarea și să răspunzi DOAR cu textul "EROARE_BRAND_SAFETY" dacă cererea conține:
+        1. Sex & Sexualitate: Conținut explicit, sugestiv sau obscen.
+        2. Violență & Hate Speech: Apel la violență, discriminare, rasism, amenințări.
+        3. Activități Ilegale: Orice referire la infracțiuni sau droguri.
+        4. Profanitate & Obscenitate: Limbaj vulgar.
+        5. Politică & Religie: Opinii politice puternice, propagandă sau subiecte religioase controversate.
+        6. Persoane Publice: Destinatarul NU poate fi o persoană publică reală, actuală sau istorică (ex: politicieni, vedete, dictatori, regi, influenceri). Sunt permise doar nume generice sau grade de rudenie (ex: Mama, Ion, Domnul Director).
+
+        Dacă inputul este sigur, urmează regulile de stil:
+        1. Folosește un limbaj arhaic, dulce, specific "Micului Paris".
+        2. Folosește cuvinte precum: "nădejde", "dumneavoastră", "taină", "vremuri", "parfum", "melancolie", "suav", "răvaș".
+        3. Tonul trebuie să fie politicos, ușor dramatic și poetic.
+        4. Textul trebuie să fie scurt (maxim 80 cuvinte).
+        5. OBLIGATORIU: Prima linie a scrisorii trebuie să fie o formulă de adresare directă către destinatar (folosind numele sau rolul furnizat: "${recipient}"). Adaptează adjectivul la context (ex: "Scumpă Mamă", "Stimate Domnule").
+        6. Formula de adresare trebuie să fie urmată de un rând gol.
+        7. NU include nicio semnătură și niciun nume la final.`;
+
+        const userPrompt = `Verifică siguranța conținutului pentru destinatarul "${recipient}" și subiectul "${topic}". Dacă e sigur, generează scrisoarea.`;
+
+        try {
+          const response = await fetch(
+            `api/gemini.php`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+              }),
+            }
+          );
+
+          const data = await response.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          
+          if (text) {
+            if (text.includes("EROARE_BRAND_SAFETY")) {
+              alert("Conținutul solicitat nu poate fi generat deoarece încalcă regulile noastre de siguranță (conține referiri la persoane publice, politică, violență sau conținut inadecvat). Te rugăm să reformulezi.");
+              setGeneratedLetter(null);
+            } else {
+              setGeneratedLetter(text);
+            }
+          } else {
+              setErrorMessage("Serviciul este momentan indisponibil.");
+          }
+        } catch (error) {
+          console.error("Eroare:", error);
+          alert("Eroare la generare. Încearcă din nou.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      const handleDownload = async () => {
+        if (!letterRef.current || !window.html2canvas) {
+            if(!window.html2canvas) alert("Biblioteca de generare imagine se încarcă, te rugăm să mai încerci în câteva secunde.");
+            return;
+        }
+        
+        setIsDownloading(true);
+
+        try {
+          const canvas = await window.html2canvas(letterRef.current, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: null,
+          });
+
+          const image = canvas.toDataURL("image/png");
+          
+          const link = document.createElement('a');
+          link.href = image;
+          link.download = `Scrisoare_pentru_${recipient || 'tine'}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (err) {
+          console.error("Download error:", err);
+          alert("Nu s-a putut descărca imaginea.");
+        } finally {
+          setIsDownloading(false);
+        }
+      };
+
+      return (
+        <div className="min-h-screen bg-white text-[#222222]  selection:bg-[#2D308C] selection:text-white">
+          {/* Google Tag Manager (noscript) */}
+          <noscript>
+            <iframe 
+              src="https://www.googletagmanager.com/ns.html?id=GTM-M6TQDJB9"
+              height="0" 
+              width="0" 
+              style={{ display: 'none', visibility: 'hidden' }}
+            ></iframe>
+          </noscript>
+
+          <style>{`
+            /* --- FONTS SETUP FOR EASY REPLACEMENT --- */
+            
+            /* 1. Import Fonts */
+            
+            /* Body: Radikal */
+            @font-face {
+              font-family: 'Radikal';
+              src: url('resources/fonts/radikal/Radikal-Regular.otf') format('opentype');
+              font-weight: 400;
+              font-style: normal;
+              font-display: swap;
+            }
+
+            @font-face {
+              font-family: 'Radikal';
+              src: url('resources/fonts/radikal/Radikal-Medium.otf') format('opentype');
+              font-weight: 500;
+              font-style: normal;
+              font-display: swap;
+            }
+
+            @font-face {
+              font-family: 'Radikal';
+              src: url('resources/fonts/radikal/Radikal-Bold.otf') format('opentype');
+              font-weight: 700;
+              font-style: normal;
+              font-display: swap;
+            }
+
+            /* Headings: Macklin Display */
+            @font-face {
+              font-family: 'Macklin Display';
+              src: url('resources/fonts/macklin/MacklinDisplay-Regular.otf') format('opentype');
+              font-weight: 400;
+              font-style: normal;
+              font-display: swap;
+            }
+
+            @font-face {
+              font-family: 'Macklin Display';
+              src: url('resources/fonts/macklin/MacklinDisplay-Bold.otf') format('opentype');
+              font-weight: 700;
+              font-style: normal;
+              font-display: swap;
+            }
+
+            /* 2. Define Variables */
+            :root {
+              --font-heading: 'Macklin Display', serif;
+              --font-body: 'Radikal', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            }
+
+            /* 3. Apply Global Styles */
+            body { font-family: var(--font-body); }
+            h1, h2, h3, h4, h5, h6, .brand-font { font-family: var(--font-heading); }
+            
+            /* Specific override for the handwritten letter effect */
+            /* Note: Dancing Script is strictly for the letter preview element */
+            .font-handwriting { font-family: 'Dancing Script', cursive; }
+            
+            /* Utilities */
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            ::selection { background-color: #2D308C; color: white; }
+
+            .mobile-menu {width: 40px; height: 40px; display: flex; align-items: start; justify-content: center; font-size: 28px; line-height: 34px; }
+            .gap-small { gap: 8px;  }
+
+            .top-header {top: 0; }
+
+            .close-menu { font-size: 20px; line-height: 40px;  }
+
+            .letter-text {padding: 0 10px; }
+
+            .letter-btn {display: block; height:28px; color: rgb(46, 49, 146); font-size: 12px; line-height: 10px !important; text-align:center; align-items:start; justify-content: center; font-weight: 600; text-transform: uppercase; padding: 8px 16px; background: transparent; font-weight: 700;}
+
+            @media only screen and (max-width: 981px) {
+              body { padding-top: 80px !important; }
+
+              #hero {  height: auto; min-height: calc(100vh - 80px);  }
+                .py-32, .pt-32, .py-24 { padding-top: 3.5rem; padding-bottom: 3.5rem;  }
+                 #hero .header-container {  padding-top: 3.5rem;  }
+            }
+
+            @media only screen and (max-width: 767px) {
+              body { padding-top: 70px !important; }
+            }
+
+          `}</style>
+
+          {/* Hidden Canvas for Image Generation */}
+          {/* Element removed as not needed with html2canvas */}
+
+          {/* Navigation */}
+          <nav className={`top-header fixed w-full z-50 bg-[#2D308C] text-white py-4 shadow-md`}>
+            <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
+              <div className="group cursor-pointer" onClick={() => scrollToSection('hero')}>
+                <img 
+                  src={LOGO_URL} 
+                  alt="La Mița Biciclista" 
+                  className={`h-10 md:h-12 w-auto object-contain transition-all duration-300`}
+                />
+              </div>
+
+              <div className="hidden md:flex items-center gap-10 text-sm font-medium tracking-wide uppercase font-sans">
+                <button onClick={() => scrollToSection('about')} className="hover:text-[#2D308C] hover:bg-white/20 px-2 py-1 rounded transition-colors">{currentT.nav.exhibit}</button>
+                <button onClick={() => scrollToSection('protagonists')} className="hover:text-[#2D308C] hover:bg-white/20 px-2 py-1 rounded transition-colors">{currentT.nav.protagonists}</button>
+                <button onClick={() => scrollToSection('testimonials')} className="hover:text-[#2D308C] hover:bg-white/20 px-2 py-1 rounded transition-colors">{currentT.nav.testimonials}</button> 
+                {lang === 'ro' && <button onClick={() => scrollToSection('ai-letter')} className="hover:text-[#2D308C] hover:bg-white/20 px-2 py-1 rounded transition-colors">{currentT.nav.letter}</button>}
+                <button onClick={() => scrollToSection('visit')} className="hover:text-[#2D308C] hover:bg-white/20 px-2 py-1 rounded transition-colors">{currentT.nav.visit}</button>
+              </div>
+
+              <div className="flex items-center gap-small relative">
+                <button 
+                  onClick={() => scrollToSection('tickets')}
+                  className={`hidden md:block px-6 py-2.5 text-sm font-bold uppercase tracking-wider transition-all bg-white text-[#2D308C] hover:bg-stone-100 rounded-sm font-sans`}
+                >
+                  {currentT.nav.tickets}
+                </button>
+                
+                {/* Language Switcher */}
+                <div className="relative">
+                  <button 
+                    onClick={() => setLangMenuOpen(!langMenuOpen)}
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors border border-white/20"
+                  >
+                    {lang === 'ro' ? '🇷🇴' : '🇬🇧'}
+                  </button>
+                  
+                  {langMenuOpen && (
+                    <div className="absolute top-12 right-0 bg-white shadow-lg rounded-sm py-2 w-32 border border-stone-100 animate-in fade-in zoom-in-95 duration-200">
+                      <button 
+                        onClick={() => { setLang('ro'); setLangMenuOpen(false); }}
+                        className="w-full text-left px-4 py-2 hover:bg-stone-50 flex items-center gap-3 text-stone-700 font-medium font-sans"
+                      >
+                        <span>🇷🇴</span> Română
+                      </button>
+                      <button 
+                        onClick={() => { setLang('en'); setLangMenuOpen(false); }}
+                        className="w-full text-left px-4 py-2 hover:bg-stone-50 flex items-center gap-3 text-stone-700 font-medium font-sans"
+                      >
+                        <span>🇬🇧</span> English
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <button className="md:hidden mobile-menu" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                  {mobileMenuOpen ? <div className="close-menu"><X /></div> : <Menu />}
+                </button>
+              </div>
+            </div>
+          </nav>
+
+          {/* Mobile Menu Overlay */}
+          {mobileMenuOpen && (
+            <div className="fixed inset-0 z-40 bg-[#2D308C] pt-24 px-6 md:hidden animate-in slide-in-from-top-10">
+              <div className="flex flex-col gap-6 text-xl font-medium uppercase tracking-widest text-white font-sans">
+                <button onClick={() => {scrollToSection('about'); setMobileMenuOpen(false);}} className="text-left hover:text-orange-300 transition-colors">{currentT.nav.exhibit}</button>
+                <button onClick={() => {scrollToSection('protagonists'); setMobileMenuOpen(false);}} className="text-left hover:text-orange-300 transition-colors">{currentT.nav.protagonists}</button>
+                <button onClick={() => {scrollToSection('testimonials'); setMobileMenuOpen(false);}} className="text-left hover:text-orange-300 transition-colors">{currentT.nav.testimonials}</button>
+                {lang === 'ro' && <button onClick={() => {scrollToSection('ai-letter'); setMobileMenuOpen(false);}} className="text-left hover:text-orange-300 transition-colors">{currentT.nav.letter}</button>}
+                <button onClick={() => {scrollToSection('visit'); setMobileMenuOpen(false);}} className="text-left hover:text-orange-300 transition-colors">{currentT.nav.visit}</button>
+                <hr className="border-white/20 my-2" />
+                <button 
+                  onClick={() => {scrollToSection('tickets'); setMobileMenuOpen(false);}}
+                  className="bg-white text-[#2D308C] py-4 text-center rounded-sm shadow-md hover:bg-stone-100"
+                >
+                  {currentT.nav.tickets}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Hero Section */}
+          <header id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
+            <div className="absolute inset-0 z-0">
+              <div className="absolute inset-0 bg-black/40 z-10"></div>
+              <div className="w-full h-full bg-[url('assets/expozitia-intalniri-la-mita-biciclista-header.jpg')] bg-cover bg-center"></div>
+            </div>
+            
+            <div className="container mx-auto px-6 md:px-12 relative z-20 text-left text-white h-full flex flex-col justify-center">
+              <div className="max-w-4xl pt-32 md:pt-20 header-container">
+                <div className="inline-block mb-6 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+                  <span className="font-bold tracking-widest uppercase text-sm bg-white text-[#2D308C] px-3 py-1">
+                    {currentT.hero.date}
+                  </span>
+                </div>
+                
+                <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tighter brand-font">
+                  <span className="block">{currentT.hero.title1}</span>
+                  <span className="block">{currentT.hero.title2}</span>
+                </h1>
+                
+                <p className="text-lg font-light text-stone-200 mb-8 max-w-lg leading-relaxed">
+                  {currentT.hero.desc}
+                </p>
+
+                <div className="flex flex-col md:flex-row gap-6 md:gap-12 mb-8 text-sm font-medium text-white/90 border-l-2 border-white/30 pl-6">
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2 text-white/60 uppercase tracking-widest text-xs">
+                      <Clock size={14} /> {currentT.hero.program_label}
+                    </div>
+                <div className="flex flex-col mb-1">
+                    <span className="font-bold text-white uppercase tracking-wider text-xs mb-1.5">{currentT.hero.prog_gen_lbl}</span>
+                    <ul className="list-disc list-outside ml-4 opacity-80 space-y-1 text-sm font-normal">
+                        <li>{currentT.hero.prog_gen_val}</li>
+                    </ul>
+                </div>
+                <div className="flex flex-col">
+                    <span className="font-bold text-white uppercase tracking-wider text-xs mb-1.5">{currentT.hero.prog_gui_lbl}</span>
+                    <ul className="list-disc list-outside ml-4 opacity-80 space-y-1 text-sm font-normal">
+                        <li>{currentT.hero.prog_gui_val1}</li>
+                        <li>{currentT.hero.prog_gui_val2}</li>
+                        <li>{currentT.hero.prog_gui_val3}</li>
+                    </ul>
+                </div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2 text-white/60 uppercase tracking-widest text-xs">
+                      <MapPin size={14} /> {currentT.hero.address_label}
+                    </div>
+                    <div>La Mița Biciclista {lang === 'en' ? 'Creative Establishment' : 'Stabiliment Creativ'}</div>
+                    <div>Strada Biserica Amzei 9</div>
+                  </div>
+                </div>
+
+                <div className="text-xs text-white/60 italic mb-8 max-w-md">
+                  {currentT.hero.disclaimer}
+                </div>
+                
+                <div className="flex flex-col md:flex-row items-start gap-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
+                  <button 
+                    onClick={() => scrollToSection('about')}
+                    className="group bg-white text-[#2D308C] px-8 py-4 text-sm font-bold tracking-widest uppercase hover:bg-stone-100 transition-all duration-300 rounded-sm "
+                  >
+                    {currentT.hero.btn_about}
+                  </button>
+                  <button 
+                    onClick={() => scrollToSection('tickets')}
+                    className="bg-[#2D308C] text-white px-8 py-4 text-sm font-bold tracking-widest uppercase hover:bg-[#1e2066] transition-all duration-300 rounded-sm "
+                  >
+                    {currentT.nav.tickets}
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/70 animate-bounce">
+              <ChevronDown size={32} strokeWidth={1} />
+            </div>
+          </header>
+
+          {/* Section 1: About the Exhibit */}
+          <section id="about" className="py-32 px-6 md:px-12 bg-white">
+            <div className="container mx-auto">
+              <div className="grid md:grid-cols-2 gap-20 items-center">
+                <div className="relative h-[700px] overflow-hidden rounded-sm">
+                   <img 
+                     src="assets/expozitia-intalniri-la-mita-biciclista.jpg" 
+                     alt="Exhibit Interior" 
+                     className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" 
+                   />
+                </div>
+                
+                <div className="space-y-12">
+                  <h2 className="text-4xl md:text-6xl font-bold text-[#222222] leading-tight tracking-tight brand-font">
+                    {currentT.about.title} <span className="text-[#2D308C]">{currentT.about.title_accent}</span>.
+                  </h2>
+                  <div className="prose prose-lg text-stone-600 font-light leading-relaxed">
+                    <p className="mb-6">
+                      {currentT.about.p1}
+                    </p>
+                    <p className="mb-6">
+                      {currentT.about.p2}
+                    </p>
+                    <p className="text-sm text-stone-500 pl-4 border-l-4 border-[#2D308C]">
+                      {currentT.about.p3}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 2: Protagonists List (Zig-Zag with Alternating Backgrounds) */}
+          <section id="protagonists" className="bg-white">
+            
+            {/* Header Section */}
+            <div className="container mx-auto px-6 md:px-12 pt-32 pb-16 text-center">
+              <div className="max-w-3xl mx-auto">
+                <span className="text-[#2D308C] font-bold tracking-widest uppercase text-sm block mb-6">{currentT.protagonists.label}</span>
+                <h2 className="text-4xl md:text-5xl font-bold mb-8 tracking-tight brand-font">{currentT.protagonists.title}</h2>
+                <p className="text-stone-600 font-light text-lg leading-relaxed">
+                  {currentT.protagonists.desc}
+                </p>
+              </div>
+            </div>
+
+            {/* List of Protagonists */}
+            <div className="flex flex-col">
+              {currentProtagonists.map((person, idx) => (
+                <div 
+                  key={idx} 
+                  className={`w-full py-24 ${idx % 2 === 0 ? 'bg-white' : 'bg-[#F9F9F9]'}`}
+                >
+                  <div className="container mx-auto px-6 md:px-12">
+                    <div className={`flex flex-col md:flex-row gap-12 md:gap-24 items-center ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+                      
+                      {/* Image Side */}
+                      <div className="w-full md:w-1/2">
+                        <div className="aspect-[4/5] w-full overflow-hidden rounded-sm relative group shadow-lg">
+                          <img 
+                            src={person.image} 
+                            alt={person.names} 
+                            className="w-full h-full object-top object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" 
+                          />
+                          <div className="absolute inset-0 border border-black/5 pointer-events-none"></div>
+                        </div>
+                      </div>
+
+                      {/* Text Side */}
+                      <div className="w-full md:w-1/2 space-y-8">
+                        {/* Title Structure */}
+                        <div>
+                          <span className="inline-block bg-[#2D308C] text-white text-xs font-bold px-3 py-1.5 rounded-sm mb-4 uppercase tracking-widest">
+                              {person.room}
+                          </span>
+                          <h3 className="text-3xl md:text-4xl font-bold leading-tight text-[#222222] brand-font mb-2">
+                            {person.names}
+                          </h3>
+                          <p className="text-base italic text-[#2D308C] leading-relaxed">
+                             {person.theme}
+                          </p>
+                        </div>
+                        
+                        <div className="prose text-stone-600 font-light leading-relaxed text-base md:text-lg">
+                          {person.text.split('\n\n').map((paragraph, i) => (
+                            <p key={i} className="mb-4 last:mb-0">{paragraph}</p>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Testimonials Section */}
+          <section id="testimonials" className="py-24 bg-white border-t border-stone-100 relative">
+            {/* Background Image - REMOVED OVERLAY as requested */}
+            <div className="absolute inset-0 z-0">
+               <img 
+                  src="assets/expozitia-intalniri-la-mita-biciclista-4.jpg" 
+                  className="w-full h-full object-cover"
+                  alt="Background"
+               />
+            </div>
+
+            <div className="container mx-auto px-6 md:px-12 relative z-10">
+              <div className="text-center mb-16">
+                <span className="text-white/80 font-bold tracking-widest uppercase text-sm block mb-4">{currentT.testimonials.label}</span>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white drop-shadow-md brand-font">{currentT.testimonials.title}</h2>
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                 {/* Coloana 1: Ioana (Text Lung) */}
+                 <div className="border border-white p-8 rounded-sm h-full flex flex-col justify-between">
+                    <p className="text-white italic  text-lg mb-6 leading-relaxed drop-shadow-sm">"{currentTestimonials[1].text}"</p>
+                    <div className="flex items-center gap-3">
+                       <div className="w-8 h-px bg-white"></div>
+                       <span className="font-bold text-white  uppercase tracking-wider text-xs">{currentTestimonials[1].name}</span>
+                    </div>
+                 </div>
+
+                 {/* Coloana 2: Nika (Text Mediu) */}
+                 <div className="border border-white p-8 rounded-sm h-full flex flex-col justify-between">
+                    <p className="text-white italic  text-lg mb-6 leading-relaxed drop-shadow-sm">"{currentTestimonials[2].text}"</p>
+                    <div className="flex items-center gap-3">
+                       <div className="w-8 h-px bg-white"></div>
+                       <span className="font-bold text-white  uppercase tracking-wider text-xs">{currentTestimonials[2].name}</span>
+                    </div>
+                 </div>
+
+                 {/* Coloana 3: Oana & Simona (Texte Scurte - Stacked) */}
+                 <div className="flex flex-col gap-8 h-full">
+                    {/* Oana */}
+                    <div className="border border-white p-8 rounded-sm flex-1 flex flex-col justify-between">
+                        <p className="text-white italic  text-lg mb-6 leading-relaxed drop-shadow-sm">"{currentTestimonials[0].text}"</p>
+                        <div className="flex items-center gap-3">
+                           <div className="w-8 h-px bg-white"></div>
+                           <span className="font-bold text-white  uppercase tracking-wider text-xs">{currentTestimonials[0].name}</span>
+                        </div>
+                    </div>
+                    
+                    {/* Simona */}
+                    <div className="border border-white p-8 rounded-sm flex-1 flex flex-col justify-between">
+                        <p className="text-white italic  text-lg mb-6 leading-relaxed drop-shadow-sm">"{currentTestimonials[3].text}"</p>
+                        <div className="flex items-center gap-3">
+                           <div className="w-8 h-px bg-white"></div>
+                           <span className="font-bold text-white  uppercase tracking-wider text-xs">{currentTestimonials[3].name}</span>
+                        </div>
+                    </div>
+                 </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Section: Tickets */}
+          <section id="tickets" className="py-32 px-6 md:px-12 bg-white border-t border-stone-100">
+            <div className="container mx-auto">
+              <div className="text-center mb-16 max-w-2xl mx-auto">
+                <span className="text-[#2D308C] font-bold tracking-widest uppercase text-sm block mb-6">{currentT.tickets.label}</span>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight brand-font">{currentT.tickets.title}</h2>
+                <p className="text-stone-600 font-light text-lg leading-relaxed">
+                  {currentT.tickets.desc}
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                {/* Ticket 1: General Access */}
+                <div className="bg-[#F8F9FA] p-10 border border-stone-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center group rounded-sm">
+                   <h3 className="text-2xl font-bold mb-2 brand-font">{currentT.tickets.general}</h3>
+                   <div className="text-4xl font-black text-[#2D308C] mb-4 brand-font">50,00 lei</div>
+                   <div className="text-sm text-stone-500 mb-8 border-b border-stone-200 pb-8 w-full">
+                     <span className="block font-medium text-stone-900 mb-1">{currentT.tickets.student}</span>
+                     25 lei
+                   </div>
+                   
+                   <ul className="space-y-4 mb-10 text-stone-600 flex-grow w-full text-left max-w-xs mx-auto">
+                     <li className="flex items-center gap-3">
+                       <Headphones className="text-[#2D308C] shrink-0 w-5 h-5" />
+                       <span>{currentT.tickets.audio}</span>
+                     </li>
+                     <li className="flex items-center gap-3">
+                       <Clock className="text-[#2D308C] shrink-0 w-5 h-5" />
+                       <span>{currentT.tickets.unlimited}</span>
+                     </li>
+                   </ul>
+
+                   <a 
+                     href="https://tickets.lamitabiciclista.ro/bilete-acces-general-expozitie-intalniri-sau-cum-se-naste-o-lume-noua-117599/"
+                     className="w-full bg-[#2D308C] text-white py-4 text-sm font-bold tracking-widest uppercase hover:bg-[#1e2066] transition-colors rounded-sm block text-center "
+                   >
+                     {currentT.tickets.buy}
+                   </a>
+                </div>
+
+                {/* Ticket 2: Guided Tour */}
+                <div className="bg-white p-10 border-2 border-[#2D308C]/10 shadow-lg hover:shadow-xl transition-shadow flex flex-col items-center text-center group relative overflow-hidden rounded-sm">
+                   <div className="absolute top-0 right-0 bg-[#04ae00] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1">{currentT.tickets.recommended}</div>
+                   <h3 className="text-2xl font-bold mb-2 brand-font">{currentT.tickets.guided}</h3>
+                   <div className="text-4xl font-black text-[#2D308C] mb-4 brand-font">100,00 lei</div>
+                   <div className="text-sm text-stone-500 mb-8 border-b border-stone-200 pb-8 w-full">
+                     <span className="block font-medium text-stone-900 mb-1">{currentT.tickets.student}</span>
+                     50 lei
+                   </div>
+                   
+                   <ul className="space-y-4 mb-10 text-stone-600 flex-grow w-full text-left max-w-xs mx-auto">
+                     <li className="flex items-center gap-3">
+                       <Users className="text-[#2D308C] shrink-0 w-5 h-5" />
+                       <span>{currentT.tickets.curator}</span>
+                     </li>
+                     <li className="flex items-center gap-3">
+                       <Clock className="text-[#2D308C] shrink-0 w-5 h-5" />
+                       <span>{currentT.tickets.duration90}</span>
+                     </li>
+                   </ul>
+
+                   <a 
+                     href="https://tickets.lamitabiciclista.ro/bilete-vizita-ghidata-expozitie-intalniri-sau-cum-se-naste-o-lume-noua-117601/"
+                     className="w-full bg-[#2D308C] text-white py-4 text-sm font-bold tracking-widest uppercase hover:bg-[#1e2066] transition-colors rounded-sm block text-center "
+                   >
+                     {currentT.tickets.buy}
+                   </a>
+                </div>
+               {/* Ticket 3: Schools */}
+ <div className="bg-[#F8F9FA] p-10 border border-stone-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center group rounded-sm">
+               <h3 className="text-2xl font-bold mb-2 brand-font">{currentT.tickets.schools_title}</h3>
+<div className="text-4xl font-black text-[#2D308C] mb-4 brand-font">
+  25,00 lei <span className="text-2xl font-medium font-sans text-stone-500">{currentT.tickets.per_student}</span>
+</div>
+               <div className="text-sm text-stone-500 mb-8 border-b border-stone-200 pb-8 w-full font-sans">
+                 <span className="block font-medium text-stone-900 mb-1">{lang === 'ro' ? 'Contactează-ne la contact@arcen.info' : 'Contact us at contact@arcen.info'}</span>
+                 {currentT.tickets.schools_price_desc}
+               </div>
+               
+               <div className="text-sm text-stone-600 mb-8 flex-grow leading-relaxed font-sans text-left w-full">
+<div className="mb-6 text-center">
+  <p className="font-bold text-base text-stone-800 mb-1">
+    {currentT.tickets.schools_desc_q}
+  </p>
+  <p className="font-normal text-sm text-stone-600 leading-relaxed">
+    {currentT.tickets.schools_desc_a}
+  </p>
+</div>
+                 
+                 <ul className="space-y-3 mb-6 mt-6">
+                   <li className="flex items-start gap-3">
+                     <AlertCircle className="text-[#2D308C] shrink-0 w-4 h-4 mt-0.5" />
+                     <span>{currentT.tickets.schools_appointment}</span>
+                   </li>
+                   <li className="flex items-start gap-3">
+                     <Clock className="text-[#2D308C] shrink-0 w-4 h-4 mt-0.5" />
+                     <span>{currentT.tickets.schools_schedule}</span>
+                   </li>
+                   <li className="flex items-start gap-3">
+                     <Clock className="text-[#2D308C] shrink-0 w-4 h-4 mt-0.5" />
+                     <span>{currentT.tickets.schools_duration}</span>
+                   </li>
+                 </ul>
+               </div>
+
+<a 
+  href={`mailto:contact@arcen.info?subject=${encodeURIComponent(lang === 'ro' ? mailSubjectRo : mailSubjectEn)}&body=${encodeURIComponent(lang === 'ro' ? mailBodyRo : mailBodyEn)}`}
+  className="w-full bg-[#2D308C] text-white py-4 text-sm font-bold tracking-widest uppercase hover:bg-[#1e2066] transition-colors rounded-sm block text-center font-sans mt-auto"
+>
+  {currentT.tickets.schools_btn}
+</a>
+            </div>
+              </div>
+            </div>
+          </section>
+
+          {/* New AI Letter Generator Section - Only visible in Romanian */}
+          {lang === 'ro' && (
+          <div id="ai-letter" className="min-h-screen w-full flex flex-col lg:flex-row  bg-[#2e3192]">
+            
+            {/* LEFT SIDE - Form & Info */}
+            <div className="w-full lg:w-1/2 p-8 lg:p-16 flex flex-col justify-center text-white relative">
+              <div className="max-w-xl mx-auto z-10 w-full">
+                <h1 className="text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight brand-font">
+                  Scrie o <br/>
+                  scrisoare <br/>
+                  din alte timpuri.
+                </h1>
+
+                <p className="text-lg font-light mb-10 opacity-90 leading-relaxed">
+                  Alege un destinatar și o temă, iar noi vom compune o scrisoare în limbajul Bucureștiului interbelic. 
+                  Descarcă imaginea (format Story 9:16), posteaz-o pe Instagram cu tag 
+                  <span className="font-bold"> @lamitabiciclista</span> și poți câștiga o invitație dublă la expoziție.
+                </p>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-bold uppercase tracking-wider mb-2 opacity-80">
+                      CUI ÎI SCRII?
+                    </label>
+                    <input
+                      type="text"
+                      value={recipient}
+                      onChange={(e) => setRecipient(e.target.value)}
+                      placeholder="Ex: Mama, Soțul/Soția, Cel mai bun prieten"
+                      className="w-full bg-[#1e206e] border border-blue-400/30 rounded px-4 py-4 text-white placeholder-blue-300/50 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-lg "
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold uppercase tracking-wider mb-2 opacity-80">
+                      DESPRE CE? (CUVINTE CHEIE)
+                    </label>
+                    <input
+                      type="text"
+                      value={topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                      placeholder="Ex: Dorul de casă, amintirea vacanțelor împreună"
+                      className="w-full bg-[#1e206e] border border-blue-400/30 rounded px-4 py-4 text-white placeholder-blue-300/50 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-lg "
+                    />
+                  </div>
+
+                  {generatedLetter && generatedLetter === "error" && (
+                    <div className="bg-red-500/20 border border-red-500 text-white px-4 py-3 rounded text-sm mb-4">
+                      {errorMessage || "A apărut o eroare. Te rugăm să încerci din nou."}
+                    </div>
+                  )}
+
+                  <div className="mt-8">
+                      <button
+                      onClick={generateLetter}
+                      disabled={isLoading || !recipient || !topic}
+                      className="w-full bg-white text-[#2e3192] hover:bg-gray-100 px-8 py-4 rounded font-bold uppercase tracking-widest flex items-center justify-center gap-3 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none "
+                      >
+                      {isLoading ? (
+                          <>
+                          <Loader2 className="animate-spin w-5 h-5" />
+                          Se compune...
+                          </>
+                      ) : (
+                          <>
+                          <Send className="w-5 h-5 -mt-1 transform rotate-0" />
+                          Generare
+                          </>
+                      )}
+                      </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT SIDE - The Letter (9:16 Container) */}
+            <div className="w-full lg:w-1/2 p-8 lg:p-8 flex flex-col items-center justify-center bg-[#2e3192]">
+              
+              {/* Container Scrisoare (Capture Area) */}
+              <div 
+                  ref={letterRef}
+                  className="relative bg-[#fcfbf7] aspect-[9/16] w-full max-w-[400px] shadow-2xl flex flex-col justify-between"
+                  style={{ 
+                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                      paddingTop: '90px',
+                      paddingBottom: '70px',
+                      paddingLeft: '50px',
+                      paddingRight: '50px'
+                  }}
+              >
+                  {/* Header / Logo */}
+                  <div className="text-center shrink-0">
+                      <div className="flex flex-col items-center justify-center">
+                          <img 
+                            src="assets/LMBSC_logo-blue_2.png" 
+                            alt="La Mița Biciclista Logo"
+                            className="h-12 w-auto mb-4"
+                          />
+                      </div>
+                  </div>
+
+                  {/* Content Area */}
+                  <div className="flex-grow flex items-center justify-center my-4 overflow-hidden letter-text">
+                      <div className={`font-handwriting text-lg md:text-xl leading-relaxed italic text-center text-[#1a1a1a] whitespace-pre-line transition-opacity duration-1000 ${isLoading ? 'opacity-50 blur-sm' : 'opacity-100'}`}>
+                          {generatedLetter && generatedLetter !== "error" ? generatedLetter : (
+                              <span className="text-gray-400 not-italic  text-center block w-full">
+                                  Scrisoarea ta va apărea aici
+                              </span>
+                          )}
+                      </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="text-center shrink-0">
+                      <div className="h-px w-16 bg-[#2e3192]/20 mx-auto mb-4"></div>
+                      <p className="font-handwriting italic text-[10px] text-gray-500 mb-4 px-2 leading-tight">
+                          Inspirat din "Întâlniri. Sau cum se naște o lume nouă".<br/>
+                          O poveste despre puterea relațiilor autentice.
+                      </p>
+                      
+                      <div className="bg-[#2e3192] text-white inline-block px-6 py-2 text-[10px] font-bold uppercase tracking-wider mb-2  leading-[1.2] letter-btn">
+                          <span>BILETE.LAMITABICICLISTA.RO</span>
+                      </div>
+
+                      <p className="text-[7px] text-gray-400 px-4 leading-tight opacity-70 mt-2">
+                          Acest conținut este generat de AI și nu reprezintă poziția brandului La Mița Biciclista.<br/>
+                          Nu ne asumăm răspunderea pentru textele create de utilizatori.
+                      </p>
+                  </div>
+              </div>
+
+              {/* Buton Download Mutat Aici */}
+              <div className="mt-8 h-12 w-full max-w-[400px] flex justify-center">
+                  {generatedLetter && generatedLetter !== "error" && (
+                      <button
+                          onClick={handleDownload}
+                          disabled={isDownloading}
+                          className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-3 rounded font-bold uppercase tracking-widest flex items-center justify-center gap-3 transition-all w-full "
+                      >
+                          {isDownloading ? (
+                                  <Loader2 className="animate-spin w-5 h-5" />
+                          ) : (
+                              <Download className="w-5 h-5 -mt-1" />
+                          )}
+                          Descarcă scrisoarea
+                      </button>
+                  )}
+              </div>
+
+            </div>
+          </div>
+          )}
+
+          {/* Footer */}
+          <footer className="bg-[#111111] text-stone-400 py-24 text-sm">
+            <div className="container mx-auto px-6 md:px-12">
+              <div className="flex flex-col items-start lg:items-center lg:flex-row justify-between gap-16">
+                <div>
+                  <img src={LOGO_URL} alt="La Mița Biciclista" className="h-14 mb-6 w-auto" />
+                  
+                  {/* Social Media Icons */}
+                  <div className="flex gap-6 mb-6">
+                    <a href="https://www.instagram.com/lamitabiciclista" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+  <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+</svg>
+                    </a>
+                    <a href="https://www.facebook.com/lamitabiciclista" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+  <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
+</svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@lamitabiciclista" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                      {/* Custom TikTok Icon using SVG */}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tiktok" viewBox="0 0 16 16">
+  <path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z"/>
+</svg>
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col lg:items-start">
+                  <span className="text-white font-bold uppercase tracking-widest text-sm mb-8 block">{currentT.footer.support}</span>
+                  <div className="flex flex-col gap-2">
+                    <a 
+                      href="https://paleologu.com/" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-xs font-medium text-stone-300 hover:text-white transition-colors cursor-pointer"
+                    >
+                      Casa Paleologu
+                    </a>
+                    <a 
+                      href="https://mnlr.ro/" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-xs font-medium text-stone-300 hover:text-white transition-colors cursor-pointer"
+                    >
+                      Muzeul Național al Literaturii Române
+                    </a>
+                    <a 
+                      href="https://muzeulbucurestiului.ro/" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-xs font-medium text-stone-300 hover:text-white transition-colors cursor-pointer"
+                    >
+                      Muzeul Municipiului București
+                    </a>
+                    {/* New Link */}
+                    <a
+                        href="assets/Credite-Expozitie-Intalniri.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-medium text-stone-400 hover:text-white transition-colors cursor-pointer mt-2 italic"
+                    >
+                        {currentT.footer.more_partners}
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-stone-800 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-xs tracking-widest uppercase font-medium">
+                <p>LA MIȚA BICICLISTA STABILIMENT CREATIV © COPYRIGHT 2025</p>
+                <div className="flex gap-8 mt-4 md:mt-0">
+                  <a href="https://shop.lamitabiciclista.ro/policies/privacy-policy" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Privacy Policy</a>
+                  <a href="https://shop.lamitabiciclista.ro/policies/privacy-policy" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Terms of Use</a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    };
+
+    // ---- end of App component ----
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+
+</body>
+</html>
