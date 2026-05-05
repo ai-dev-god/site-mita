@@ -1,0 +1,21 @@
+# bilete.lamitabiciclista.ro — static single-file React app
+# DocumentRoot: /home/mita/public_html/bilete/
+
+DirectoryIndex index.html
+
+<IfModule mod_headers.c>
+    # HTML must always re-fetch — single-file app changes invalidate everything
+    <FilesMatch "\.html?$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
+    # Images, fonts, PDFs — long cache (filenames are stable)
+    <FilesMatch "\.(jpe?g|png|gif|webp|avif|svg|ico|woff2?|ttf|otf|pdf)$">
+        Header set Cache-Control "public, max-age=2592000, immutable"
+    </FilesMatch>
+</IfModule>
+
+# Block dotfiles
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

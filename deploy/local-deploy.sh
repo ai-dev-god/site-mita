@@ -86,6 +86,20 @@ rsync -a --delete \
   --exclude='.env*' \
   "$REPO_DIR/" "$PUBLIC_HTML/"
 
+# ── bilete.lamitabiciclista.ro (cPanel sub of mita) ──────────
+# Live docroot is /home/mita/public_html/bilete/ (cPanel-managed),
+# not aurel's public_html. Sync via sudo, then chown to mita:mita
+# so cPanel/Apache can serve it under the mita user.
+BILETE_DOCROOT="/home/mita/public_html/bilete"
+if [ -d "$REPO_DIR/marketing/bilete" ]; then
+  log "Syncing marketing/bilete -> $BILETE_DOCROOT..."
+  sudo mkdir -p "$BILETE_DOCROOT"
+  sudo rsync -a --delete \
+    --exclude='cgi-bin' \
+    "$REPO_DIR/marketing/bilete/" "$BILETE_DOCROOT/"
+  sudo chown -R mita:mita "$BILETE_DOCROOT"
+fi
+
 # ── Restart services ─────────────────────────────────────────
 log "Restarting services..."
 sudo systemctl restart lmbsc-api
