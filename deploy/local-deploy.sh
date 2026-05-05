@@ -111,6 +111,18 @@ if [ -d "$REPO_DIR/marketing/bilete" ]; then
   sudo chown -R mita:mita "$BILETE_DOCROOT"
 fi
 
+# ── lamitabiciclista.ro/expo-2026 (LAM-776 wireframes review) ──
+# Static HTML wireframes for the new ticket page. Served from a
+# subfolder of the apex docroot, no separate vhost needed.
+EXPO_DOCROOT="/home/mita/public_html/expo-2026"
+if [ -d "$REPO_DIR/designs/lam-776-bilete" ]; then
+  log "Syncing designs/lam-776-bilete -> $EXPO_DOCROOT..."
+  sudo mkdir -p "$EXPO_DOCROOT"
+  sudo rsync -a --delete \
+    "$REPO_DIR/designs/lam-776-bilete/" "$EXPO_DOCROOT/"
+  sudo chown -R mita:mita "$EXPO_DOCROOT"
+fi
+
 # ── Restart services ─────────────────────────────────────────
 log "Restarting services..."
 sudo systemctl restart lmbsc-api
