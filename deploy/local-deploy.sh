@@ -86,6 +86,17 @@ rsync -a --delete \
   --exclude='.env*' \
   "$REPO_DIR/" "$PUBLIC_HTML/"
 
+# ── lamitabiciclista.ro apex (cPanel docroot of mita user) ──
+# Apex serves from /home/mita/public_html/ (cPanel ServerName lamitabiciclista.ro).
+# Push only the static landing assets — NOT the whole repo, the mita user's
+# docroot is not a generic public_html mirror like aurel's.
+MITA_DOCROOT="/home/mita/public_html"
+log "Syncing apex landing -> $MITA_DOCROOT..."
+sudo rsync -a "$REPO_DIR/index.html" "$MITA_DOCROOT/index.html"
+sudo rsync -a --delete "$REPO_DIR/assets/" "$MITA_DOCROOT/assets/"
+sudo rsync -a --delete "$REPO_DIR/meniu/"  "$MITA_DOCROOT/meniu/"
+sudo chown -R mita:mita "$MITA_DOCROOT/index.html" "$MITA_DOCROOT/assets" "$MITA_DOCROOT/meniu"
+
 # ── bilete.lamitabiciclista.ro (cPanel sub of mita) ──────────
 # Live docroot is /home/mita/public_html/bilete/ (cPanel-managed),
 # not aurel's public_html. Sync via sudo, then chown to mita:mita
