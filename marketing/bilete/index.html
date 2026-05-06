@@ -561,10 +561,10 @@ Thank you,
             
             /* 1. Import Fonts */
             
-            /* Body: Radikal (Nootype) — same cuts as apex, sourced from WP origin's wp-content/uploads/2023/04 */
+            /* Body: Radikal (Nootype) — Light/Medium/Bold .otf cuts, supplied by board on LAM-775. */
             @font-face {
               font-family: 'Radikal';
-              src: url('resources/fonts/radikal/Nootype-Radikal-Light.ttf') format('truetype');
+              src: url('resources/fonts/radikal/Nootype-Radikal-Light.otf') format('opentype');
               font-weight: 300;
               font-style: normal;
               font-display: swap;
@@ -572,8 +572,16 @@ Thank you,
 
             @font-face {
               font-family: 'Radikal';
-              src: url('resources/fonts/radikal/Nootype-Radikal-Medium.ttf') format('truetype');
+              src: url('resources/fonts/radikal/Nootype-Radikal-Medium.otf') format('opentype');
               font-weight: 400;
+              font-style: normal;
+              font-display: swap;
+            }
+
+            @font-face {
+              font-family: 'Radikal';
+              src: url('resources/fonts/radikal/Nootype-Radikal-Bold.otf') format('opentype');
+              font-weight: 700;
               font-style: normal;
               font-display: swap;
             }
